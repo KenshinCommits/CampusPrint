@@ -94,13 +94,27 @@ ordersRouter.get('/mine', requireAuth, async (req, res) => {
   res.json({ orders });
 });
 
+const ACTIVE_QUEUE_STATUSES = ['placed', 'accepted', 'processing'];
+
 ordersRouter.get('/:id', requireAuth, async (req, res) => {
   const order = await db.orders.findById(req.params.id);
   if (!order) return res.status(404).json({ error: 'Order not found' });
   if (order.userId !== req.user.email && req.user.role !== 'staff') {
     return res.status(403).json({ error: 'Not your order' });
   }
-  res.json({ order });
+
+  let queue = null;
+  if (ACTIVE_QUEUE_STATUSES.includes(order.status)) {
+    const active = (await db.orders.findAll({}))
+      .filter((o) => ACTIVE_QUEUE_STATUSES.includes(o.status))
+      .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    const position = active.findIndex((o) => o.orderId === order.orderId) + 1;
+    if (position > 0) {
+      queue = { position, ahead: position - 1, totalActive: active.length };
+    }
+  }
+
+  res.json({ order, queue });
 });
 
 ordersRouter.post('/:id/pay', requireAuth, async (req, res) => {

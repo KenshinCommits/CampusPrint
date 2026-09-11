@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { Button } from '../components/Button.jsx';
+import { OptionCard } from '../components/OptionCard.jsx';
 
 export function Signup() {
   const { signup } = useAuth();
@@ -19,7 +21,7 @@ export function Signup() {
     setBusy(true);
     try {
       const user = await signup(form);
-      navigate(user.role === 'staff' ? '/staff' : '/new-order');
+      navigate(user.role === 'staff' ? '/staff' : '/');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -28,42 +30,46 @@ export function Signup() {
   }
 
   return (
-    <div className="card centered">
-      <h1>Sign up</h1>
-      <form onSubmit={onSubmit}>
-        <label>
-          Name
-          <input value={form.name} onChange={(e) => update('name', e.target.value)} required />
-        </label>
-        <label>
-          Email
-          <input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} required />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={form.password}
-            onChange={(e) => update('password', e.target.value)}
-            required
-            minLength={6}
-          />
-        </label>
-        <label>
-          I am a
-          <select value={form.role} onChange={(e) => update('role', e.target.value)}>
-            <option value="student">Student</option>
-            <option value="staff">Shop staff</option>
-          </select>
-        </label>
-        {error && <p className="error">{error}</p>}
-        <button type="submit" disabled={busy}>
-          {busy ? 'Creating account…' : 'Create account'}
-        </button>
-      </form>
-      <p>
-        Already have an account? <Link to="/login">Log in</Link>
-      </p>
+    <div className="container narrow">
+      <div className="card" style={{ margin: '20px auto' }}>
+        <span className="eyebrow">JOIN CAMPUSPRINT</span>
+        <h1 style={{ marginTop: 10 }}>SIGN UP</h1>
+        <form onSubmit={onSubmit}>
+          <div className="field">
+            <label>Name</label>
+            <input value={form.name} onChange={(e) => update('name', e.target.value)} required />
+          </div>
+          <div className="field">
+            <label>Email</label>
+            <input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} required />
+          </div>
+          <div className="field">
+            <label>Password</label>
+            <input
+              type="password"
+              value={form.password}
+              onChange={(e) => update('password', e.target.value)}
+              required
+              minLength={6}
+            />
+            <span className="field-hint">At least 6 characters</span>
+          </div>
+          <div className="field">
+            <label>I am a</label>
+            <div className="option-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
+              <OptionCard title="Student" sub="Order prints" selected={form.role === 'student'} onClick={() => update('role', 'student')} />
+              <OptionCard title="Shop Staff" sub="Run the queue" selected={form.role === 'staff'} onClick={() => update('role', 'staff')} tone="blue" />
+            </div>
+          </div>
+          {error && <p className="error-text">{error}</p>}
+          <Button type="submit" className="btn-block" disabled={busy}>
+            {busy ? 'Creating account…' : 'Create Account →'}
+          </Button>
+        </form>
+        <p style={{ marginTop: 16 }}>
+          Already have an account? <Link to="/login"><strong>LOG IN</strong></Link>
+        </p>
+      </div>
     </div>
   );
 }

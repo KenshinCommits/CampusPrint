@@ -3,14 +3,16 @@ import { Navbar } from './components/Navbar.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 import { Login } from './pages/Login.jsx';
 import { Signup } from './pages/Signup.jsx';
+import { Dashboard } from './pages/Dashboard.jsx';
 import { NewOrder } from './pages/NewOrder.jsx';
 import { MyOrders } from './pages/MyOrders.jsx';
 import { OrderDetail } from './pages/OrderDetail.jsx';
 import { StaffDashboard } from './pages/StaffDashboard.jsx';
+import { Loader } from './components/EmptyState.jsx';
 
 function Protected({ role, children }) {
   const { user, loading } = useAuth();
-  if (loading) return <p>Loading…</p>;
+  if (loading) return <Loader />;
   if (!user) return <Navigate to="/login" replace />;
   if (role && user.role !== role) return <Navigate to="/" replace />;
   return children;
@@ -18,9 +20,10 @@ function Protected({ role, children }) {
 
 function Home() {
   const { user, loading } = useAuth();
-  if (loading) return <p>Loading…</p>;
+  if (loading) return <Loader />;
   if (!user) return <Navigate to="/login" replace />;
-  return <Navigate to={user.role === 'staff' ? '/staff' : '/new-order'} replace />;
+  if (user.role === 'staff') return <Navigate to="/staff" replace />;
+  return <Dashboard />;
 }
 
 export default function App() {
@@ -64,6 +67,7 @@ export default function App() {
               </Protected>
             }
           />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </div>
