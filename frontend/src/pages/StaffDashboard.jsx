@@ -12,8 +12,8 @@ const NEXT_ACTIONS = {
     { label: 'Accept', status: 'accepted' },
     { label: 'Reject', status: 'rejected', needsReason: true },
   ],
-  accepted: [{ label: 'Start processing', status: 'processing' }],
-  processing: [{ label: 'Mark ready for pickup', status: 'ready' }],
+  accepted: [{ label: 'Start processing', status: 'processing', needsEta: true }],
+  processing: [{ label: 'Mark ready for pickup', status: 'ready', needsEta: true }],
   ready: [{ label: 'Mark completed', status: 'completed' }],
 };
 
@@ -45,15 +45,22 @@ export function StaffDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, q]);
 
-  async function updateStatus(order, nextStatus, needsReason) {
+  async function updateStatus(order, nextStatus, { needsReason, needsEta } = {}) {
     let reason;
     if (needsReason) {
       reason = window.prompt('Reason for rejecting this order:');
       if (!reason) return;
     }
+    let estimatedReadyAt;
+    if (needsEta) {
+      const minutes = window.prompt('Minutes until ready for pickup? (leave blank to skip)');
+      if (minutes && !Number.isNaN(Number(minutes))) {
+        estimatedReadyAt = new Date(Date.now() + Number(minutes) * 60000).toISOString();
+      }
+    }
     setBusyId(order.orderId);
     try {
-      await api.updateStatus(order.orderId, { status: nextStatus, reason });
+      await api.updateStatus(order.orderId, { status: nextStatus, reason, estimatedReadyAt });
       await load();
     } catch (err) {
       setError(err.message);
@@ -109,6 +116,7 @@ export function StaffDashboard() {
             <th>Total</th>
             <th>Payment</th>
             <th>Status</th>
+            <th>ETA</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -132,12 +140,15 @@ export function StaffDashboard() {
               <td>
                 <StatusBadge status={o.status} />
               </td>
+              <td className="small">
+                {o.estimatedReadyAt ? new Date(o.estimatedReadyAt).toLocaleTimeString() : '—'}
+              </td>
               <td className="actions-cell">
                 {(NEXT_ACTIONS[o.status] || []).map((action) => (
                   <button
                     key={action.status}
                     disabled={busyId === o.orderId}
-                    onClick={() => updateStatus(o, action.status, action.needsReason)}
+                    onClick={() => updateStatus(o, action.status, action)}
                   >
                     {action.label}
                   </button>
@@ -147,7 +158,7 @@ export function StaffDashboard() {
           ))}
           {orders.length === 0 && (
             <tr>
-              <td colSpan={8}>No orders match this filter.</td>
+              <td colSpan={9}>No orders match this filter.</td>
             </tr>
           )}
         </tbody>
