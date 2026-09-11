@@ -1,17 +1,27 @@
 node_modules/
+**/node_modules/
 dist/
+**/dist/
 build/
+**/build/
 
 .env
-.env.local
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
 
-backend/data/
-backend/uploads/
+data/
+uploads/
+**/data/
+**/uploads/
 
 *.log
 npm-debug.log*
 
 .DS_Store
+**/.DS_Store
 Thumbs.db
 
 .vscode/

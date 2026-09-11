@@ -3,27 +3,34 @@ import { Navbar } from './components/Navbar.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 import { Login } from './pages/Login.jsx';
 import { Signup } from './pages/Signup.jsx';
-import { Dashboard } from './pages/Dashboard.jsx';
+import { StudentDashboard } from './pages/StudentDashboard.jsx';
 import { NewOrder } from './pages/NewOrder.jsx';
 import { MyOrders } from './pages/MyOrders.jsx';
 import { OrderDetail } from './pages/OrderDetail.jsx';
+import { OrderSuccess } from './pages/OrderSuccess.jsx';
 import { StaffDashboard } from './pages/StaffDashboard.jsx';
-import { Loader } from './components/EmptyState.jsx';
 
 function Protected({ role, children }) {
   const { user, loading } = useAuth();
-  if (loading) return <Loader />;
+  if (loading) {
+    return (
+      <div style={{ padding: '60px', textAlign: 'center', fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
+        Loading session…
+      </div>
+    );
+  }
   if (!user) return <Navigate to="/login" replace />;
-  if (role && user.role !== role) return <Navigate to="/" replace />;
+  if (role && user.role !== role) {
+    return <Navigate to={user.role === 'staff' ? '/staff' : '/dashboard'} replace />;
+  }
   return children;
 }
 
 function Home() {
   const { user, loading } = useAuth();
-  if (loading) return <Loader />;
+  if (loading) return null;
   if (!user) return <Navigate to="/login" replace />;
-  if (user.role === 'staff') return <Navigate to="/staff" replace />;
-  return <Dashboard />;
+  return <Navigate to={user.role === 'staff' ? '/staff' : '/dashboard'} replace />;
 }
 
 export default function App() {
@@ -35,6 +42,26 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+
+          {/* Student Dashboard */}
+          <Route
+            path="/dashboard"
+            element={
+              <Protected role="student">
+                <StudentDashboard />
+              </Protected>
+            }
+          />
+
+          {/* New Order Creator */}
+          <Route
+            path="/order"
+            element={
+              <Protected role="student">
+                <NewOrder />
+              </Protected>
+            }
+          />
           <Route
             path="/new-order"
             element={
@@ -43,11 +70,23 @@ export default function App() {
               </Protected>
             }
           />
+
+          {/* Order Success Screen */}
           <Route
-            path="/my-orders"
+            path="/order/:id/success"
             element={
-              <Protected role="student">
-                <MyOrders />
+              <Protected>
+                <OrderSuccess />
+              </Protected>
+            }
+          />
+
+          {/* Order Live Status / Details */}
+          <Route
+            path="/order/:id"
+            element={
+              <Protected>
+                <OrderDetail />
               </Protected>
             }
           />
@@ -59,6 +98,26 @@ export default function App() {
               </Protected>
             }
           />
+
+          {/* My Orders List */}
+          <Route
+            path="/orders"
+            element={
+              <Protected role="student">
+                <MyOrders />
+              </Protected>
+            }
+          />
+          <Route
+            path="/my-orders"
+            element={
+              <Protected role="student">
+                <MyOrders />
+              </Protected>
+            }
+          />
+
+          {/* Staff Shop Queue */}
           <Route
             path="/staff"
             element={
@@ -67,6 +126,8 @@ export default function App() {
               </Protected>
             }
           />
+
+          {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

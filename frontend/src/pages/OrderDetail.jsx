@@ -1,351 +1,374 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { useAuth } from '../context/AuthContext.jsx';
-import { useToast } from '../context/ToastContext.jsx';
-import { StatusBadge } from '../components/StatusBadge.jsx';
-import { StatusTimeline } from '../components/StatusTimeline.jsx';
-import { Button } from '../components/Button.jsx';
-import { OptionCard } from '../components/OptionCard.jsx';
-import { Modal } from '../components/Modal.jsx';
-import { EmptyState, Loader } from '../components/EmptyState.jsx';
-import { NEXT_ACTIONS } from '../components/QueueTable.jsx';
-import {
-  formatCurrency,
-  formatFileSize,
-  minutesUntil,
-  optionsSummary,
-  COLOR_LABEL,
-  SIDED_LABEL,
-  BINDING_LABEL,
-} from '../utils/format.js';
+import { Check, Clock, FileText, AlertCircle, ArrowLeft, CreditCard, XCircle } from 'lucide-react';
+
+const STATUS_STEPS = [
+  { key: 'placed', label: 'ORDER PLACED' },
+  { key: 'accepted', label: 'ACCEPTED' },
+  { key: 'processing', label: 'PROCESSING' },
+  { key: 'ready', label: 'READY FOR PICKUP' },
+  { key: 'completed', label: 'COMPLETED' },
+];
 
 export function OrderDetail() {
   const { id } = useParams();
-  const { user } = useAuth();
-  const { toast } = useToast();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
-  const [queue, setQueue] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
-  async function load() {
-    try {
-      const res = await api.getOrder(id);
-      setOrder(res.order);
-      setQueue(res.queue);
-    } catch (err) {
-      setError(err.message);
-    }
+  function loadOrder() {
+    api
+      .getOrder(id)
+      .then((data) => setOrder(data.order))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
-    setOrder(null);
-    setError('');
-    load();
-    const interval = setInterval(load, 5000);
+    loadOrder();
+    const interval = setInterval(loadOrder, 8000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  async function pay() {
+  async function handlePay() {
     setBusy(true);
     try {
-      const { order } = await api.payOrder(id);
-      setOrder(order);
-      toast('PAYMENT SUCCESSFUL ✓', 'success');
+      const res = await api.payOrder(id);
+      setOrder(res.order);
     } catch (err) {
-      toast(err.message, 'error');
+      alert(err.message || 'Payment simulation failed');
     } finally {
       setBusy(false);
     }
   }
 
-  async function cancel() {
+  async function handleCancel() {
+    if (!confirm('Are you sure you want to cancel this order?')) return;
     setBusy(true);
     try {
-      const { order } = await api.cancelOrder(id);
-      setOrder(order);
-      toast('Order cancelled.', 'info');
+      const res = await api.cancelOrder(id);
+      setOrder(res.order);
     } catch (err) {
-      toast(err.message, 'error');
+      alert(err.message || 'Failed to cancel order');
     } finally {
       setBusy(false);
     }
   }
 
-  async function updateStatus(status, extra) {
-    setBusy(true);
-    try {
-      const { order } = await api.updateStatus(id, { status, ...extra });
-      setOrder(order);
-      setQueue(null);
-      toast(status === 'completed' ? 'ORDER COLLECTED ✓' : `Order moved to ${status}.`, 'success');
-    } catch (err) {
-      toast(err.message, 'error');
-    } finally {
-      setBusy(false);
-    }
+  if (loading) {
+    return <div style={{ textAlign: 'center', padding: '60px' }}>Loading order status…</div>;
   }
 
-  if (error) return <EmptyState icon="⚠" title="THAT DIDN'T WORK" subtitle={error} />;
-  if (!order) return <Loader />;
-
-  const isStaff = user?.role === 'staff';
-
-  return isStaff ? (
-    <StaffView order={order} onAction={updateStatus} busy={busy} navigate={navigate} />
-  ) : (
-    <StudentView order={order} queue={queue} onPay={pay} onCancel={cancel} busy={busy} />
-  );
-}
-
-function PaymentChooser({ onPay, busy }) {
-  const [choice, setChoice] = useState(null);
-
-  if (choice === 'counter') return <p className="muted" style={{ margin: 0 }}>PAYMENT DUE AT COUNTER</p>;
-
-  if (choice === 'online') {
+  if (error || !order) {
     return (
-      <div>
-        <p className="hint">Simulated payment — no real transaction occurs.</p>
-        <Button onClick={onPay} disabled={busy}>SIMULATE PAYMENT →</Button>
+      <div className="neo-card" style={{ maxWidth: '500px', margin: '40px auto', textAlign: 'center' }}>
+        <AlertCircle size={40} color="#DC2626" style={{ margin: '0 auto 12px' }} />
+        <h2>Order Not Found</h2>
+        <p style={{ color: 'var(--text-muted)', margin: '10px 0 20px' }}>{error || 'Unable to load order.'}</p>
+        <Link to="/orders" className="neo-btn primary sm">
+          Back to Orders
+        </Link>
       </div>
     );
   }
 
-  return (
-    <div className="option-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
-      <OptionCard title="Pay Online" sub="Simulated" onClick={() => setChoice('online')} />
-      <OptionCard title="Pay At Counter" onClick={() => setChoice('counter')} tone="blue" />
-    </div>
-  );
-}
-
-function StudentView({ order, queue, onPay, onCancel, busy }) {
-  const isPlaced = order.status === 'placed';
+  // Determine active step index
+  const currentIndex = STATUS_STEPS.findIndex((s) => s.key === order.status);
   const isRejected = order.status === 'rejected';
+  const isCancelled = order.status === 'cancelled';
+  const isPaid = order.paymentStatus === 'paid';
+
+  function getStepTime(stepKey) {
+    const historyItem = (order.statusHistory || []).find((h) => h.status === stepKey);
+    if (!historyItem?.at) {
+      if (stepKey === 'ready' && currentIndex >= 2) return '~12 min';
+      return '';
+    }
+    const d = new Date(historyItem.at);
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
 
   return (
-    <div className="container medium">
-      {isPlaced ? (
-        <div className="card" style={{ textAlign: 'center', marginBottom: 24 }}>
-          <span className="eyebrow">ORDER CONFIRMED</span>
-          <h1>YOU'RE IN THE QUEUE.</h1>
-          <p className="muted upper" style={{ fontSize: '0.78rem', fontWeight: 700, marginBottom: 2 }}>Your Print Token</p>
-          <div className="mono-token" style={{ fontSize: '2.6rem' }}>{order.orderId}</div>
-          {queue && (
-            <div style={{ marginTop: 14 }}>
-              <p style={{ margin: 0, fontWeight: 700 }}>POSITION #{String(queue.position).padStart(2, '0')}</p>
-              <p className="muted" style={{ margin: 0 }}>
-                {queue.ahead} order{queue.ahead === 1 ? '' : 's'} ahead of you
-              </p>
-            </div>
-          )}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {/* Back button + Header */}
+      <div>
+        <Link
+          to="/orders"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 700,
+            fontSize: '0.85rem',
+            color: '#000',
+            marginBottom: '10px',
+            textDecoration: 'none',
+          }}
+        >
+          <ArrowLeft size={16} />
+          <span>Back to all orders</span>
+        </Link>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)',
+              fontWeight: 900,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            ORDER {order.orderId}
+          </h1>
+
+          <span className={`neo-badge ${order.status}`} style={{ fontSize: '0.88rem', padding: '6px 14px' }}>
+            {order.status === 'processing' ? 'PRINTING' : order.status}
+          </span>
+        </div>
+      </div>
+
+      {/* 5-Step Horizontal Timeline Card */}
+      {!isRejected && !isCancelled ? (
+        <div className="neo-card timeline-container">
+          <div className="timeline-steps">
+            <div className="timeline-track-bg" />
+            <div
+              className="timeline-track-fill"
+              style={{
+                width: `${Math.max(0, Math.min(100, (currentIndex / (STATUS_STEPS.length - 1)) * 100))}%`,
+              }}
+            />
+
+            {STATUS_STEPS.map((step, idx) => {
+              const isDone = currentIndex > idx || order.status === 'completed';
+              const isCurrent = currentIndex === idx;
+              const time = getStepTime(step.key);
+
+              return (
+                <div
+                  key={step.key}
+                  className={`timeline-step ${isDone ? 'completed' : ''} ${isCurrent ? 'active' : ''}`}
+                >
+                  <div className="step-circle">
+                    {isDone ? (
+                      <Check size={18} strokeWidth={3} />
+                    ) : (
+                      <span>{idx + 1}</span>
+                    )}
+                  </div>
+                  <div className="step-label">{step.label}</div>
+                  {time && <div className="step-time">{time}</div>}
+                </div>
+              );
+            })}
+          </div>
         </div>
       ) : (
-        <div className="row between" style={{ marginBottom: 18, flexWrap: 'wrap', gap: 10 }}>
-          <h1 style={{ margin: 0 }}>ORDER {order.orderId}</h1>
-          <StatusBadge status={order.status} />
-        </div>
-      )}
-
-      {isRejected && (
-        <div className="alert-coral">
-          <h3>ORDER REJECTED</h3>
-          <p style={{ margin: 0 }}>Reason: {order.rejectionReason}</p>
-        </div>
-      )}
-
-      {isPlaced && (
-        <div className="card" style={{ marginBottom: 24 }}>
-          <h3 className="upper">Payment</h3>
-          {order.paymentStatus === 'paid' ? (
-            <p style={{ margin: 0, fontWeight: 700 }}>PAYMENT SUCCESSFUL ✓</p>
-          ) : (
-            <PaymentChooser onPay={onPay} busy={busy} />
-          )}
-        </div>
-      )}
-
-      {!isRejected && (
-        <div className="card" style={{ marginBottom: 24 }}>
-          <h3 className="upper">Status</h3>
-          <StatusTimeline statusHistory={order.statusHistory} status={order.status} estimatedReadyAt={order.estimatedReadyAt} />
-          {order.status !== 'completed' && order.estimatedReadyAt && (
-            <p className="hint" style={{ marginTop: 10 }}>Estimated ready in ~{minutesUntil(order.estimatedReadyAt)} min</p>
-          )}
-        </div>
-      )}
-
-      <div className="card">
-        <h3 className="upper">Details</h3>
-        <div className="stack" style={{ gap: 6 }}>
-          <div className="row between"><span className="muted">File</span><span>{order.fileName}</span></div>
-          <div className="row between"><span className="muted">Pages</span><span>{order.pages}</span></div>
-          <div className="row between"><span className="muted">Copies</span><span>{order.options.copies}</span></div>
-          <div className="row between"><span className="muted">Options</span><span style={{ textAlign: 'right' }}>{optionsSummary(order.options)}</span></div>
-          {order.options.notes && <div className="row between"><span className="muted">Notes</span><span style={{ textAlign: 'right' }}>{order.options.notes}</span></div>}
-          <hr className="divider" />
-          <div className="row between"><span className="muted">Print cost</span><span>{formatCurrency(order.cost.printCost)}</span></div>
-          <div className="row between"><span className="muted">Binding</span><span>{formatCurrency(order.cost.bindingCost)}</span></div>
-          <div className="row between"><strong>Total</strong><strong>{formatCurrency(order.cost.total)}</strong></div>
-          <div className="row between">
-            <span className="muted">Payment status</span>
-            <span className={`badge ${order.paymentStatus === 'paid' ? 'badge-ready' : 'badge-placed'}`}>
-              {order.paymentStatus === 'paid' ? 'PAID' : 'UNPAID'}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {isPlaced && (
-        <div style={{ marginTop: 20 }}>
-          <Button variant="danger" onClick={onCancel} disabled={busy}>CANCEL ORDER</Button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function StaffView({ order, onAction, busy, navigate }) {
-  const [modal, setModal] = useState(null);
-  const [reason, setReason] = useState('');
-  const [etaMinutes, setEtaMinutes] = useState('15');
-
-  const actions = NEXT_ACTIONS[order.status] || [];
-  const ext = (order.fileName.split('.').pop() || '').toUpperCase().slice(0, 4);
-
-  function trigger(action) {
-    if (action.needsReason) {
-      setReason('');
-      setModal({ type: 'reject' });
-      return;
-    }
-    if (action.needsEta) {
-      setEtaMinutes('15');
-      setModal({ type: 'eta', action });
-      return;
-    }
-    onAction(action.status, {});
-  }
-
-  function confirmReject() {
-    if (!reason.trim()) return;
-    onAction('rejected', { reason });
-    setModal(null);
-  }
-
-  function confirmEta() {
-    const mins = Number(etaMinutes);
-    const extra = mins > 0 ? { estimatedReadyAt: new Date(Date.now() + mins * 60000).toISOString() } : {};
-    onAction(modal.action.status, extra);
-    setModal(null);
-  }
-
-  return (
-    <div className="container">
-      <button className="btn-ghost" onClick={() => navigate('/staff')} style={{ marginBottom: 14 }}>
-        ← Back to Queue
-      </button>
-
-      <div className="row between" style={{ marginBottom: 18, flexWrap: 'wrap', gap: 10 }}>
-        <h1 style={{ margin: 0 }}>ORDER {order.orderId}</h1>
-        <StatusBadge status={order.status} />
-      </div>
-
-      {order.status === 'rejected' && (
-        <div className="alert-coral">
-          <h3>ORDER REJECTED</h3>
-          <p style={{ margin: 0 }}>Reason: {order.rejectionReason}</p>
-        </div>
-      )}
-
-      <div className="two-col">
-        <div className="card">
-          <h3 className="upper">Document</h3>
-          <div className="file-chip" style={{ marginBottom: 16 }}>
-            <div className="file-icon">{ext || 'FILE'}</div>
-            <div className="file-info">
-              <div className="file-name">{order.fileName}</div>
-              <div className="file-meta">{formatFileSize(order.fileSizeBytes)} · {order.pages} pages</div>
+        <div
+          style={{
+            background: '#FEE2E2',
+            border: '2px solid #EF4444',
+            borderRadius: '8px',
+            padding: '16px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+          }}
+        >
+          <XCircle size={24} color="#DC2626" />
+          <div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, color: '#991B1B' }}>
+              ORDER {order.status.toUpperCase()}
             </div>
-          </div>
-          <Button as="a" href={api.staffFileUrl(order.orderId)} target="_blank" rel="noreferrer" variant="dark">
-            Download File
-          </Button>
-
-          <h3 className="upper" style={{ marginTop: 28 }}>Status History</h3>
-          <StatusTimeline statusHistory={order.statusHistory} status={order.status} estimatedReadyAt={order.estimatedReadyAt} />
-        </div>
-
-        <div className="card">
-          <h3 className="upper">Print Requirements</h3>
-          <div className="stack" style={{ gap: 6, marginBottom: 18 }}>
-            <div className="row between"><span className="muted">Student</span><span>{order.userName}</span></div>
-            <div className="row between"><span className="muted">Copies</span><span>{order.options.copies}</span></div>
-            <div className="row between"><span className="muted">Color</span><span>{COLOR_LABEL[order.options.colorMode]}</span></div>
-            <div className="row between"><span className="muted">Sides</span><span>{SIDED_LABEL[order.options.sided]}</span></div>
-            <div className="row between"><span className="muted">Paper</span><span>{order.options.paperSize}</span></div>
-            <div className="row between"><span className="muted">Binding</span><span>{BINDING_LABEL[order.options.binding]}</span></div>
-            {order.options.notes && <div className="row between"><span className="muted">Notes</span><span style={{ textAlign: 'right' }}>{order.options.notes}</span></div>}
-            <hr className="divider" />
-            <div className="row between"><strong>Total</strong><strong>{formatCurrency(order.cost.total)}</strong></div>
-          </div>
-
-          <div className="row between" style={{ marginBottom: 18 }}>
-            <span className="field-label" style={{ margin: 0 }}>Payment</span>
-            <span className={`badge ${order.paymentStatus === 'paid' ? 'badge-ready' : 'badge-placed'}`}>
-              {order.paymentStatus === 'paid' ? 'PAID' : 'PAYMENT DUE'}
-            </span>
-          </div>
-
-          <div className="btn-row">
-            {actions.map((a) => (
-              <Button key={a.status} variant={a.variant} onClick={() => trigger(a)} disabled={busy}>
-                {a.label}
-              </Button>
-            ))}
-            {actions.length === 0 && order.status !== 'rejected' && order.status !== 'cancelled' && (
-              <p className="muted" style={{ margin: 0 }}>No further action needed — order is complete.</p>
+            {order.rejectionReason && (
+              <div style={{ fontSize: '0.88rem', color: '#B91C1C', marginTop: '2px' }}>
+                Reason: {order.rejectionReason}
+              </div>
             )}
           </div>
         </div>
-      </div>
-
-      {modal?.type === 'reject' && (
-        <Modal
-          title="WHY ARE YOU REJECTING THIS ORDER?"
-          onClose={() => setModal(null)}
-          footer={
-            <>
-              <Button variant="danger" onClick={confirmReject} disabled={!reason.trim()}>Reject Order</Button>
-              <Button variant="ghost" onClick={() => setModal(null)}>Cancel</Button>
-            </>
-          }
-        >
-          <textarea placeholder="Enter reason…" value={reason} onChange={(e) => setReason(e.target.value)} rows={3} autoFocus />
-        </Modal>
       )}
 
-      {modal?.type === 'eta' && (
-        <Modal
-          title="ESTIMATED READY TIME"
-          onClose={() => setModal(null)}
-          footer={
-            <>
-              <Button onClick={confirmEta}>Confirm</Button>
-              <Button variant="ghost" onClick={() => setModal(null)}>Cancel</Button>
-            </>
-          }
-        >
-          <div className="field" style={{ marginBottom: 0 }}>
-            <label>Minutes from now</label>
-            <input type="number" min="1" value={etaMinutes} onChange={(e) => setEtaMinutes(e.target.value)} autoFocus />
+      {/* Two Column Cards */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1.2fr 0.8fr',
+          gap: '24px',
+          alignItems: 'start',
+        }}
+        className="order-detail-grid"
+      >
+        {/* Left Column: Order Details */}
+        <div className="neo-card">
+          <h2
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1.1rem',
+              fontWeight: 800,
+              marginBottom: '16px',
+              letterSpacing: '0.02em',
+            }}
+          >
+            ORDER DETAILS
+          </h2>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '0.92rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>File name</span>
+              <span style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FileText size={15} color="#DC2626" />
+                {order.fileName}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Pages</span>
+              <span style={{ fontWeight: 700 }}>{order.pages}</span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Copies</span>
+              <span style={{ fontWeight: 700 }}>{order.options?.copies || 1}</span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Print settings</span>
+              <span style={{ fontWeight: 700, textAlign: 'right' }}>
+                {order.options?.colorMode === 'color' ? 'Color' : 'B&W'} ·{' '}
+                {order.options?.sided === 'double' ? 'Double-sided' : 'Single'} ·{' '}
+                {order.options?.paperSize || 'A4'} ·{' '}
+                {order.options?.binding === 'none' ? 'No binding' : order.options?.binding || 'None'}
+              </span>
+            </div>
+
+            {order.options?.notes && (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Notes</span>
+                <span style={{ fontWeight: 600, fontStyle: 'italic', maxWidth: '240px', textAlign: 'right' }}>
+                  "{order.options.notes}"
+                </span>
+              </div>
+            )}
+
+            <div style={{ borderTop: '2px dashed #000', margin: '4px 0' }} />
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Payment status</span>
+              <span className={`neo-badge ${isPaid ? 'paid' : 'unpaid'}`}>
+                {isPaid ? 'PAID' : 'UNPAID'}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.05rem' }}>
+                Total Amount
+              </span>
+              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.3rem' }}>
+                ₹{order.cost?.total || 0}
+              </span>
+            </div>
           </div>
-        </Modal>
-      )}
+
+          {order.status === 'placed' && (
+            <div style={{ marginTop: '20px', borderTop: '2px solid #E5E7EB', paddingTop: '16px' }}>
+              <button
+                type="button"
+                className="neo-btn danger sm"
+                disabled={busy}
+                onClick={handleCancel}
+              >
+                Cancel Order
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Estimated Ready Time & Quick Actions */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div className="neo-card" style={{ background: '#FFFDF9' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.04em',
+                marginBottom: '10px',
+              }}
+            >
+              ESTIMATED READY TIME
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  background: 'var(--yellow-primary)',
+                  border: '2px solid #000',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Clock size={22} strokeWidth={2.5} />
+              </div>
+              <div
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '1.8rem',
+                  fontWeight: 900,
+                }}
+              >
+                {order.status === 'ready'
+                  ? 'READY NOW!'
+                  : order.status === 'completed'
+                  ? 'COMPLETED'
+                  : order.status === 'processing'
+                  ? '~5-10 MIN'
+                  : '~15-20 MIN'}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="neo-btn sm blue full-width"
+              onClick={() => alert(`Your order ${order.orderId} is currently #${currentIndex >= 2 ? 1 : 2} in line at the counter!`)}
+            >
+              VIEW QUEUE POSITION
+            </button>
+          </div>
+
+          {!isPaid && !isCancelled && !isRejected && (
+            <div className="neo-card" style={{ background: '#FFFDEB' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                <CreditCard size={18} />
+                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.9rem' }}>
+                  Simulated Online Payment
+                </span>
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '14px' }}>
+                Pay digitally to skip counter cash handling.
+              </p>
+              <button
+                type="button"
+                className="neo-btn primary full-width"
+                disabled={busy}
+                onClick={handlePay}
+              >
+                <span>{busy ? 'Processing…' : `PAY NOW (₹${order.cost?.total || 0})`}</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

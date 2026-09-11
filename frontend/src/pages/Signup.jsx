@@ -1,74 +1,158 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import { Button } from '../components/Button.jsx';
-import { OptionCard } from '../components/OptionCard.jsx';
+import { ArrowRight, User, Mail, Lock, ShieldAlert } from 'lucide-react';
 
 export function Signup() {
   const { signup } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student' });
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('student');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-
-  function update(field, value) {
-    setForm((f) => ({ ...f, [field]: value }));
-  }
 
   async function onSubmit(e) {
     e.preventDefault();
     setError('');
     setBusy(true);
     try {
-      const user = await signup(form);
-      navigate(user.role === 'staff' ? '/staff' : '/');
+      const user = await signup({ name, email, password, role });
+      navigate(user.role === 'staff' ? '/staff' : '/dashboard');
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Registration failed');
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <div className="container narrow">
-      <div className="card" style={{ margin: '20px auto' }}>
-        <span className="eyebrow">JOIN CAMPUSPRINT</span>
-        <h1 style={{ marginTop: 10 }}>SIGN UP</h1>
+    <div style={{ maxWidth: '480px', margin: '40px auto' }}>
+      <div className="neo-card">
+        <div style={{ marginBottom: '20px' }}>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.8rem', fontWeight: 900 }}>
+            Create Account
+          </h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+            Join CampusPrint to bypass the print shop line
+          </p>
+        </div>
+
+        {error && (
+          <div
+            style={{
+              background: '#FEE2E2',
+              border: '2px solid #EF4444',
+              color: '#991B1B',
+              borderRadius: '6px',
+              padding: '10px 14px',
+              marginBottom: '16px',
+              fontSize: '0.88rem',
+              fontWeight: 600,
+            }}
+          >
+            {error}
+          </div>
+        )}
+
         <form onSubmit={onSubmit}>
-          <div className="field">
-            <label>Name</label>
-            <input value={form.name} onChange={(e) => update('name', e.target.value)} required />
+          <div className="neo-input-group">
+            <label className="neo-label">
+              <User size={15} />
+              <span>Full Name</span>
+            </label>
+            <input
+              type="text"
+              className="neo-input"
+              placeholder="e.g. Rahul Kumar"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </div>
-          <div className="field">
-            <label>Email</label>
-            <input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} required />
+
+          <div className="neo-input-group">
+            <label className="neo-label">
+              <Mail size={15} />
+              <span>Email Address</span>
+            </label>
+            <input
+              type="email"
+              className="neo-input"
+              placeholder="e.g. rahul@college.edu"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
-          <div className="field">
-            <label>Password</label>
+
+          <div className="neo-input-group">
+            <label className="neo-label">
+              <Lock size={15} />
+              <span>Password</span>
+            </label>
             <input
               type="password"
-              value={form.password}
-              onChange={(e) => update('password', e.target.value)}
+              className="neo-input"
+              placeholder="Minimum 6 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
             />
-            <span className="field-hint">At least 6 characters</span>
           </div>
-          <div className="field">
-            <label>I am a</label>
-            <div className="option-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
-              <OptionCard title="Student" sub="Order prints" selected={form.role === 'student'} onClick={() => update('role', 'student')} />
-              <OptionCard title="Shop Staff" sub="Run the queue" selected={form.role === 'staff'} onClick={() => update('role', 'staff')} tone="blue" />
+
+          <div className="neo-input-group">
+            <label className="neo-label">
+              <span>Account Type</span>
+            </label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                className={`neo-btn sm ${role === 'student' ? 'primary' : ''}`}
+                style={{ flex: 1 }}
+                onClick={() => setRole('student')}
+              >
+                Student
+              </button>
+              <button
+                type="button"
+                className={`neo-btn sm ${role === 'staff' ? 'primary' : ''}`}
+                style={{ flex: 1 }}
+                onClick={() => setRole('staff')}
+              >
+                Staff
+              </button>
             </div>
           </div>
-          {error && <p className="error-text">{error}</p>}
-          <Button type="submit" className="btn-block" disabled={busy}>
-            {busy ? 'Creating account…' : 'Create Account →'}
-          </Button>
+
+          <button
+            type="submit"
+            className="neo-btn primary full-width"
+            disabled={busy}
+            style={{ marginTop: '12px', padding: '12px' }}
+          >
+            <span>{busy ? 'CREATING ACCOUNT…' : 'SIGN UP ->'}</span>
+          </button>
         </form>
-        <p style={{ marginTop: 16 }}>
-          Already have an account? <Link to="/login"><strong>LOG IN</strong></Link>
-        </p>
+
+        <div
+          style={{
+            marginTop: '16px',
+            textAlign: 'center',
+            fontSize: '0.88rem',
+            color: 'var(--text-muted)',
+          }}
+        >
+          Already have an account?{' '}
+          <Link
+            to="/login"
+            style={{ color: '#000', fontWeight: 800, textDecoration: 'underline' }}
+          >
+            Log in
+          </Link>
+        </div>
       </div>
     </div>
   );

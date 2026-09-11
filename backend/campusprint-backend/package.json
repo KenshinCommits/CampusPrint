@@ -1,0 +1,22 @@
+{
+  "name": "campusprint-backend",
+  "version": "1.0.0",
+  "description": "CampusPrint backend - simple local version (no AWS needed to run)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node seed.js",
+    "init-db": "node init-db.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.699.0",
+    "@aws-sdk/lib-dynamodb": "^3.699.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.0",
+    "pdf-lib": "^1.17.1"
+  }
+}

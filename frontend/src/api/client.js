@@ -1,16 +1,34 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API_ORIGIN = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+export const baseURL = `${API_ORIGIN.replace(/\/api\/?$/, '')}/api`;
 
-function getToken() {
-  return localStorage.getItem('cp_token');
+export function getToken() {
+  return localStorage.getItem('cp_token') || localStorage.getItem('token');
 }
 
-async function request(path, { method = 'GET', body, isMultipart = false } = {}) {
-  const headers = {};
-  const token = getToken();
-  if (token) headers.Authorization = `Bearer ${token}`;
-  if (!isMultipart && body) headers['Content-Type'] = 'application/json';
+export function setToken(token) {
+  localStorage.setItem('cp_token', token);
+  localStorage.setItem('token', token);
+}
 
-  const res = await fetch(`${API_URL}${path}`, {
+export function clearToken() {
+  localStorage.removeItem('cp_token');
+  localStorage.removeItem('token');
+}
+
+async function request(endpoint, { method = 'GET', body, isMultipart = false } = {}) {
+  const url = endpoint.startsWith('http') ? endpoint : `${baseURL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+  const headers = {};
+
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  if (!isMultipart && body && typeof body === 'object') {
+    headers['Content-Type'] = 'application/json';
+  }
+
+  const res = await fetch(url, {
     method,
     headers,
     body: isMultipart ? body : body ? JSON.stringify(body) : undefined,
@@ -20,30 +38,37 @@ async function request(path, { method = 'GET', body, isMultipart = false } = {})
   const data = contentType.includes('application/json') ? await res.json() : null;
 
   if (!res.ok) {
-    throw new Error((data && data.error) || `Request failed (${res.status})`);
+    const errorMsg = (data && data.error) || `Request failed with status ${res.status}`;
+    const err = new Error(errorMsg);
+    err.status = res.status;
+    err.data = data;
+    throw err;
   }
+
   return data;
 }
 
 export const api = {
-  signup: (payload) => request('/api/auth/signup', { method: 'POST', body: payload }),
-  login: (payload) => request('/api/auth/login', { method: 'POST', body: payload }),
-  me: () => request('/api/auth/me'),
+  baseURL,
+  // Auth endpoints
+  signup: (payload) => request('/auth/signup', { method: 'POST', body: payload }),
+  login: (payload) => request('/auth/login', { method: 'POST', body: payload }),
+  me: () => request('/auth/me'),
 
-  placeOrder: (formData) => request('/api/orders', { method: 'POST', body: formData, isMultipart: true }),
-  myOrders: () => request('/api/orders/mine'),
-  getOrder: (id) => request(`/api/orders/${id}`),
-  payOrder: (id) => request(`/api/orders/${id}/pay`, { method: 'POST' }),
-  cancelOrder: (id) => request(`/api/orders/${id}`, { method: 'DELETE' }),
+  // Student Order endpoints
+  placeOrder: (formData) => request('/orders', { method: 'POST', body: formData, isMultipart: true }),
+  myOrders: () => request('/orders/mine'),
+  getOrder: (id) => request(`/orders/${id}`),
+  payOrder: (id) => request(`/orders/${id}/pay`, { method: 'POST' }),
+  cancelOrder: (id) => request(`/orders/${id}`, { method: 'DELETE' }),
 
+  // Staff endpoints
   staffOrders: (params = {}) => {
     const qs = new URLSearchParams(params).toString();
-    return request(`/api/staff/orders${qs ? `?${qs}` : ''}`);
+    return request(`/staff/orders${qs ? `?${qs}` : ''}`);
   },
-  staffOrder: (id) => request(`/api/staff/orders/${id}`),
-  staffFileUrl: (id) => `${API_URL}/api/staff/orders/${id}/file?token=${encodeURIComponent(getToken() || '')}`,
-  updateStatus: (id, payload) => request(`/api/staff/orders/${id}/status`, { method: 'PATCH', body: payload }),
-  staffStats: () => request('/api/staff/stats'),
+  staffOrder: (id) => request(`/staff/orders/${id}`),
+  staffFileUrl: (id) => `${baseURL}/staff/orders/${id}/file?token=${encodeURIComponent(getToken() || '')}`,
+  updateStatus: (id, payload) => request(`/staff/orders/${id}/status`, { method: 'PATCH', body: payload }),
+  staffStats: () => request('/staff/stats'),
 };
-
-export { API_URL };
