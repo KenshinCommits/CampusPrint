@@ -1,21 +1,16 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import { PixelLogo } from './PixelArt.jsx';
+import { PixelLogo, PixelStatusDot } from './PixelArt.jsx';
 import { 
   LayoutDashboard, 
   PlusCircle, 
   FileText, 
   Layers, 
-  Clock, 
   LogOut, 
   Bell, 
-  Menu, 
-  X,
-  Printer,
   BarChart3,
   ChevronRight
 } from 'lucide-react';
-import { useState } from 'react';
 
 export function RetroFooter() {
   return (
@@ -23,7 +18,7 @@ export function RetroFooter() {
       style={{
         backgroundColor: '#000814',
         borderTop: '2px solid #000000',
-        padding: '16px 24px',
+        padding: '16px 28px',
         color: '#FFFFFF',
         display: 'flex',
         alignItems: 'center',
@@ -31,20 +26,20 @@ export function RetroFooter() {
         flexWrap: 'wrap',
         gap: '12px',
         fontFamily: 'var(--font-heading)',
-        fontSize: '0.8rem',
+        fontSize: '0.82rem',
         fontWeight: 700,
         letterSpacing: '0.02em',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <PixelLogo size={20} color="#FFC300" />
-        <span style={{ color: '#FFC300', fontWeight: 900 }}>CAMPUSPRINT</span>
-        <span style={{ color: '#4B5563' }}>|</span>
+        <PixelLogo size={22} color="#FFC300" />
+        <span style={{ color: '#FFC300', fontWeight: 900, letterSpacing: '0.04em' }}>CAMPUSPRINT</span>
+        <span style={{ color: '#003566' }}>|</span>
         <span style={{ color: '#94A3B8', fontWeight: 600 }}>
-          Digital Xerox & Stationery Ordering System
+          Digital Xerox &amp; Stationery Ordering System
         </span>
       </div>
-      <div style={{ color: '#FFD60A', fontWeight: 800, letterSpacing: '0.05em' }}>
+      <div style={{ color: '#FFD60A', fontWeight: 800, letterSpacing: '0.06em' }}>
         FAST · SIMPLE · CAMPUS READY
       </div>
     </footer>
@@ -55,7 +50,6 @@ export function AppLayout({ children }) {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const isStaff = user?.role === 'staff';
@@ -68,7 +62,7 @@ export function AppLayout({ children }) {
   // If unauthenticated or on login/signup page, don't show sidebar
   if (!user || isAuthPage) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#FBF8F1' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#F8F5ED' }}>
         <main style={{ flex: 1 }}>{children}</main>
         <RetroFooter />
       </div>
@@ -84,7 +78,6 @@ export function AppLayout({ children }) {
         .toUpperCase()
     : 'U';
 
-  // Compute breadcrumb / page title
   const getPageTitle = () => {
     const p = location.pathname;
     if (p.includes('/dashboard')) return 'DASHBOARD';
@@ -117,23 +110,23 @@ export function AppLayout({ children }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#FBF8F1' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#F8F5ED' }}>
       <div style={{ display: 'flex', flex: 1, minHeight: 'calc(100vh - 56px)' }}>
-        {/* Left Sidebar (Desktop) */}
+        {/* Left Sidebar (Desktop: 240px wide, crisp 2px black right border) */}
         <aside
           style={{
             width: '240px',
-            backgroundColor: '#FBF8F1',
+            backgroundColor: '#F8F5ED',
             borderRight: '2px solid #000000',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
             padding: '24px 16px',
             position: 'sticky',
             top: 0,
             height: '100vh',
             flexShrink: 0,
             zIndex: 30,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
           }}
         >
           <div>
@@ -146,7 +139,7 @@ export function AppLayout({ children }) {
                 gap: '10px',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 900,
-                fontSize: '1.2rem',
+                fontSize: '1.25rem',
                 letterSpacing: '-0.02em',
                 color: '#000000',
                 textDecoration: 'none',
@@ -154,7 +147,7 @@ export function AppLayout({ children }) {
                 marginBottom: '28px',
               }}
             >
-              <PixelLogo size={26} color="#FFC300" />
+              <PixelLogo size={28} color="#FFC300" />
               <span>CAMPUSPRINT</span>
             </Link>
 
@@ -172,31 +165,19 @@ export function AppLayout({ children }) {
                       alignItems: 'center',
                       gap: '12px',
                       padding: '12px 16px',
-                      borderRadius: '12px', // rounded-xl
+                      borderRadius: '12px',
                       border: '2px solid #000000',
                       fontFamily: 'var(--font-heading)',
                       fontWeight: 900,
-                      fontSize: '0.875rem',
+                      fontSize: '0.88rem',
                       textDecoration: 'none',
-                      color: '#000000',
-                      backgroundColor: active ? '#FFC300' : 'transparent',
-                      boxShadow: active ? '2px 2px 0px 0px #000000' : 'none',
-                      transition: 'all 0.12s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!active) {
-                        e.currentTarget.style.backgroundColor = '#F7F4EB';
-                        e.currentTarget.style.boxShadow = '2px 2px 0px 0px #000000';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!active) {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.boxShadow = 'none';
-                      }
+                      color: active ? '#000000' : '#001D3D',
+                      backgroundColor: active ? '#FFC300' : '#FFFFFF',
+                      boxShadow: active ? '3px 3px 0px 0px #000000' : '2px 2px 0px 0px #000000',
+                      transition: 'all 0.1s ease',
                     }}
                   >
-                    <IconComponent size={18} />
+                    <IconComponent size={18} color={active ? '#000000' : '#003566'} strokeWidth={active ? 2.5 : 2} />
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -204,13 +185,13 @@ export function AppLayout({ children }) {
             </div>
           </div>
 
-          {/* User Profile Badge at Bottom: rounded-full border-2 border-black bg-[#BAE6FD] */}
+          {/* User Profile Badge at Bottom: rounded-full border-2 border-black */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '10px 12px',
+              padding: '12px',
               backgroundColor: '#FFFFFF',
               border: '2px solid #000000',
               borderRadius: '16px',
@@ -221,12 +202,12 @@ export function AppLayout({ children }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div
                 style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '9999px', // rounded-full
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '9999px',
                   border: '2px solid #000000',
-                  backgroundColor: '#BAE6FD',
-                  color: '#000000',
+                  backgroundColor: isStaff ? '#003566' : '#BAE6FD',
+                  color: isStaff ? '#FFFFFF' : '#000000',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -241,16 +222,19 @@ export function AppLayout({ children }) {
                 <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#000000' }}>
                   {user.name || user.email?.split('@')[0]}
                 </span>
-                <span
-                  style={{
-                    fontSize: '0.7rem',
-                    color: '#4B5563',
-                    textTransform: 'capitalize',
-                    fontWeight: 700,
-                  }}
-                >
-                  {user.role}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <PixelStatusDot color="#86EFAC" size={6} />
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      color: '#4B5563',
+                      textTransform: 'capitalize',
+                      fontWeight: 700,
+                    }}
+                  >
+                    {user.role}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -267,7 +251,6 @@ export function AppLayout({ children }) {
                 display: 'flex',
                 alignItems: 'center',
                 borderRadius: '6px',
-                transition: 'transform 0.1s ease',
               }}
             >
               <LogOut size={16} />
@@ -275,15 +258,15 @@ export function AppLayout({ children }) {
           </div>
         </aside>
 
-        {/* Main Content Area */}
+        {/* Main Content Area (Desktop) */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           {/* Top Utility Strip */}
           <header
             style={{
               height: '64px',
-              backgroundColor: '#FBF8F1',
+              backgroundColor: '#F8F5ED',
               borderBottom: '2px solid #000000',
-              padding: '0 24px',
+              padding: '0 28px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -292,12 +275,12 @@ export function AppLayout({ children }) {
               zIndex: 20,
             }}
           >
-            {/* Breadcrumb / Page Title */}
+            {/* Left: Breadcrumb / Title */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 800, color: '#6B7280' }}>
+              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 900, color: '#003566', letterSpacing: '0.04em' }}>
                 CAMPUSPRINT
               </span>
-              <ChevronRight size={14} style={{ color: '#9CA3AF' }} />
+              <ChevronRight size={14} style={{ color: '#000000' }} strokeWidth={2.5} />
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
@@ -329,7 +312,6 @@ export function AppLayout({ children }) {
                   justifyContent: 'center',
                   cursor: 'pointer',
                   position: 'relative',
-                  transition: 'transform 0.1s ease',
                 }}
               >
                 <Bell size={18} color="#000000" />
@@ -340,14 +322,13 @@ export function AppLayout({ children }) {
                     right: '5px',
                     width: '8px',
                     height: '8px',
-                    borderRadius: '50%',
                     backgroundColor: '#EF4444',
                     border: '1.5px solid #000000',
                   }}
                 />
               </button>
 
-              {/* User Profile Chip: rounded-full border-2 border-black px-3 py-1.5 bg-white text-xs font-bold */}
+              {/* User Profile Chip */}
               <div
                 style={{
                   display: 'flex',
@@ -369,8 +350,8 @@ export function AppLayout({ children }) {
                     height: '24px',
                     borderRadius: '9999px',
                     border: '1.5px solid #000000',
-                    backgroundColor: '#BAE6FD',
-                    color: '#000000',
+                    backgroundColor: isStaff ? '#003566' : '#BAE6FD',
+                    color: isStaff ? '#FFFFFF' : '#000000',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -386,7 +367,7 @@ export function AppLayout({ children }) {
           </header>
 
           {/* Route Content Container */}
-          <main style={{ flex: 1, padding: '32px 28px', maxWidth: '1440px', width: '100%', margin: '0 auto' }}>
+          <main style={{ flex: 1, padding: '32px 36px', maxWidth: '1440px', width: '100%', margin: '0 auto' }}>
             {children}
           </main>
         </div>

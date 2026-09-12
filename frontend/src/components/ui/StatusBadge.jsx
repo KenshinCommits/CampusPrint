@@ -1,8 +1,9 @@
 import React from 'react';
+import { PixelStatusDot } from '../PixelArt.jsx';
 
 /**
- * StatusBadge: Neo-Brutalist Pill Badge
- * Tokens: rounded-full, 2px solid black border, uppercase font-black text-xs, pastel fills
+ * StatusBadge: Modern Pixel-Art Inspired Status Pill
+ * Tokens: rounded-full, 2px solid black border, uppercase font-black text-xs, pastel fills with 8-bit square dot
  */
 export function StatusBadge({
   status = 'placed',
@@ -20,6 +21,7 @@ export function StatusBadge({
       case 'success':
         return {
           bg: '#BBF7D0', // Mint green
+          dot: '#166534',
           color: '#000000',
           defaultText: norm === 'paid' ? 'PAID' : norm === 'ready' ? 'READY' : 'COMPLETED',
         };
@@ -27,6 +29,7 @@ export function StatusBadge({
       case 'active':
         return {
           bg: '#BAE6FD', // Sky blue
+          dot: '#003566', // Secondary blue
           color: '#000000',
           defaultText: 'ACCEPTED',
         };
@@ -34,6 +37,7 @@ export function StatusBadge({
       case 'printing':
         return {
           bg: '#C7D2FE', // Lavender / Indigo
+          dot: '#3730A3',
           color: '#000000',
           defaultText: norm === 'printing' ? 'PRINTING' : 'PROCESSING',
         };
@@ -42,6 +46,7 @@ export function StatusBadge({
       case 'failed':
         return {
           bg: '#FECACA', // Soft red / coral
+          dot: '#991B1B',
           color: '#000000',
           defaultText: norm.toUpperCase(),
         };
@@ -50,6 +55,7 @@ export function StatusBadge({
       default:
         return {
           bg: '#FEF08A', // Pale yellow
+          dot: '#854D0E',
           color: '#000000',
           defaultText: 'PLACED',
         };
@@ -67,21 +73,23 @@ export function StatusBadge({
     backgroundColor: config.bg,
     color: config.color,
     border: '2px solid #000000',
-    borderRadius: '9999px', // rounded-full
-    padding: '4px 12px',
-    fontSize: '0.75rem', // text-xs
+    borderRadius: '9999px',
+    padding: '3px 10px',
+    fontSize: '0.72rem',
     fontFamily: 'var(--font-heading, "Space Grotesk", sans-serif)',
     fontWeight: 900,
     textTransform: 'uppercase',
-    letterSpacing: '0.02em',
+    letterSpacing: '0.04em',
     lineHeight: 1,
     whiteSpace: 'nowrap',
+    boxShadow: '1.5px 1.5px 0px 0px #000000',
     ...style,
   };
 
   return (
     <span className={`status-badge ${className}`} style={baseStyle}>
-      {text}
+      <PixelStatusDot color={config.dot} size={6} />
+      <span>{text}</span>
     </span>
   );
 }

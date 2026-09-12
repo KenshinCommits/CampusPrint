@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
 /**
- * NeoButton: Tactile Neo-Brutalist Arcade Button
+ * NeoButton: Modern Pixel-Art Chunky Graphic Button
  * Tokens: 2px solid black border, 3px hard black shadow, rounded-xl, uppercase font-black
- * Active press: translate(2px, 2px) & shadow vanishes
+ * Active press: translate(2px, 2px) & shadow drops to 0
+ * Palette: #FFC300 primary, #FFD60A hover, #003566 secondary blue
  */
 export function NeoButton({
   children,
-  variant = 'primary', // 'primary' (#FFC300), 'secondary' (white), 'dark' (navy), 'mint' (#BBF7D0), 'sky' (#BAE6FD), 'ghost'
+  variant = 'primary', // 'primary' (#FFC300), 'secondary' (#003566), 'white' (#FFFFFF), 'dark' (#001D3D), 'sky' (#BAE6FD), 'mint' (#BBF7D0), 'ghost'
   size = 'md', // 'sm', 'md', 'lg'
   className = '',
   style = {},
@@ -23,7 +24,12 @@ export function NeoButton({
     switch (variant) {
       case 'secondary':
         return {
-          backgroundColor: isHovered && !disabled ? '#F7F4EB' : '#FFFFFF',
+          backgroundColor: isHovered && !disabled ? '#001D3D' : '#003566',
+          color: '#FFFFFF',
+        };
+      case 'white':
+        return {
+          backgroundColor: isHovered && !disabled ? '#F8F5ED' : '#FFFFFF',
           color: '#000000',
         };
       case 'dark':
@@ -66,7 +72,7 @@ export function NeoButton({
       case 'lg':
         return {
           padding: '14px 28px',
-          fontSize: '1rem',
+          fontSize: '1.05rem',
           borderRadius: '14px',
         };
       case 'md':
@@ -74,7 +80,7 @@ export function NeoButton({
         return {
           padding: '10px 20px',
           fontSize: '0.875rem',
-          borderRadius: '12px', // rounded-xl
+          borderRadius: '12px',
         };
     }
   };

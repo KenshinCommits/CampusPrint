@@ -6,19 +6,21 @@
 
 :root {
   /* Foundations & Color Palette */
-  --bg-cream: #FBF8F1;
-  --bg-subtle: #F7F4EB;
+  --bg-cream: #F8F5ED;
+  --bg-subtle: #EDE9DE;
   --surface-white: #FFFFFF;
   --border-black: #000000;
   
-  /* Retro Dark Navy for Login / Footer */
+  /* Retro Dark Navy & Blue Secondary Surfaces */
   --navy-deep: #000814;
   --navy-surface: #001D3D;
+  --blue-secondary: #003566;
   --navy-border: #000000;
   
   /* Primary Arcade Yellow */
   --yellow-primary: #FFC300;
   --yellow-arcade: #FFD60A;
+  --yellow-hover: #FFD60A;
   --yellow-light: #FEF08A;
   --yellow-subtle: #FFFDEB;
   
@@ -611,11 +613,36 @@ body {
   to { transform: rotate(360deg); }
 }
 
-@media (max-width: 900px) {
-  .app-sidebar {
-    display: none;
+/* Pixel UI Utilities & Subtle Pattern */
+.pixel-pattern-bg {
+  background-image: radial-gradient(#000000 0.8px, transparent 0.8px);
+  background-size: 16px 16px;
+}
+
+@media (max-width: 860px) {
+  .desktop-sidebar {
+    display: none !important;
+  }
+  .mobile-hamburger-btn {
+    display: flex !important;
+  }
+  .mobile-close-btn {
+    display: block !important;
   }
   .content-container {
-    padding: 16px;
+    padding: 16px !important;
   }
 }
+
+@media (min-width: 861px) {
+  .desktop-sidebar {
+    display: flex !important;
+  }
+  .mobile-hamburger-btn {
+    display: none !important;
+  }
+  .mobile-close-btn {
+    display: none !important;
+  }
+}
+
