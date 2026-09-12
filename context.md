@@ -51,7 +51,10 @@ Custom-crafted 128x128 pixel-grid vector graphics embedded natively in the appli
   - Inactive: Transparent with white text, hovering to Tech Blue (`#003566`) with Bright Yellow text (`#FFD60A`).
   - Active: Filled Bright Yellow (`#FFD60A`) with `#000814` text, `2px solid #000814` border, and `3px 3px 0px 0px #000814` shadow.
 - **Bottom User Capsule**: Container in `#000814` with `#003566` border, `#FFC300` user avatar, and logout action.
-- **Top Utility Strip**: Canvas Cream (`#FBF8F1`) with bottom border, breadcrumbs, notification bell, and user pill chip.
+- **Top Utility Strip**:
+  - Canvas Cream (`#FBF8F1`) with bottom border and breadcrumb trail.
+  - **Notification Bell Button & Popover**: Real-time unread badge, click-to-open Golden Twilight popover displaying order state transitions, relative timestamps (`Just now`, `5m ago`), auto mark-all-read on open, and click-outside dismissal.
+  - **User Profile Chip & Dropdown Menu**: Accessible `<button>` trigger with avatar initials and chevron rotation; opens rich user profile card with email, active role badge, quick links (`Dashboard`, `New Print Order`, `My Orders`), single-click demo account switcher (`Switch to Staff / Student Demo`), and styled `Log Out` action.
 - **Retro Navy Footer**: Deepest Navy (`#000814`) with Golden Twilight typography and brand tagline.
 
 ### B. Student Dashboard (`frontend/src/pages/StudentDashboard.jsx`)

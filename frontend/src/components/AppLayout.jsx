@@ -1,5 +1,7 @@
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useNotifications } from '../context/NotificationContext.jsx';
 import { PixelLogo, PixelStatusDot } from './PixelArt.jsx';
 import { 
   LayoutDashboard, 
@@ -9,7 +11,9 @@ import {
   LogOut, 
   Bell, 
   BarChart3,
-  ChevronRight
+  ChevronRight,
+  ChevronDown,
+  ArrowRightLeft
 } from 'lucide-react';
 
 export function RetroFooter() {
@@ -46,10 +50,60 @@ export function RetroFooter() {
   );
 }
 
+function formatRelativeTime(dateStr) {
+  if (!dateStr) return '';
+  const diffMs = Date.now() - new Date(dateStr).getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  if (diffSec < 60) return 'Just now';
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `${diffHr}h ago`;
+  return new Date(dateStr).toLocaleDateString([], { month: 'short', day: 'numeric' });
+}
+
 export function AppLayout({ children }) {
-  const { user, logout } = useAuth();
+  const { user, login, logout } = useAuth();
+  const { notifications, unread, markAllRead } = useNotifications();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const notifRef = useRef(null);
+  const userMenuRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setShowNotifications(false);
+    setShowUserMenu(false);
+  }, [location.pathname]);
+
+  async function handleSwitchRole() {
+    try {
+      if (user?.role === 'student') {
+        await login('staff@campusprint.demo', 'staff123');
+        navigate('/staff');
+      } else {
+        await login('student@campusprint.demo', 'student123');
+        navigate('/dashboard');
+      }
+      setShowUserMenu(false);
+    } catch (err) {
+      console.error('Failed to switch role', err);
+    }
+  }
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const isStaff = user?.role === 'staff';
@@ -320,74 +374,411 @@ export function AppLayout({ children }) {
 
             {/* Right: Quick Notification Bell + User Profile Chip */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              {/* Notification Bell Button: rounded-full */}
-              <button
-                type="button"
-                aria-label="Notifications"
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '9999px',
-                  border: '2px solid #000814',
-                  backgroundColor: '#FFFFFF',
-                  boxShadow: '2px 2px 0px 0px #000814',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  position: 'relative',
-                }}
-              >
-                <Bell size={18} color="#000814" />
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '5px',
-                    right: '5px',
-                    width: '8px',
-                    height: '8px',
-                    backgroundColor: '#EF4444',
-                    border: '1.5px solid #000814',
-                    borderRadius: '50%',
+              {/* Notification Bell Container */}
+              <div ref={notifRef} style={{ position: 'relative' }}>
+                <button
+                  type="button"
+                  aria-label="Notifications"
+                  onClick={() => {
+                    setShowNotifications((prev) => {
+                      if (!prev) markAllRead();
+                      return !prev;
+                    });
+                    setShowUserMenu(false);
                   }}
-                />
-              </button>
-
-              {/* User Profile Chip */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  backgroundColor: '#FFFFFF',
-                  border: '2px solid #000814',
-                  borderRadius: '9999px',
-                  padding: '4px 12px 4px 6px',
-                  boxShadow: '2px 2px 0px 0px #000814',
-                  fontSize: '0.75rem',
-                  fontWeight: 900,
-                  fontFamily: 'var(--font-heading)',
-                  color: '#000814',
-                }}
-              >
-                <div
                   style={{
-                    width: '24px',
-                    height: '24px',
+                    width: '38px',
+                    height: '38px',
                     borderRadius: '9999px',
-                    backgroundColor: '#FFC300',
-                    border: '1.5px solid #000814',
-                    color: '#000814',
+                    border: '2px solid #000814',
+                    backgroundColor: showNotifications ? '#FFD60A' : '#FFFFFF',
+                    boxShadow: '2px 2px 0px 0px #000814',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '0.65rem',
-                    fontWeight: 900,
+                    cursor: 'pointer',
+                    position: 'relative',
+                    transition: 'all 0.1s ease',
                   }}
+                  onMouseEnter={(e) => { if (!showNotifications) e.currentTarget.style.backgroundColor = '#FFD60A'; }}
+                  onMouseLeave={(e) => { if (!showNotifications) e.currentTarget.style.backgroundColor = '#FFFFFF'; }}
                 >
-                  {initials}
-                </div>
-                <span>{user.name?.split(' ')[0] || 'User'}</span>
+                  <Bell size={18} color="#000814" />
+                  {unread > 0 && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        top: '4px',
+                        right: '4px',
+                        minWidth: '10px',
+                        height: '10px',
+                        padding: '0 2px',
+                        backgroundColor: '#EF4444',
+                        border: '1.5px solid #000814',
+                        borderRadius: '9999px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.55rem',
+                        color: '#FFFFFF',
+                        fontWeight: 900,
+                      }}
+                    />
+                  )}
+                </button>
+
+                {/* Notifications Dropdown Popover */}
+                {showNotifications && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '46px',
+                      right: 0,
+                      width: '320px',
+                      maxHeight: '400px',
+                      backgroundColor: '#FFFFFF',
+                      border: '2px solid #000814',
+                      borderRadius: '12px',
+                      boxShadow: '4px 4px 0px 0px #000814',
+                      zIndex: 100,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        padding: '12px 14px',
+                        backgroundColor: '#001D3D',
+                        color: '#FFFFFF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        borderBottom: '2px solid #000814',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Bell size={16} color="#FFD60A" />
+                        <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.82rem', letterSpacing: '0.04em' }}>
+                          NOTIFICATIONS
+                        </span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          backgroundColor: '#003566',
+                          color: '#FFD60A',
+                          padding: '2px 8px',
+                          borderRadius: '9999px',
+                          fontWeight: 700,
+                        }}
+                      >
+                        {notifications.length} total
+                      </span>
+                    </div>
+
+                    <div style={{ overflowY: 'auto', maxHeight: '300px', padding: '8px' }}>
+                      {notifications.length === 0 ? (
+                        <div style={{ padding: '24px 16px', textAlign: 'center', color: '#6B7280' }}>
+                          <div style={{ fontSize: '1.4rem', marginBottom: '6px' }}>🔔</div>
+                          <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '0.85rem', color: '#000814' }}>
+                            All caught up!
+                          </p>
+                          <p style={{ fontSize: '0.75rem', marginTop: '2px' }}>
+                            Order updates & hardware statuses will appear here.
+                          </p>
+                        </div>
+                      ) : (
+                        notifications.map((n) => (
+                          <div
+                            key={n.id}
+                            style={{
+                              padding: '10px 12px',
+                              borderRadius: '8px',
+                              border: '1.5px solid #000814',
+                              backgroundColor: '#FBF8F1',
+                              marginBottom: '6px',
+                              fontSize: '0.8rem',
+                              color: '#000814',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '4px',
+                            }}
+                          >
+                            <span style={{ fontWeight: 600, lineHeight: 1.4 }}>{n.text}</span>
+                            <span style={{ fontSize: '0.68rem', color: '#6B7280', alignSelf: 'flex-end' }}>
+                              {formatRelativeTime(n.at)}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* User Profile Chip Container */}
+              <div ref={userMenuRef} style={{ position: 'relative' }}>
+                <button
+                  type="button"
+                  aria-label="User Profile Menu"
+                  onClick={() => {
+                    setShowUserMenu((prev) => !prev);
+                    setShowNotifications(false);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    backgroundColor: showUserMenu ? '#FFD60A' : '#FFFFFF',
+                    border: '2px solid #000814',
+                    borderRadius: '9999px',
+                    padding: '4px 10px 4px 6px',
+                    boxShadow: '2px 2px 0px 0px #000814',
+                    fontSize: '0.75rem',
+                    fontWeight: 900,
+                    fontFamily: 'var(--font-heading)',
+                    color: '#000814',
+                    cursor: 'pointer',
+                    transition: 'all 0.1s ease',
+                  }}
+                  onMouseEnter={(e) => { if (!showUserMenu) e.currentTarget.style.backgroundColor = '#FFD60A'; }}
+                  onMouseLeave={(e) => { if (!showUserMenu) e.currentTarget.style.backgroundColor = '#FFFFFF'; }}
+                >
+                  <div
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '9999px',
+                      backgroundColor: '#FFC300',
+                      border: '1.5px solid #000814',
+                      color: '#000814',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.65rem',
+                      fontWeight: 900,
+                    }}
+                  >
+                    {initials}
+                  </div>
+                  <span>{user.name?.split(' ')[0] || 'User'}</span>
+                  <ChevronDown
+                    size={14}
+                    strokeWidth={2.5}
+                    style={{
+                      transform: showUserMenu ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 0.15s ease',
+                    }}
+                  />
+                </button>
+
+                {/* User Dropdown Menu Popover */}
+                {showUserMenu && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '46px',
+                      right: 0,
+                      width: '260px',
+                      backgroundColor: '#FFFFFF',
+                      border: '2px solid #000814',
+                      borderRadius: '12px',
+                      boxShadow: '4px 4px 0px 0px #000814',
+                      zIndex: 100,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        padding: '14px',
+                        backgroundColor: '#FBF8F1',
+                        borderBottom: '2px solid #000814',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '9999px',
+                          backgroundColor: '#FFC300',
+                          border: '2px solid #000814',
+                          color: '#000814',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontFamily: 'var(--font-heading)',
+                          fontWeight: 900,
+                          fontSize: '0.85rem',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {initials}
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                        <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.88rem', color: '#000814', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                          {user.name || 'Demo User'}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: '#6B7280', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                          {user.email}
+                        </span>
+                        <span
+                          style={{
+                            alignSelf: 'flex-start',
+                            marginTop: '4px',
+                            fontSize: '0.65rem',
+                            fontFamily: 'var(--font-heading)',
+                            fontWeight: 800,
+                            textTransform: 'uppercase',
+                            backgroundColor: '#003566',
+                            color: '#FFD60A',
+                            padding: '1px 6px',
+                            borderRadius: '4px',
+                            border: '1px solid #000814',
+                          }}
+                        >
+                          {user.role}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div style={{ padding: '6px' }}>
+                      <Link
+                        to={isStaff ? '/staff' : '/dashboard'}
+                        onClick={() => setShowUserMenu(false)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '8px 10px',
+                          borderRadius: '6px',
+                          color: '#000814',
+                          textDecoration: 'none',
+                          fontFamily: 'var(--font-heading)',
+                          fontWeight: 700,
+                          fontSize: '0.82rem',
+                          transition: 'background-color 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEF08A'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                      >
+                        <LayoutDashboard size={16} />
+                        <span>{isStaff ? 'Shop Queue' : 'Dashboard'}</span>
+                      </Link>
+
+                      {!isStaff && (
+                        <>
+                          <Link
+                            to="/new-order"
+                            onClick={() => setShowUserMenu(false)}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                              padding: '8px 10px',
+                              borderRadius: '6px',
+                              color: '#000814',
+                              textDecoration: 'none',
+                              fontFamily: 'var(--font-heading)',
+                              fontWeight: 700,
+                              fontSize: '0.82rem',
+                              transition: 'background-color 0.15s ease',
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEF08A'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                          >
+                            <PlusCircle size={16} />
+                            <span>New Print Order</span>
+                          </Link>
+
+                          <Link
+                            to="/orders"
+                            onClick={() => setShowUserMenu(false)}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                              padding: '8px 10px',
+                              borderRadius: '6px',
+                              color: '#000814',
+                              textDecoration: 'none',
+                              fontFamily: 'var(--font-heading)',
+                              fontWeight: 700,
+                              fontSize: '0.82rem',
+                              transition: 'background-color 0.15s ease',
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEF08A'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                          >
+                            <FileText size={16} />
+                            <span>My Orders</span>
+                          </Link>
+                        </>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={handleSwitchRole}
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '8px 10px',
+                          borderRadius: '6px',
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          color: '#003566',
+                          cursor: 'pointer',
+                          fontFamily: 'var(--font-heading)',
+                          fontWeight: 700,
+                          fontSize: '0.82rem',
+                          textAlign: 'left',
+                          transition: 'background-color 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#BAE6FD'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                      >
+                        <ArrowRightLeft size={16} />
+                        <span>Switch to {isStaff ? 'Student' : 'Staff'} Demo</span>
+                      </button>
+
+                      <div style={{ height: '1px', backgroundColor: '#000814', margin: '4px 0' }} />
+
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '8px 10px',
+                          borderRadius: '6px',
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          color: '#DC2626',
+                          cursor: 'pointer',
+                          fontFamily: 'var(--font-heading)',
+                          fontWeight: 800,
+                          fontSize: '0.82rem',
+                          textAlign: 'left',
+                          transition: 'background-color 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FECACA'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                      >
+                        <LogOut size={16} />
+                        <span>Log Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </header>
