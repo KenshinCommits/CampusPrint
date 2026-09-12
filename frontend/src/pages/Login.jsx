@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import { Printer, Upload, ShieldCheck, CheckCircle2, ArrowRight, Sparkles, Mail, Lock } from 'lucide-react';
+import { PixelLogo, PixelPrinter, PixelSparkles } from '../components/PixelArt.jsx';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 export function Login() {
   const { login } = useAuth();
@@ -10,6 +11,7 @@ export function Login() {
   const [roleSelection, setRoleSelection] = useState('student');
   const [email, setEmail] = useState('student@campusprint.demo');
   const [password, setPassword] = useState('student123');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -39,258 +41,286 @@ export function Login() {
   }
 
   return (
-    <div className="auth-split-grid">
-      {/* Left Column: Hero Showcase */}
-      <div className="auth-hero">
-        <h1 className="auth-hero-title">
-          PRINT WITHOUT<br />THE QUEUE.
-        </h1>
-        <p className="auth-hero-desc">
-          Upload your document. Choose your print options. Pay. Pick it up when it's ready.
-        </p>
+    <div
+      style={{
+        minHeight: 'calc(100vh - 52px)',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+        background: '#FBF8F1',
+      }}
+    >
+      {/* Left Column: Retro Dark Navy Hero Showcase */}
+      <div
+        style={{
+          background: '#0B132B',
+          padding: 'clamp(32px, 6vw, 64px)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          position: 'relative',
+          overflow: 'hidden',
+          borderRight: '2px solid #000',
+        }}
+      >
+        {/* Top Pixel Logo & Corner Sparkles */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+            <PixelLogo size={28} color="#FFD028" />
+            <span
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.25rem',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                color: '#FFF',
+              }}
+            >
+              CAMPUSPRINT
+            </span>
+          </div>
 
-        <div>
-          <button
-            className="neo-btn primary"
-            onClick={() => document.getElementById('auth-email')?.focus()}
+          <PixelSparkles color1="#FFD028" color2="#38BDF8" />
+        </div>
+
+        {/* Hero Big Typography & Tagline */}
+        <div style={{ margin: '40px 0' }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(2.5rem, 5.5vw, 4.2rem)',
+              fontWeight: 900,
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
+              color: '#FFFFFF',
+              marginBottom: '20px',
+            }}
           >
-            <span>GET STARTED</span>
-            <ArrowRight size={18} strokeWidth={2.5} />
-          </button>
+            PRINT.<br />
+            PAY.<br />
+            <span style={{ color: '#FFD028' }}>PICK UP.</span>
+          </h1>
+
+          <p
+            style={{
+              color: '#94A3B8',
+              fontSize: 'clamp(0.95rem, 1.5vw, 1.15rem)',
+              maxWidth: '380px',
+              lineHeight: 1.6,
+              fontWeight: 500,
+            }}
+          >
+            Upload your document.<br />
+            Choose your print options.<br />
+            Pay.<br />
+            Pick it up when it's ready.
+          </p>
         </div>
 
-        {/* Neo-brutalist Printer Illustration */}
-        <div
-          style={{
-            position: 'relative',
-            background: '#FCE77D',
-            border: '3px solid #000',
-            borderRadius: '12px',
-            padding: '28px',
-            boxShadow: '4px 4px 0px #000',
-            maxWidth: '460px',
-            margin: '10px 0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div
-              style={{
-                width: '64px',
-                height: '64px',
-                background: '#3B82F6',
-                border: '2.5px solid #000',
-                borderRadius: '8px',
-                boxShadow: '2px 2px 0px #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-              }}
-            >
-              <Printer size={36} strokeWidth={2.2} />
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem' }}>
-                PRINT DISPATCH READY
-              </div>
-              <div style={{ fontSize: '0.85rem', color: '#333' }}>
-                Tokens instantly synced to shop floor
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div
-              style={{
-                background: '#fff',
-                border: '2px solid #000',
-                borderRadius: '4px',
-                padding: '3px 8px',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 800,
-                fontSize: '0.75rem',
-                boxShadow: '1.5px 1.5px 0px #000',
-                transform: 'rotate(-3deg)',
-              }}
-            >
-              CP-1041 📄
-            </div>
-            <div
-              style={{
-                background: '#86EFAC',
-                border: '2px solid #000',
-                borderRadius: '4px',
-                padding: '3px 8px',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 800,
-                fontSize: '0.75rem',
-                boxShadow: '1.5px 1.5px 0px #000',
-                transform: 'rotate(2deg)',
-              }}
-            >
-              CP-1042 ✓
-            </div>
-          </div>
-        </div>
-
-        {/* 3 Features Row */}
-        <div className="hero-features">
-          <div className="hero-feature-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#2563EB' }}>
-              <Upload size={18} strokeWidth={2.5} />
-              <span className="hero-feature-title">QUICK UPLOAD</span>
-            </div>
-            <p className="hero-feature-desc">
-              Upload your file and set your preferences in seconds.
-            </p>
-          </div>
-
-          <div className="hero-feature-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#059669' }}>
-              <ShieldCheck size={18} strokeWidth={2.5} />
-              <span className="hero-feature-title">SECURE PAYMENT</span>
-            </div>
-            <p className="hero-feature-desc">
-              Pay online or at the counter. It's up to you.
-            </p>
-          </div>
-
-          <div className="hero-feature-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D97706' }}>
-              <CheckCircle2 size={18} strokeWidth={2.5} />
-              <span className="hero-feature-title">PICK UP & GO</span>
-            </div>
-            <p className="hero-feature-desc">
-              Get your unique token and collect your print job.
-            </p>
-          </div>
+        {/* Pixel Art Printer Illustration */}
+        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
+          <PixelPrinter width={300} height={220} />
         </div>
       </div>
 
-      {/* Right Column: Auth Card */}
-      <div>
-        <div className="neo-card" style={{ maxWidth: '440px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '20px' }}>
-            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', fontWeight: 900 }}>
+      {/* Right Column: Warm Cream Login Card Area */}
+      <div
+        style={{
+          background: '#FBF8F1',
+          padding: 'clamp(32px, 5vw, 64px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          className="neo-card"
+          style={{
+            maxWidth: '440px',
+            width: '100%',
+            padding: '36px 32px',
+            background: '#FFFFFF',
+          }}
+        >
+          {/* Student vs Staff Toggle Switch */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              background: '#FFF',
+              border: '2px solid #000',
+              borderRadius: '8px',
+              padding: '3px',
+              marginBottom: '28px',
+              boxShadow: '2px 2px 0px #000',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => handleRoleToggle('student')}
+              style={{
+                padding: '8px',
+                border: 'none',
+                borderRadius: '6px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                background: roleSelection === 'student' ? '#FFD028' : 'transparent',
+                color: '#000',
+                transition: 'all 0.1s ease',
+              }}
+            >
+              Student
+            </button>
+            <button
+              type="button"
+              onClick={() => handleRoleToggle('staff')}
+              style={{
+                padding: '8px',
+                border: 'none',
+                borderRadius: '6px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                background: roleSelection === 'staff' ? '#FFD028' : 'transparent',
+                color: '#000',
+                transition: 'all 0.1s ease',
+              }}
+            >
+              Staff
+            </button>
+          </div>
+
+          {/* Heading */}
+          <div style={{ marginBottom: '24px' }}>
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '1.7rem',
+                letterSpacing: '-0.02em',
+                marginBottom: '4px',
+              }}
+            >
               Welcome Back!
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              Login to your account
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+              Log in to your account
             </p>
           </div>
 
           {error && (
             <div
               style={{
-                background: '#FEE2E2',
-                border: '2px solid #EF4444',
-                color: '#991B1B',
+                background: '#FECACA',
+                border: '2px solid #000',
                 borderRadius: '6px',
                 padding: '10px 14px',
-                marginBottom: '16px',
-                fontSize: '0.88rem',
-                fontWeight: 600,
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                color: '#991B1B',
+                marginBottom: '18px',
               }}
             >
               {error}
             </div>
           )}
 
-          <form onSubmit={onSubmit}>
-            <div className="neo-input-group">
+          {/* Form */}
+          <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            <div className="neo-input-group" style={{ marginBottom: 0 }}>
               <label className="neo-label" htmlFor="auth-email">
-                <Mail size={15} />
+                <Mail size={14} />
                 <span>Email address</span>
               </label>
               <input
                 id="auth-email"
                 type="email"
+                required
                 className="neo-input"
-                placeholder="student@campusprint.demo"
+                placeholder="name@campus.edu"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
               />
             </div>
 
-            <div className="neo-input-group">
+            <div className="neo-input-group" style={{ marginBottom: 0 }}>
               <label className="neo-label" htmlFor="auth-password">
-                <Lock size={15} />
+                <Lock size={14} />
                 <span>Password</span>
               </label>
-              <input
-                id="auth-password"
-                type="password"
-                className="neo-input"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  id="auth-password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  className="neo-input"
+                  style={{ paddingRight: '40px' }}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#6B7280',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
 
             <button
               type="submit"
-              className="neo-btn primary full-width"
               disabled={busy}
-              style={{ marginTop: '8px', padding: '12px' }}
+              className="neo-btn primary full-width"
+              style={{
+                marginTop: '10px',
+                padding: '12px',
+                fontSize: '0.95rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+              }}
             >
               <span>{busy ? 'LOGGING IN…' : 'LOG IN'}</span>
               <ArrowRight size={18} strokeWidth={2.5} />
             </button>
           </form>
 
+          {/* Footer Link */}
           <div
             style={{
-              marginTop: '16px',
               textAlign: 'center',
-              fontSize: '0.88rem',
+              marginTop: '24px',
+              fontSize: '0.85rem',
               color: 'var(--text-muted)',
             }}
           >
             Don't have an account?{' '}
             <Link
               to="/signup"
-              style={{ color: '#000', fontWeight: 800, textDecoration: 'underline' }}
+              style={{
+                color: '#000',
+                fontWeight: 800,
+                textDecoration: 'underline',
+              }}
             >
               Sign Up
             </Link>
-          </div>
-
-          <div style={{ marginTop: '24px', borderTop: '2px dashed #000', paddingTop: '16px' }}>
-            <div
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '0.8rem',
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                color: 'var(--text-muted)',
-                marginBottom: '8px',
-              }}
-            >
-              I am a:
-            </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                type="button"
-                className={`neo-btn sm ${roleSelection === 'student' ? 'primary' : ''}`}
-                style={{ flex: 1 }}
-                onClick={() => handleRoleToggle('student')}
-              >
-                Student
-              </button>
-              <button
-                type="button"
-                className={`neo-btn sm ${roleSelection === 'staff' ? 'primary' : ''}`}
-                style={{ flex: 1 }}
-                onClick={() => handleRoleToggle('staff')}
-              >
-                Staff
-              </button>
-            </div>
           </div>
         </div>
       </div>

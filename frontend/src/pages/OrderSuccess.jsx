@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { CheckCircle2, ArrowRight, Printer, Sparkles, RefreshCw, FileText } from 'lucide-react';
+import { PixelDoc, PixelSparkles } from '../components/PixelArt.jsx';
+import { ArrowRight, FileText, Clock } from 'lucide-react';
 
 export function OrderSuccess() {
   const { id } = useParams();
@@ -9,7 +10,6 @@ export function OrderSuccess() {
   const navigate = useNavigate();
   const [order, setOrder] = useState(location.state?.order || null);
   const [loading, setLoading] = useState(!order);
-  const [paying, setPaying] = useState(false);
 
   useEffect(() => {
     if (!order && id) {
@@ -21,200 +21,167 @@ export function OrderSuccess() {
     }
   }, [id, order]);
 
-  async function handleSimulatedPayment() {
-    if (!order) return;
-    setPaying(true);
-    try {
-      const res = await api.payOrder(order.orderId);
-      setOrder(res.order);
-    } catch (err) {
-      alert(err.message || 'Payment simulation failed');
-    } finally {
-      setPaying(false);
-    }
-  }
-
-  if (loading) {
-    return <div style={{ textAlign: 'center', padding: '60px' }}>Loading order details…</div>;
-  }
-
-  const token = order?.orderId || id || 'CP-1001';
-  const isPaid = order?.paymentStatus === 'paid';
+  const token = order?.orderId || id || 'CP-1042';
+  const tokenNum = token.replace(/\D/g, '') ? `#${parseInt(token.replace(/\D/g, ''), 10) % 100}` : '#42';
 
   return (
-    <div style={{ maxWidth: '820px', margin: '30px auto' }}>
-      <div className="neo-card" style={{ padding: '36px 30px' }}>
+    <div
+      style={{
+        minHeight: 'calc(100vh - 120px)',
+        background: '#0B132B',
+        borderRadius: '16px',
+        border: '3px solid #000',
+        padding: 'clamp(32px, 5vw, 60px) 20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '6px 6px 0px #000',
+      }}
+    >
+      {/* Corner Pixel Sparkles */}
+      <div style={{ position: 'absolute', top: '24px', left: '24px' }}>
+        <PixelSparkles color1="#FFD028" color2="#38BDF8" />
+      </div>
+      <div style={{ position: 'absolute', top: '24px', right: '24px' }}>
+        <PixelSparkles color1="#38BDF8" color2="#FFD028" />
+      </div>
+
+      <div
+        style={{
+          maxWidth: '480px',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          gap: '24px',
+          zIndex: 2,
+        }}
+      >
+        {/* Document with blue arrow icon */}
+        <PixelDoc size={68} />
+
+        <h1
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'clamp(2rem, 4vw, 2.6rem)',
+            fontWeight: 900,
+            letterSpacing: '-0.02em',
+            color: '#FFFFFF',
+            margin: 0,
+          }}
+        >
+          ORDER PLACED!
+        </h1>
+
+        {/* Massive Yellow Ticket with Dashed Border */}
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: '1.1fr 0.9fr',
-            gap: '36px',
+            width: '100%',
+            background: '#FFD028',
+            border: '2.5px dashed #000',
+            borderRadius: '12px',
+            padding: '24px 20px',
+            boxShadow: '4px 4px 0px #000',
+            display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
+            gap: '6px',
           }}
-          className="success-grid"
         >
-          {/* Left Column: Big Celebratory Badge + Token */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '20px' }}>
-            {/* Green Checkmark Circle */}
-            <div
-              style={{
-                width: '74px',
-                height: '74px',
-                background: '#86EFAC',
-                border: '3px solid #000',
-                borderRadius: '50%',
-                boxShadow: '3px 3px 0px #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <CheckCircle2 size={44} strokeWidth={2.5} color="#000" />
-            </div>
-
-            <div>
-              <h1
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.8rem',
-                  fontWeight: 900,
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                {isPaid ? 'PAYMENT SUCCESSFUL!' : 'ORDER PLACED!'}
-              </h1>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginTop: '6px' }}>
-                {isPaid
-                  ? 'Your order has been paid and added to the queue.'
-                  : 'Your print order is queued. Pay at counter or right now.'}
-              </p>
-            </div>
-
-            {/* Neo-brutalist Yellow Ticket */}
-            <div
-              style={{
-                background: '#FFD028',
-                border: '3px solid #000',
-                borderRadius: '10px',
-                boxShadow: '4px 4px 0px #000',
-                padding: '18px 36px',
-                position: 'relative',
-                width: '100%',
-                maxWidth: '300px',
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '2.4rem',
-                  fontWeight: 900,
-                  letterSpacing: '0.04em',
-                }}
-              >
-                {token}
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '0.78rem',
-                  fontWeight: 800,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  marginTop: '2px',
-                }}
-              >
-                YOUR PRINT TOKEN
-              </div>
-            </div>
-
-            {!isPaid && (
-              <button
-                type="button"
-                className="neo-btn success sm"
-                onClick={handleSimulatedPayment}
-                disabled={paying}
-              >
-                <Sparkles size={16} />
-                <span>{paying ? 'Processing…' : `Pay ₹${order?.cost?.total || 0} Online Now`}</span>
-              </button>
-            )}
-          </div>
-
-          {/* Right Column: Order Summary Receipt */}
           <div
             style={{
-              background: '#FFFDF9',
-              border: '2px solid #000',
-              borderRadius: '8px',
-              boxShadow: '2px 2px 0px #000',
-              padding: '24px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '14px',
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(2.4rem, 5vw, 3.2rem)',
+              fontWeight: 900,
+              letterSpacing: '0.02em',
+              color: '#000',
+              lineHeight: 1,
             }}
           >
-            <div
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '0.85rem',
-                fontWeight: 900,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                color: 'var(--text-muted)',
-              }}
-            >
-              ORDER SUMMARY
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-              <span>
-                {order?.pages || 1} pages × {order?.options?.copies || 1} copies
-              </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
-                ₹{order?.cost?.printCost || 0}
-              </span>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-              <span style={{ textTransform: 'capitalize' }}>
-                Binding ({order?.options?.binding || 'None'})
-              </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
-                ₹{order?.cost?.bindingCost || 0}
-              </span>
-            </div>
-
-            <div style={{ borderTop: '2px dashed #000', margin: '4px 0' }} />
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', fontWeight: 900 }}>
-                Total
-              </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 900 }}>
-                ₹{order?.cost?.total || 0}
-              </span>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                Payment Status
-              </span>
-              <span className={`neo-badge ${isPaid ? 'paid' : 'unpaid'}`}>
-                {isPaid ? 'PAID' : 'PENDING'}
-              </span>
-            </div>
-
-            <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <Link to={`/order/${token}`} className="neo-btn primary full-width">
-                <span>TRACK ORDER</span>
-                <ArrowRight size={18} strokeWidth={2.5} />
-              </Link>
-              <Link to="/order" className="neo-btn full-width" style={{ textAlign: 'center' }}>
-                + Place Another Order
-              </Link>
-            </div>
+            {token}
+          </div>
+          <div
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              letterSpacing: '0.08em',
+              color: '#1E293B',
+            }}
+          >
+            PRINT {tokenNum}
           </div>
         </div>
+
+        {/* White Receipt Card */}
+        <div
+          className="neo-card"
+          style={{
+            width: '100%',
+            background: '#FFFFFF',
+            padding: '20px 24px',
+            textAlign: 'left',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+            <span style={{ color: 'var(--text-muted)' }}>File</span>
+            <span style={{ fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <FileText size={14} color="#DC2626" />
+              <span>{order?.fileName || 'assignment.pdf'}</span>
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+            <span style={{ color: 'var(--text-muted)' }}>Print Details</span>
+            <span style={{ fontWeight: 700 }}>
+              {order?.pages || 1} {order?.pages === 1 ? 'page' : 'pages'} ·{' '}
+              {order?.options?.colorMode === 'color' ? 'Color' : 'B&W'} ·{' '}
+              {order?.options?.sided === 'double' ? 'Double-sided' : 'Single'}
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+            <span style={{ color: 'var(--text-muted)' }}>Total</span>
+            <span style={{ fontWeight: 900, fontSize: '1.05rem' }}>
+              ₹{order?.cost?.total || 8}
+            </span>
+          </div>
+
+          <div style={{ borderTop: '2px dashed #000', margin: '2px 0' }} />
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', alignItems: 'center' }}>
+            <span style={{ color: 'var(--text-muted)' }}>Estimated Ready</span>
+            <span style={{ fontWeight: 800, color: '#166534', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Clock size={14} />
+              <span>~5-10 min</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Wide Yellow Track Order Button */}
+        <Link
+          to={`/order/${token}`}
+          className="neo-btn primary full-width"
+          style={{
+            padding: '14px',
+            fontSize: '1rem',
+            boxShadow: '4px 4px 0px #000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+          }}
+        >
+          <span>TRACK ORDER</span>
+          <ArrowRight size={18} strokeWidth={2.5} />
+        </Link>
       </div>
     </div>
   );

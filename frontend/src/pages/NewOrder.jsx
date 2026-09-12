@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { Upload, FileText, X, ArrowRight, Minus, Plus, AlertCircle } from 'lucide-react';
+import { PixelDoc } from '../components/PixelArt.jsx';
+import { ArrowLeft, Trash2, CheckCircle2, ArrowRight, Minus, Plus } from 'lucide-react';
 
 export function NewOrder() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export function NewOrder() {
   const [colorMode, setColorMode] = useState('bw');
   const [sided, setSided] = useState('double');
   const [paperSize, setPaperSize] = useState('A4');
-  const [binding, setBinding] = useState('staple');
+  const [binding, setBinding] = useState('none');
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('counter');
 
@@ -38,7 +39,7 @@ export function NewOrder() {
     setError('');
     setFile(selectedFile);
 
-    // Try reading page count or default based on file size
+    // Estimate pages based on PDF file size if not available
     const estPages = Math.max(1, Math.min(50, Math.round(selectedFile.size / 65000)));
     setPages(estPages || 1);
   }
@@ -83,434 +84,363 @@ export function NewOrder() {
   }
 
   return (
-    <div>
-      <h1
-        style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
-          fontWeight: 900,
-          marginBottom: '24px',
-          letterSpacing: '-0.02em',
-        }}
-      >
-        LET'S GET IT PRINTED.
-      </h1>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {/* Back Link & Title */}
+      <div>
+        <Link
+          to="/dashboard"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 800,
+            fontSize: '0.85rem',
+            color: '#000',
+            marginBottom: '10px',
+            textDecoration: 'none',
+          }}
+        >
+          <ArrowLeft size={16} />
+          <span>Back to Dashboard</span>
+        </Link>
+
+        <h1
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)',
+            fontWeight: 900,
+            letterSpacing: '-0.02em',
+            margin: 0,
+          }}
+        >
+          NEW PRINT ORDER
+        </h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '4px' }}>
+          Upload your file and select print options
+        </p>
+      </div>
 
       {error && (
         <div
           style={{
-            background: '#FEE2E2',
-            border: '2px solid #EF4444',
-            color: '#991B1B',
-            borderRadius: '8px',
+            background: '#FECACA',
+            border: '2px solid #000',
+            borderRadius: '6px',
             padding: '12px 16px',
-            marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
+            fontSize: '0.88rem',
             fontWeight: 700,
+            color: '#991B1B',
           }}
         >
-          <AlertCircle size={18} />
-          <span>{error}</span>
+          {error}
         </div>
       )}
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 0.8fr',
-          gap: '28px',
-          alignItems: 'start',
-        }}
-        className="order-grid"
-      >
-        {/* Left Column: Steps 1 & 2 */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Step 1: Upload Document */}
-          <div className="neo-card">
+      {/* Two-Column Grid: Left Upload & Price, Right Settings */}
+      <form onSubmit={handleSubmit}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '24px',
+            alignItems: 'start',
+          }}
+        >
+          {/* Left Column: Dropzone & Price Summary */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {/* Dropzone Card */}
             <div
+              className="neo-card"
               style={{
+                border: '2px dashed #000',
+                background: dragActive ? '#FEF08A' : '#FFFFFF',
+                textAlign: 'center',
+                padding: '40px 24px',
+                cursor: 'pointer',
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
-                gap: '10px',
-                marginBottom: '16px',
+                gap: '16px',
+                transition: 'background 0.15s ease',
               }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragActive(true);
+              }}
+              onDragLeave={() => setDragActive(false)}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
             >
-              <span
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,application/pdf"
+                style={{ display: 'none' }}
+                onChange={(e) => handleFileSelect(e.target.files?.[0])}
+              />
+
+              <PixelDoc size={72} />
+
+              <div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1rem', letterSpacing: '0.04em' }}>
+                  DROP YOUR PDF HERE
+                </div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginTop: '4px' }}>
+                  or
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="neo-btn primary sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fileInputRef.current?.click();
+                }}
+              >
+                Choose a File
+              </button>
+
+              {/* Uploaded File Item Pill */}
+              {file && (
+                <div
+                  style={{
+                    marginTop: '12px',
+                    width: '100%',
+                    background: '#F0FDF4',
+                    border: '2px solid #000',
+                    borderRadius: '8px',
+                    padding: '10px 14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '10px',
+                    boxShadow: '2px 2px 0px #000',
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', textAlign: 'left', minWidth: 0 }}>
+                    <CheckCircle2 size={18} color="#166534" style={{ flexShrink: 0 }} />
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontWeight: 800, fontSize: '0.85rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {file.name}
+                      </div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                        {(file.size / (1024 * 1024)).toFixed(1)} MB · {pages} pages
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFile(null);
+                      setPages(1);
+                    }}
+                    style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#DC2626' }}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Price Summary Card */}
+            <div className="neo-card">
+              <div
                 style={{
-                  background: '#000',
-                  color: '#fff',
-                  width: '26px',
-                  height: '26px',
-                  borderRadius: '50%',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.82rem',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  color: 'var(--text-muted)',
+                  marginBottom: '14px',
+                }}
+              >
+                PRICE SUMMARY
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Print cost</span>
+                  <span style={{ fontWeight: 800 }}>₹{printCost}</span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Binding</span>
+                  <span style={{ fontWeight: 800 }}>₹{bindingCost}</span>
+                </div>
+
+                <div style={{ borderTop: '2px dashed #000', margin: '4px 0' }} />
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.1rem' }}>
+                    Total
+                  </span>
+                  <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.4rem' }}>
+                    ₹{totalCost}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting || !file}
+                className="neo-btn primary full-width"
+                style={{
+                  marginTop: '18px',
+                  padding: '12px',
+                  fontSize: '0.95rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 900,
-                  fontSize: '0.85rem',
+                  gap: '8px',
                 }}
               >
-                1
-              </span>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 800 }}>
-                Upload Document
-              </h2>
+                <span>{submitting ? 'PLACING ORDER…' : 'PLACE ORDER'}</span>
+                <ArrowRight size={18} strokeWidth={2.5} />
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column: PRINT SETTINGS */}
+          <div className="neo-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.88rem',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                borderBottom: '2px solid #000',
+                paddingBottom: '10px',
+              }}
+            >
+              PRINT SETTINGS
             </div>
 
-            {!file ? (
-              <div
-                className={`dropzone ${dragActive ? 'drag-active' : ''}`}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setDragActive(true);
-                }}
-                onDragLeave={() => setDragActive(false)}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Upload size={36} strokeWidth={2.2} />
-                <div className="dropzone-title">DROP YOUR PDF HERE</div>
-                <div className="dropzone-desc">or</div>
+            {/* Copies Counter */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="neo-label">Copies</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <button
                   type="button"
-                  className="neo-btn sm primary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    fileInputRef.current?.click();
-                  }}
+                  className="neo-btn sm"
+                  style={{ width: '34px', height: '34px', padding: 0 }}
+                  onClick={() => setCopies((c) => Math.max(1, c - 1))}
                 >
-                  BROWSE FILES
+                  <Minus size={14} />
                 </button>
-                <div className="dropzone-desc" style={{ marginTop: '4px' }}>
-                  PDF only · Maximum 25 MB
-                </div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".pdf,application/pdf"
-                  style={{ display: 'none' }}
-                  onChange={(e) => handleFileSelect(e.target.files?.[0])}
-                />
+                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.1rem', minWidth: '24px', textAlign: 'center' }}>
+                  {copies}
+                </span>
+                <button
+                  type="button"
+                  className="neo-btn sm"
+                  style={{ width: '34px', height: '34px', padding: 0 }}
+                  onClick={() => setCopies((c) => Math.min(50, c + 1))}
+                >
+                  <Plus size={14} />
+                </button>
               </div>
-            ) : (
-              <div
-                style={{
-                  border: '2px solid #000',
-                  borderRadius: '8px',
-                  padding: '14px 18px',
-                  background: '#FFFDF9',
-                  boxShadow: '2px 2px 0px #000',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '12px',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div
-                    style={{
-                      background: '#FEE2E2',
-                      border: '1.5px solid #000',
-                      borderRadius: '6px',
-                      padding: '8px',
-                      color: '#DC2626',
-                    }}
-                  >
-                    <FileText size={24} strokeWidth={2.5} />
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.95rem' }}>
-                      {file.name}
-                    </div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                      {(file.size / (1024 * 1024)).toFixed(2)} MB · {pages} pages
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-                    Pages:
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="1000"
-                    value={pages}
-                    onChange={(e) => setPages(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                    style={{
-                      width: '60px',
-                      padding: '4px 8px',
-                      border: '2px solid #000',
-                      borderRadius: '4px',
-                      fontFamily: 'var(--font-heading)',
-                      fontWeight: 700,
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setFile(null)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '4px',
-                    }}
-                    title="Remove file"
-                  >
-                    <X size={18} />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Step 2: Print Options */}
-          <div className="neo-card">
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginBottom: '16px',
-              }}
-            >
-              <span
-                style={{
-                  background: '#000',
-                  color: '#fff',
-                  width: '26px',
-                  height: '26px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 900,
-                  fontSize: '0.85rem',
-                }}
-              >
-                2
-              </span>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 800 }}>
-                Print Options
-              </h2>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              {/* Copies */}
-              <div>
-                <label className="neo-label">Copies</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <button
-                    type="button"
-                    className="neo-btn sm"
-                    onClick={() => setCopies(Math.max(1, copies - 1))}
-                  >
-                    <Minus size={14} />
-                  </button>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: '1.2rem',
-                      fontWeight: 800,
-                      minWidth: '36px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {copies}
-                  </span>
-                  <button
-                    type="button"
-                    className="neo-btn sm"
-                    onClick={() => setCopies(copies + 1)}
-                  >
-                    <Plus size={14} />
-                  </button>
-                </div>
+            {/* Color Mode */}
+            <div>
+              <span className="neo-label" style={{ marginBottom: '8px' }}>Color</span>
+              <div className="option-grid">
+                <button
+                  type="button"
+                  className={`option-btn ${colorMode === 'bw' ? 'selected' : ''}`}
+                  onClick={() => setColorMode('bw')}
+                >
+                  B&W
+                </button>
+                <button
+                  type="button"
+                  className={`option-btn ${colorMode === 'color' ? 'selected' : ''}`}
+                  onClick={() => setColorMode('color')}
+                >
+                  Color
+                </button>
               </div>
+            </div>
 
-              {/* Color Mode */}
-              <div>
-                <label className="neo-label">Color Mode</label>
-                <div className="option-group">
-                  <button
-                    type="button"
-                    className={`option-btn ${colorMode === 'bw' ? 'selected' : ''}`}
-                    onClick={() => setColorMode('bw')}
-                  >
-                    B&W (₹2/pg)
-                  </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${colorMode === 'color' ? 'selected' : ''}`}
-                    onClick={() => setColorMode('color')}
-                  >
-                    Color (₹8/pg)
-                  </button>
-                </div>
+            {/* Sides */}
+            <div>
+              <span className="neo-label" style={{ marginBottom: '8px' }}>Sides</span>
+              <div className="option-grid">
+                <button
+                  type="button"
+                  className={`option-btn ${sided === 'single' ? 'selected' : ''}`}
+                  onClick={() => setSided('single')}
+                >
+                  Single
+                </button>
+                <button
+                  type="button"
+                  className={`option-btn ${sided === 'double' ? 'selected' : ''}`}
+                  onClick={() => setSided('double')}
+                >
+                  Double
+                </button>
               </div>
+            </div>
 
-              {/* Sided */}
-              <div>
-                <label className="neo-label">Sides</label>
-                <div className="option-group">
+            {/* Paper Size */}
+            <div>
+              <span className="neo-label" style={{ marginBottom: '8px' }}>Paper Size</span>
+              <div className="option-grid">
+                {['A4', 'Letter', 'A3'].map((size) => (
                   <button
+                    key={size}
                     type="button"
-                    className={`option-btn ${sided === 'single' ? 'selected' : ''}`}
-                    onClick={() => setSided('single')}
+                    className={`option-btn ${paperSize === size ? 'selected' : ''}`}
+                    onClick={() => setPaperSize(size)}
                   >
-                    Single-sided
+                    {size}
                   </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${sided === 'double' ? 'selected' : ''}`}
-                    onClick={() => setSided('double')}
-                  >
-                    Double-sided
-                  </button>
-                </div>
+                ))}
               </div>
+            </div>
 
-              {/* Paper Size */}
-              <div>
-                <label className="neo-label">Paper Size</label>
-                <div className="option-group">
+            {/* Binding */}
+            <div>
+              <span className="neo-label" style={{ marginBottom: '8px' }}>Binding</span>
+              <div className="option-grid">
+                {[
+                  { id: 'none', label: 'None' },
+                  { id: 'staple', label: 'Staple' },
+                  { id: 'spiral', label: 'Spiral' },
+                ].map((b) => (
                   <button
+                    key={b.id}
                     type="button"
-                    className={`option-btn ${paperSize === 'A4' ? 'selected' : ''}`}
-                    onClick={() => setPaperSize('A4')}
+                    className={`option-btn ${binding === b.id ? 'selected' : ''}`}
+                    onClick={() => setBinding(b.id)}
                   >
-                    A4 (Standard)
+                    {b.label}
                   </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${paperSize === 'A3' ? 'selected' : ''}`}
-                    onClick={() => setPaperSize('A3')}
-                  >
-                    A3 (Poster)
-                  </button>
-                </div>
+                ))}
               </div>
+            </div>
 
-              {/* Binding */}
-              <div>
-                <label className="neo-label">Binding</label>
-                <div className="option-group">
-                  <button
-                    type="button"
-                    className={`option-btn ${binding === 'none' ? 'selected' : ''}`}
-                    onClick={() => setBinding('none')}
-                  >
-                    None (₹0)
-                  </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${binding === 'staple' ? 'selected' : ''}`}
-                    onClick={() => setBinding('staple')}
-                  >
-                    Stapled (₹5)
-                  </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${binding === 'spiral' ? 'selected' : ''}`}
-                    onClick={() => setBinding('spiral')}
-                  >
-                    Spiral (₹30)
-                  </button>
-                </div>
-              </div>
-
-              {/* Special Instructions */}
-              <div>
-                <label className="neo-label">Special Instructions (Optional)</label>
-                <textarea
-                  className="neo-textarea"
-                  rows="2"
-                  placeholder="e.g. Please print page 1 in color, rest B&W"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                />
-              </div>
+            {/* Notes */}
+            <div className="neo-input-group" style={{ marginBottom: 0 }}>
+              <span className="neo-label">Notes (optional)</span>
+              <textarea
+                rows={2}
+                className="neo-textarea"
+                placeholder="Any special instructions?"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+              />
             </div>
           </div>
         </div>
-
-        {/* Right Column: Sticky Receipt Card */}
-        <div className="sticky-receipt">
-          <div className="receipt-header">
-            <span className="receipt-title">YOUR PRINT</span>
-          </div>
-
-          <div className="receipt-body">
-            <div className="receipt-row">
-              <span className="receipt-row-label">Pages</span>
-              <span className="receipt-row-val">{pages}</span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Copies</span>
-              <span className="receipt-row-val">{copies}</span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Color</span>
-              <span className="receipt-row-val">
-                {colorMode === 'color' ? 'Color' : 'B&W'}
-              </span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Sides</span>
-              <span className="receipt-row-val">
-                {sided === 'double' ? 'Double' : 'Single'}
-              </span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Paper</span>
-              <span className="receipt-row-val">{paperSize}</span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Binding</span>
-              <span className="receipt-row-val" style={{ textTransform: 'capitalize' }}>
-                {binding === 'none' ? 'None' : binding === 'staple' ? 'Stapled' : 'Spiral'}
-              </span>
-            </div>
-
-            <div className="receipt-divider" />
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">PRINT COST</span>
-              <span className="receipt-row-val">₹{printCost}</span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">BINDING</span>
-              <span className="receipt-row-val">₹{bindingCost}</span>
-            </div>
-
-            <div className="receipt-total-bar">
-              <span className="receipt-total-label">TOTAL</span>
-              <span className="receipt-total-amt">₹{totalCost}</span>
-            </div>
-
-            <button
-              type="button"
-              className="neo-btn primary full-width"
-              disabled={submitting || !file}
-              onClick={handleSubmit}
-              style={{ padding: '14px', fontSize: '1.05rem', marginTop: '6px' }}
-            >
-              <span>{submitting ? 'PROCESSING…' : 'PLACE ORDER'}</span>
-              <ArrowRight size={20} strokeWidth={2.5} />
-            </button>
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
   );
 }

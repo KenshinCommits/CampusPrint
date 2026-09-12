@@ -1,48 +1,58 @@
 /* =========================================================
-   CAMPUSPRINT NEO-BRUTALIST DESIGN SYSTEM
+   CAMPUSPRINT NEO-BRUTALIST PIXEL UI DESIGN SYSTEM
    ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800;900&display=swap');
 
 :root {
-  /* Color Palette */
+  /* Foundations & Color Palette */
   --bg-cream: #FBF8F1;
-  --bg-subtle: #F3EFE6;
+  --bg-subtle: #F7F4EB;
   --surface-white: #FFFFFF;
   --border-black: #000000;
   
+  /* Retro Dark Navy for Login / Footer */
+  --navy-deep: #0B132B;
+  --navy-surface: #1C2541;
+  --navy-border: #000000;
+  
+  /* Primary Arcade Yellow */
   --yellow-primary: #FFD028;
-  --yellow-light: #FFF066;
-  --yellow-subtle: #FEF9C3;
+  --yellow-arcade: #FFC700;
+  --yellow-light: #FEF08A;
+  --yellow-subtle: #FFFDEB;
   
-  --blue-processing: #3B82F6;
-  --blue-pastel: #DCECFE;
-  --blue-dark: #1D4ED8;
-  
-  --green-ready: #10B981;
-  --green-pastel: #D1FBE2;
-  --green-dark: #047857;
-  
-  --red-rejected: #EF4444;
+  /* Pastel Stat Accents */
+  --blue-sky: #BAE6FD;
+  --blue-pastel: #BAE6FD;
+  --blue-processing: #C7D2FE;
+  --green-mint: #86EFAC;
+  --green-pastel: #BBF7D0;
+  --red-coral: #FECACA;
   --red-pastel: #FEE2E2;
+  --gray-completed: #E5E7EB;
   
-  --text-main: #111111;
-  --text-muted: #555555;
-  --text-subtle: #777777;
+  --text-main: #000000;
+  --text-muted: #4B5563;
+  --text-subtle: #6B7280;
   
-  /* Neo-Brutalist Tokens */
+  /* Neo-Brutalist Borders & Shadows */
   --border-thick: 2px solid #000000;
   --border-extra: 3px solid #000000;
+  --border-dashed: 2px dashed #000000;
+  
+  --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
   
-  --shadow-neo: 3px 3px 0px #000000;
-  --shadow-neo-lg: 4px 4px 0px #000000;
-  --shadow-neo-sm: 2px 2px 0px #000000;
-  --shadow-neo-hover: 5px 5px 0px #000000;
-  --shadow-neo-active: 1px 1px 0px #000000;
+  /* Hard Pixel Drop Shadows */
+  --shadow-neo: 4px 4px 0px #000000;
+  --shadow-neo-sm: 3px 3px 0px #000000;
+  --shadow-neo-lg: 6px 6px 0px #000000;
+  --shadow-neo-active: 0px 0px 0px #000000;
   
   --font-heading: 'Space Grotesk', -apple-system, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
@@ -63,211 +73,213 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---------------- Layout & App Frame ---------------- */
-.app {
+/* ---------------- Main App Shell Layout ---------------- */
+.app-shell {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.content {
-  flex: 1;
-  width: 100%;
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 24px 20px 60px;
-}
-
-/* ---------------- Top Navbar ---------------- */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 24px;
   background-color: var(--bg-cream);
-  border-bottom: var(--border-thick);
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 56px);
+}
+
+/* Sidebar Navigation */
+.app-sidebar {
+  width: 240px;
+  background: var(--bg-cream);
+  border-right: var(--border-thick);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 16px;
   position: sticky;
   top: 0;
-  z-index: 100;
+  height: 100vh;
+  flex-shrink: 0;
 }
 
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.brand-badge {
+.sidebar-logo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: var(--yellow-primary);
-  border: var(--border-thick);
-  box-shadow: var(--shadow-neo-sm);
-  padding: 6px 14px;
+  gap: 10px;
   font-family: var(--font-heading);
+  font-weight: 900;
   font-size: 1.15rem;
-  font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--border-black);
+  color: #000;
   text-decoration: none;
-  border-radius: var(--radius-sm);
-  transition: transform 0.1s ease;
+  padding: 6px 8px;
+  margin-bottom: 24px;
 }
 
-.brand-badge:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: var(--shadow-neo);
-}
-
-.nav-links {
+.sidebar-menu {
   display: flex;
-  align-items: center;
-  gap: 18px;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.nav-link {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--text-main);
-  text-decoration: none;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  transition: all 0.15s ease;
-}
-
-.nav-link:hover {
-  background: var(--bg-subtle);
-}
-
-.nav-link.active {
-  background: var(--surface-white);
-  border: var(--border-thick);
-  box-shadow: var(--shadow-neo-sm);
-}
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.nav-bell-btn {
-  background: var(--surface-white);
-  border: var(--border-thick);
-  box-shadow: var(--shadow-neo-sm);
-  border-radius: var(--radius-sm);
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-}
-
-.nav-bell-dot {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 8px;
-  height: 8px;
-  background: var(--red-rejected);
-  border: 1.5px solid #000;
-  border-radius: 50%;
-}
-
-.user-badge {
+.sidebar-link {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--surface-white);
-  border: var(--border-thick);
-  box-shadow: var(--shadow-neo-sm);
-  padding: 4px 12px 4px 6px;
-  border-radius: var(--radius-full);
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 10px 14px;
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: 0.85rem;
-  color: #fff;
+  font-size: 0.9rem;
+  color: #000;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  transition: all 0.12s ease;
 }
 
-.user-avatar.student {
-  background: #2563EB;
+.sidebar-link:hover {
+  background: var(--bg-subtle);
+  border-color: #000;
 }
 
-.user-avatar.staff {
-  background: #0D9488;
+.sidebar-link.active {
+  background: var(--yellow-primary);
+  border: var(--border-thick);
+  box-shadow: var(--shadow-neo-sm);
 }
 
-.user-info {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-
-.user-name {
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.user-role-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.btn-logout {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: var(--text-muted);
+.sidebar-user-card {
   display: flex;
   align-items: center;
-  padding: 4px;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #FFF;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-neo-sm);
+  border-radius: var(--radius-md);
+  margin-top: auto;
 }
 
-.btn-logout:hover {
-  color: var(--red-rejected);
+/* Main Content Area */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.top-utility-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 14px 28px;
+  gap: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.content-container {
+  flex: 1;
+  padding: 24px 32px 60px;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Retro Navy Footer Bar */
+.retro-footer {
+  background: var(--navy-deep);
+  border-top: var(--border-thick);
+  color: #FFF;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  z-index: 10;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-right {
+  color: #94A3B8;
+  letter-spacing: 0.1em;
 }
 
 /* ---------------- Neo-Brutalist Cards ---------------- */
 .neo-card {
   background: var(--surface-white);
   border: var(--border-thick);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-neo);
   padding: 24px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.neo-card.ticket-dashed {
+  border: var(--border-dashed);
 }
 
 .neo-card.interactive:hover {
   transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-neo-hover);
+  box-shadow: 6px 6px 0px #000;
 }
 
-.neo-card.yellow {
+/* Stat Cards */
+.stat-card {
+  border: var(--border-thick);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-neo);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+.stat-card.yellow {
   background: var(--yellow-primary);
 }
 
-.neo-card.blue {
-  background: var(--blue-pastel);
+.stat-card.sky-blue {
+  background: var(--blue-sky);
 }
 
-.neo-card.green {
-  background: var(--green-pastel);
+.stat-card.cream {
+  background: var(--surface-white);
+}
+
+.stat-card.lavender {
+  background: var(--blue-processing);
+}
+
+.stat-card.mint {
+  background: var(--green-mint);
+}
+
+.stat-card-label {
+  font-family: var(--font-heading);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.stat-card-number {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #000;
 }
 
 /* ---------------- Neo-Brutalist Buttons ---------------- */
@@ -277,12 +289,12 @@ body {
   justify-content: center;
   gap: 8px;
   font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 0.95rem;
-  padding: 10px 18px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 10px 20px;
   border: var(--border-thick);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-neo);
+  box-shadow: var(--shadow-neo-sm);
   background: var(--surface-white);
   color: var(--text-main);
   text-decoration: none;
@@ -294,7 +306,7 @@ body {
 
 .neo-btn:hover:not(:disabled) {
   transform: translate(-1px, -1px);
-  box-shadow: var(--shadow-neo-hover);
+  box-shadow: var(--shadow-neo);
 }
 
 .neo-btn:active:not(:disabled) {
@@ -302,45 +314,84 @@ body {
   box-shadow: var(--shadow-neo-active);
 }
 
-.neo-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
-
-.neo-btn.primary {
+.neo-btn.primary,
+.neo-btn.yellow {
   background: var(--yellow-primary);
   color: #000;
 }
 
-.neo-btn.success {
-  background: var(--green-pastel);
-  color: #000;
-}
-
 .neo-btn.blue {
-  background: var(--blue-pastel);
+  background: var(--blue-sky);
   color: #000;
-}
-
-.neo-btn.danger {
-  background: var(--red-pastel);
-  color: var(--border-black);
 }
 
 .neo-btn.dark {
-  background: var(--border-black);
-  color: #fff;
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.neo-btn.sm {
+  padding: 6px 14px;
+  font-size: 0.82rem;
 }
 
 .neo-btn.full-width {
   width: 100%;
 }
 
-.neo-btn.sm {
-  padding: 6px 12px;
-  font-size: 0.85rem;
+/* ---------------- Retro Pill Badges ---------------- */
+.neo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  border: var(--border-thick);
+  border-radius: var(--radius-full);
+  box-shadow: 1.5px 1.5px 0px #000;
+  white-space: nowrap;
+}
+
+.neo-badge.placed {
+  background: var(--yellow-light);
+  color: #000;
+}
+
+.neo-badge.accepted {
+  background: var(--blue-sky);
+  color: #000;
+}
+
+.neo-badge.processing,
+.neo-badge.printing {
+  background: var(--blue-processing);
+  color: #000;
+}
+
+.neo-badge.ready,
+.neo-badge.paid {
+  background: var(--green-mint);
+  color: #000;
+}
+
+.neo-badge.completed {
+  background: var(--gray-completed);
+  color: #111;
+}
+
+.neo-badge.rejected,
+.neo-badge.cancelled {
+  background: var(--red-coral);
+  color: #000;
+}
+
+.neo-badge.unpaid {
+  background: #FEE2E2;
+  color: #991B1B;
 }
 
 /* ---------------- Form Elements ---------------- */
@@ -353,11 +404,11 @@ body {
 
 .neo-label {
   font-family: var(--font-heading);
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 0.82rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--text-main);
+  letter-spacing: 0.04em;
+  color: #000;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -373,8 +424,8 @@ body {
   box-shadow: var(--shadow-neo-sm);
   font-family: var(--font-body);
   font-size: 0.95rem;
-  background: #fff;
-  color: var(--text-main);
+  background: #FFF;
+  color: #000;
   transition: all 0.15s ease;
 }
 
@@ -382,316 +433,12 @@ body {
 .neo-select:focus,
 .neo-textarea:focus {
   outline: none;
-  background: #fff;
   box-shadow: var(--shadow-neo);
   transform: translate(-1px, -1px);
 }
 
-/* ---------------- Neo Pills & Badges ---------------- */
-.neo-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-heading);
-  font-size: 0.76rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 4px 10px;
-  border: var(--border-thick);
-  border-radius: var(--radius-full);
-  box-shadow: 1.5px 1.5px 0px #000;
-  white-space: nowrap;
-}
-
-.neo-badge.placed {
-  background: var(--yellow-primary);
-  color: #000;
-}
-
-.neo-badge.accepted {
-  background: var(--blue-pastel);
-  color: #000;
-}
-
-.neo-badge.processing,
-.neo-badge.printing {
-  background: #BFDBFE;
-  color: #000;
-}
-
-.neo-badge.ready {
-  background: #86EFAC;
-  color: #000;
-}
-
-.neo-badge.completed {
-  background: #E5E7EB;
-  color: #111;
-}
-
-.neo-badge.rejected,
-.neo-badge.cancelled {
-  background: #FECACA;
-  color: #000;
-}
-
-.neo-badge.paid {
-  background: #86EFAC;
-  color: #000;
-}
-
-.neo-badge.unpaid {
-  background: #FDE68A;
-  color: #000;
-}
-
-/* ---------------- Neo Status Tracker (5-Step) ---------------- */
-.timeline-container {
-  padding: 10px 0;
-  margin-bottom: 24px;
-}
-
-.timeline-steps {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-}
-
-.timeline-track-bg {
-  position: absolute;
-  top: 18px;
-  left: 30px;
-  right: 30px;
-  height: 4px;
-  background: #E5E7EB;
-  border: 1.5px solid #000;
-  z-index: 1;
-}
-
-.timeline-track-fill {
-  position: absolute;
-  top: 18px;
-  left: 30px;
-  height: 4px;
-  background: var(--green-ready);
-  border: 1.5px solid #000;
-  z-index: 2;
-  transition: width 0.3s ease;
-}
-
-.timeline-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  z-index: 3;
-  text-align: center;
-  min-width: 90px;
-}
-
-.step-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: var(--border-thick);
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 0.88rem;
-  box-shadow: var(--shadow-neo-sm);
-  transition: all 0.2s ease;
-}
-
-.timeline-step.completed .step-circle {
-  background: var(--green-pastel);
-  color: #000;
-}
-
-.timeline-step.active .step-circle {
-  background: var(--blue-processing);
-  color: #fff;
-  transform: scale(1.1);
-  box-shadow: var(--shadow-neo);
-}
-
-.step-label {
-  margin-top: 8px;
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.step-time {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-/* ---------------- Neo Tables ---------------- */
-.neo-table-wrapper {
-  overflow-x: auto;
-  border: var(--border-thick);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-neo);
-  background: #fff;
-}
-
-.neo-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 0.9rem;
-}
-
-.neo-table th {
-  background: var(--bg-cream);
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 12px 16px;
-  border-bottom: var(--border-thick);
-  border-right: 1px solid #E5E7EB;
-}
-
-.neo-table th:last-child {
-  border-right: none;
-}
-
-.neo-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid #E5E7EB;
-  border-right: 1px solid #F3F4F6;
-  vertical-align: middle;
-}
-
-.neo-table td:last-child {
-  border-right: none;
-}
-
-.neo-table tr:last-child td {
-  border-bottom: none;
-}
-
-.neo-table tr:hover td {
-  background-color: #FAF8F2;
-}
-
-/* ---------------- Neo Ticket Token ---------------- */
-.neo-ticket {
-  background: var(--yellow-primary);
-  border: 3px solid #000;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-neo-lg);
-  padding: 20px 32px;
-  text-align: center;
-  position: relative;
-  display: inline-block;
-}
-
-.ticket-number {
-  font-family: var(--font-heading);
-  font-size: 2.2rem;
-  font-weight: 900;
-  letter-spacing: 0.05em;
-  color: #000;
-}
-
-.ticket-subtitle {
-  font-family: var(--font-heading);
-  font-size: 0.85rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-top: 4px;
-}
-
-/* ---------------- Metric Cards ---------------- */
-.metrics-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.metric-card {
-  background: #fff;
-  border: var(--border-thick);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-neo);
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.metric-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-heading);
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--text-muted);
-}
-
-.metric-number {
-  font-family: var(--font-heading);
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-/* ---------------- Drag & Drop Upload Zone ---------------- */
-.dropzone {
-  border: 2px dashed #000;
-  background: #FFFDF9;
-  border-radius: var(--radius-md);
-  padding: 36px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.dropzone:hover,
-.dropzone.drag-active {
-  background: var(--yellow-subtle);
-  border-color: #000;
-  transform: translate(-1px, -1px);
-  box-shadow: var(--shadow-neo-sm);
-}
-
-.dropzone-title {
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 1.05rem;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.dropzone-desc {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-/* ---------------- Option Pills / Toggle Selectors ---------------- */
-.option-group {
+/* ---------------- Option Pills / Segmented Controls ---------------- */
+.option-grid {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
@@ -699,14 +446,14 @@ body {
 
 .option-btn {
   flex: 1;
-  min-width: 80px;
-  padding: 8px 14px;
+  min-width: 70px;
+  padding: 8px 12px;
   border: var(--border-thick);
-  border-radius: var(--radius-sm);
-  background: #fff;
+  border-radius: var(--radius-md);
+  background: #FFF;
   font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 0.88rem;
+  font-weight: 800;
+  font-size: 0.85rem;
   cursor: pointer;
   text-align: center;
   box-shadow: var(--shadow-neo-sm);
@@ -720,211 +467,155 @@ body {
 
 .option-btn.selected {
   background: var(--yellow-primary);
-  border-color: #000;
-  box-shadow: var(--shadow-neo);
+  box-shadow: var(--shadow-neo-sm);
 }
 
-/* ---------------- Sticky Receipt / Order Summary ---------------- */
-.sticky-receipt {
-  background: #fff;
+/* ---------------- Neo-Brutalist Table ---------------- */
+.neo-table-container {
   border: var(--border-thick);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-neo-lg);
-  position: sticky;
-  top: 90px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-neo);
+  overflow: hidden;
+  background: #FFF;
 }
 
-.receipt-header {
-  background: var(--yellow-primary);
-  padding: 14px 20px;
+.neo-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.neo-table th {
+  background: #FFF;
   border-bottom: var(--border-thick);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.receipt-title {
+  padding: 12px 16px;
   font-family: var(--font-heading);
-  font-size: 1.1rem;
+  font-size: 0.78rem;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
 }
 
-.receipt-body {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.neo-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #E5E7EB;
+  font-size: 0.9rem;
+  vertical-align: middle;
 }
 
-.receipt-row {
+.neo-table tr:last-child td {
+  border-bottom: none;
+}
+
+.neo-table tr:hover td {
+  background: #FAF8F5;
+}
+
+/* ---------------- Timeline (5-Step) ---------------- */
+.timeline-container {
+  background: #FFF;
+  border: var(--border-thick);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-neo);
+  padding: 24px 20px;
+}
+
+.timeline-steps {
+  position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
+  align-items: flex-start;
 }
 
-.receipt-row-label {
+.timeline-track-bg {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  right: 30px;
+  height: 4px;
+  background: #E5E7EB;
+  border: 1px solid #000;
+  z-index: 1;
+}
+
+.timeline-track-fill {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  height: 4px;
+  background: var(--yellow-primary);
+  border: 1px solid #000;
+  z-index: 2;
+  transition: width 0.4s ease;
+}
+
+.timeline-step {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 110px;
+}
+
+.step-circle {
+  width: 38px;
+  height: 38px;
+  border: var(--border-thick);
+  border-radius: 50%;
+  background: #FFF;
+  box-shadow: var(--shadow-neo-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.timeline-step.completed .step-circle {
+  background: var(--green-mint);
+}
+
+.timeline-step.active .step-circle {
+  background: var(--yellow-primary);
+  transform: scale(1.1);
+}
+
+.step-label {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.step-time {
+  font-size: 0.72rem;
   color: var(--text-muted);
   font-weight: 600;
+  margin-top: 2px;
 }
 
-.receipt-row-val {
-  font-family: var(--font-heading);
-  font-weight: 700;
+/* Animations */
+.spin {
+  animation: spin 1s linear infinite;
 }
 
-.receipt-divider {
-  border-top: 2px dashed #000;
-  margin: 6px 0;
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.receipt-total-bar {
-  background: var(--yellow-subtle);
-  border: var(--border-thick);
-  border-radius: var(--radius-sm);
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.receipt-total-label {
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  font-weight: 900;
-}
-
-.receipt-total-amt {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 900;
-}
-
-/* ---------------- Auth Split Page ---------------- */
-.auth-split-grid {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 40px;
-  align-items: center;
-  min-height: calc(100vh - 160px);
-  padding: 20px 0;
-}
-
-.auth-hero {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.auth-hero-title {
-  font-family: var(--font-heading);
-  font-size: clamp(2.2rem, 4vw, 3.4rem);
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-}
-
-.auth-hero-desc {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  max-width: 500px;
-  line-height: 1.5;
-}
-
-.hero-features {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 10px;
-}
-
-.hero-feature-card {
-  background: #fff;
-  border: var(--border-thick);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-neo-sm);
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.hero-feature-title {
-  font-family: var(--font-heading);
-  font-size: 0.85rem;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.hero-feature-desc {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  line-height: 1.35;
-}
-
-.auth-role-tabs {
-  display: flex;
-  border: var(--border-thick);
-  border-radius: var(--radius-sm);
-  background: #E5E7EB;
-  margin-top: 12px;
-  overflow: hidden;
-}
-
-.auth-role-tab {
-  flex: 1;
-  padding: 8px 12px;
-  background: #fff;
-  border: none;
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.1s ease;
-}
-
-.auth-role-tab.active {
-  background: var(--yellow-primary);
-  box-shadow: inset 0 -2px 0 #000;
-}
-
-/* ---------------- Responsive ---------------- */
 @media (max-width: 900px) {
-  .auth-split-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  .hero-features {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    padding: 12px 16px;
-  }
-  .nav-links {
+  .app-sidebar {
     display: none;
   }
-  .metrics-row {
-    grid-template-columns: 1fr;
-  }
-  .timeline-steps {
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-  }
-  .timeline-track-bg,
-  .timeline-track-fill {
-    display: none;
-  }
-  .timeline-step {
-    flex-direction: row;
-    gap: 12px;
-    text-align: left;
+  .content-container {
+    padding: 16px;
   }
 }
