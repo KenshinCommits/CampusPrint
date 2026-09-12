@@ -497,7 +497,7 @@ export function StudentDashboard() {
               </tr>
             </thead>
             <tbody>
-              {displayOrders.map((o) => {
+              {displayOrders.map((o, idx) => {
                 const isProcessing = o.status === 'processing';
                 const isReady = o.status === 'ready';
                 const isCompleted = o.status === 'completed';
@@ -526,7 +526,7 @@ export function StudentDashboard() {
                 }
 
                 return (
-                  <tr key={o.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                  <tr key={`${o.id || o.token}-${idx}`} style={{ borderBottom: '1px solid #F1F5F9' }}>
                     {/* Token */}
                     <td style={{ padding: '12px 10px' }}>
                       <span
