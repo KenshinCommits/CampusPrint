@@ -174,3 +174,26 @@ Implemented pure, crisp SVG React components with `shapeRendering="crispEdges"` 
 - Retro pixel-styled HTML receipt email template with deep navy header, golden text, dashed token ticket (`CP-1042`), and stationery desk pickup instructions.
 - Automated non-blocking dispatch on order status transition to `ready` or `completed` in `backend/src/routes/staff.js`.
 
+---
+
+## 10. Official 16-Bit Retro Pixel Landing Page (`frontend/src/pages/LandingPage.jsx`)
+- **Route**: Root route (`/`) converted into the complete, high-contrast 16-bit retro landing page.
+- **Color Tokens**:
+  - Deepest Navy: `#000814`
+  - Dark Navy: `#001D3D`
+  - Tech Blue: `#003566`
+  - Golden Yellow: `#FFC300`
+  - Bright Yellow: `#FFD60A`
+  - Retro Off-White / Cream: `#FBF8F1`
+- **Section Architecture**:
+  - **Section A (Top Navigation Bar)**: 72px height, `#000814` background with `4px solid #000814` bottom border. Left pixel cap logo + `CAMPUSPRINT` with `PRINT. PAY. PICK UP.` subtitle; Center links (`Home` active with 3px yellow bar, `How It Works` smooth scroll, `Prices`, `Locations`, `Help` with interactive retro modals); Right `Login` and beveled arcade yellow `Create Account` buttons.
+  - **Section B (Hero Section)**: Dark Navy `#001D3D` background. Left column features massive 3-line headline (`PRINT.`, `PAY.`, `PICK UP.`), monospace cream subtitle, arcade yellow `Get Started >` CTA and dark `▶ How It Works` button. Right column displays authentic pixel art workstation scene (`landing_hero_workstation.png`) featuring desktop laser printer spitting out paper, terminal monitor ("GOOD IDEAS GET PRINTED"), potted plant, coffee mug, paper stacks, and campus clock tower background.
+  - **Section C (4-Step How It Works Bar)**: Warm cream background (`#FBF8F1`) framed by 4px black borders. 4 isolated pixel step icons (`step_upload.png`, `step_pay.png`, `step_print.png`, `step_pickup.png`) for `UPLOAD`, `PAY`, `WE PRINT`, and `PICK UP` with typography in `Press Start 2P` and `Silkscreen`.
+  - **Section D (Social Proof & Campus Skyline Banner)**: Deepest Navy `#000814` with left tagline `"BUILT FOR STUDENTS. POWERED BY CONVENIENCE."`, center pixel art campus skyline silhouette (`landing_skyline.png`), and right live statistics badges (`10K+ Students`, `50K+ Pages Printed`, `4.8 Student Rating`).
+- **Routing & Responsive Behavior**:
+  - `AppLayout.jsx` detects `isLandingPage` to render full-bleed standalone layout without dashboard sidebar or duplicate footer.
+  - Interactive modals for `Prices`, `Locations`, and `Help` equipped with click-outside dismissal and keyboard accessibility.
+  - Smooth-scrolling anchor to `#how-it-works`.
+  - Authenticated session redirects for students (`/dashboard`) and staff (`/staff`).
+
+

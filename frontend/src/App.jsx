@@ -9,6 +9,7 @@ import { MyOrders } from './pages/MyOrders.jsx';
 import { OrderDetail } from './pages/OrderDetail.jsx';
 import { OrderSuccess } from './pages/OrderSuccess.jsx';
 import { StaffDashboard } from './pages/StaffDashboard.jsx';
+import { LandingPage } from './pages/LandingPage.jsx';
 
 function Protected({ role, children }) {
   const { user, loading } = useAuth();
@@ -26,20 +27,14 @@ function Protected({ role, children }) {
   return children;
 }
 
-function Home() {
-  const { user, loading } = useAuth();
-  if (loading) return null;
-  if (!user) return <Navigate to="/login" replace />;
-  return <Navigate to={user.role === 'staff' ? '/staff' : '/dashboard'} replace />;
-}
-
 export default function App() {
   return (
     <AppLayout>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/register" element={<Signup />} />
 
         {/* Student Dashboard */}
         <Route
