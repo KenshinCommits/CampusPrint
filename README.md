@@ -2,6 +2,12 @@
 
 Digital Xerox & Stationery Ordering System — AWS Cloud Trek 2026, Problem Statement 1.
 
+### 🌐 Official Live Deployment (Permanent Link)
+> **Direct Access**: [https://effjm7shr3.execute-api.ap-south-1.amazonaws.com/login](https://effjm7shr3.execute-api.ap-south-1.amazonaws.com/login)
+> - **Protocol**: HTTPS (Port 443) with Amazon Trust Services SSL/TLS
+> - **Architecture**: AWS ECS Fargate + Application Load Balancer + API Gateway HTTP API + Amazon DynamoDB
+> - **Target**: Region `ap-south-1` (Mumbai)
+
 Read **PRD.md** first — it has the full spec, API contract, and the 3-person work split for your remaining hours. This file is just "how do I run it."
 
 ## 1. Run it locally (zero AWS setup — do this first)

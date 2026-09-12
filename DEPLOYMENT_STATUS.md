@@ -1,13 +1,12 @@
-# ?? CampusPrint AWS Deployment - LIVE DEPLOYMENT SUMMARY
+# 🚀 CampusPrint AWS Deployment - LIVE DEPLOYMENT SUMMARY
 
-## ?? Public Application URLs
+## 🌐 Public Application URLs
 
-- **Primary Production URL (Application Load Balancer)**:
-  ?? **http://campusprint-alb-2061311608.ap-south-1.elb.amazonaws.com**
+- **Primary Permanent URL (HTTPS Secure with SSL)**:
+  👉 **https://effjm7shr3.execute-api.ap-south-1.amazonaws.com/login**
 
-- **Direct Frontend**: `http://13.201.7.235`
-- **Direct Backend API**: `http://13.233.88.46:4000`
-- **Health Check**: `http://campusprint-alb-2061311608.ap-south-1.elb.amazonaws.com/health`
+- **Direct Load Balancer**: `http://campusprint-alb-2061311608.ap-south-1.elb.amazonaws.com`
+- **Health Check**: `https://effjm7shr3.execute-api.ap-south-1.amazonaws.com/health` (200 OK)
 
 ---
 

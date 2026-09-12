@@ -25,7 +25,7 @@ $BACKEND_TG = "arn:aws:elasticloadbalancing:ap-south-1:666036096455:targetgroup/
 
 Write-Host "========================================================" -ForegroundColor Cyan
 Write-Host "  CampusPrint: In-Place AWS Rolling Deployment" -ForegroundColor Cyan
-Write-Host "  Live URL will NOT change: https://effjm7shr3.execute-api.ap-south-1.amazonaws.com" -ForegroundColor Green
+Write-Host "  Live URL will NOT change: https://effjm7shr3.execute-api.ap-south-1.amazonaws.com/login" -ForegroundColor Green
 Write-Host "========================================================" -ForegroundColor Cyan
 
 # 1. ECR Login
@@ -113,5 +113,5 @@ if ($Target -eq "backend" -or $Target -eq "both") {
 Write-Host "`n========================================================" -ForegroundColor Cyan
 Write-Host "  Deployment Completed Successfully!" -ForegroundColor Green
 Write-Host "  Permanent Secure HTTPS Link (Unchanged):" -ForegroundColor Cyan
-Write-Host "  👉 https://effjm7shr3.execute-api.ap-south-1.amazonaws.com" -ForegroundColor Green
+Write-Host "  👉 https://effjm7shr3.execute-api.ap-south-1.amazonaws.com/login" -ForegroundColor Green
 Write-Host "========================================================" -ForegroundColor Cyan

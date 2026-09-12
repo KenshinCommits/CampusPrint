@@ -1,12 +1,14 @@
-# ?? CAMPUSPRINT - OFFICIAL AWS DEPLOYMENT
+# 🚀 CAMPUSPRINT - OFFICIAL AWS DEPLOYMENT
 
-## ?? Official AWS Deployment URL
-?? **http://campusprint-alb-2061311608.ap-south-1.elb.amazonaws.com**
+## 🌐 Official Permanent Deployment URL (HTTPS Secure)
+👉 **https://effjm7shr3.execute-api.ap-south-1.amazonaws.com/login**
 
-- **Infrastructure**: AWS Application Load Balancer (ALB) + AWS ECS Fargate
-- **Region**: `ap-south-1`
+- **Protocol**: HTTPS (Port 443) with Amazon Trust Services SSL/TLS
+- **Direct ALB**: http://campusprint-alb-2061311608.ap-south-1.elb.amazonaws.com
+- **Infrastructure**: AWS API Gateway HTTP API + Application Load Balancer + AWS ECS Fargate
+- **Region**: `ap-south-1` (Mumbai)
 - **Database**: AWS DynamoDB (`campusprint-users` & `campusprint-orders`)
-- **Health Check**: http://campusprint-alb-2061311608.ap-south-1.elb.amazonaws.com/health (200 OK)
+- **Health Check**: https://effjm7shr3.execute-api.ap-south-1.amazonaws.com/health (200 OK)
 
 ---
 
