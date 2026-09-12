@@ -10,6 +10,8 @@ import { OrderDetail } from './pages/OrderDetail.jsx';
 import { OrderSuccess } from './pages/OrderSuccess.jsx';
 import { StaffDashboard } from './pages/StaffDashboard.jsx';
 
+import { About } from './pages/About.jsx';
+
 function Protected({ role, children }) {
   const { user, loading } = useAuth();
   if (loading) {
@@ -42,6 +44,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/about" element={<About />} />
 
           {/* Student Dashboard */}
           <Route

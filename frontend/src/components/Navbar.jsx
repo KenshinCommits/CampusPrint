@@ -54,6 +54,12 @@ export function Navbar() {
                 >
                   My Orders
                 </Link>
+                <Link
+                  to="/about"
+                  className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
+                >
+                  About
+                </Link>
               </>
             ) : (
               <>
@@ -74,6 +80,12 @@ export function Navbar() {
                   className={`nav-link ${location.pathname === '/staff' && new URLSearchParams(location.search).get('tab') === 'stats' ? 'active' : ''}`}
                 >
                   Statistics
+                </Link>
+                <Link
+                  to="/about"
+                  className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
+                >
+                  About
                 </Link>
               </>
             )}
@@ -108,6 +120,9 @@ export function Navbar() {
           </>
         ) : (
           <div className="nav-links">
+            <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}>
+              About
+            </Link>
             <Link to="/login" className="nav-link">
               Log In
             </Link>
