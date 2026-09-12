@@ -112,18 +112,12 @@ export function AppLayout({ children }) {
     }
   }
 
-  const isLandingPage = location.pathname === '/';
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/register';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const isStaff = user?.role === 'staff';
 
   function handleLogout() {
     logout();
     navigate('/login');
-  }
-
-  // Root landing page renders full-screen standalone layout
-  if (isLandingPage) {
-    return <main style={{ minHeight: '100vh' }}>{children}</main>;
   }
 
   // If unauthenticated or on login/signup page, don't show full dashboard layout
