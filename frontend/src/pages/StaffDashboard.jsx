@@ -91,7 +91,7 @@ export function StaffDashboard() {
         </button>
       </div>
 
-      {/* Top 5 Metric Cards (Golden Twilight Palette) */}
+      {/* Top 5 Metric Cards (Matching Mockup Slide 6) */}
       <div
         style={{
           display: 'grid',
@@ -102,11 +102,10 @@ export function StaffDashboard() {
         <div
           className="neo-card"
           style={{
-            background: '#FFC300',
-            color: '#000814',
+            background: '#FEF08A',
             padding: '16px',
             cursor: 'pointer',
-            border: statusFilter === 'placed' ? '3px solid #FFD60A' : '2px solid #003566',
+            border: statusFilter === 'placed' ? '3px solid #000' : '2px solid #000',
           }}
           onClick={() => setStatusFilter(statusFilter === 'placed' ? '' : 'placed')}
         >
@@ -121,11 +120,10 @@ export function StaffDashboard() {
         <div
           className="neo-card"
           style={{
-            background: '#003566',
-            color: '#F8FAFC',
+            background: '#BFDBFE',
             padding: '16px',
             cursor: 'pointer',
-            border: statusFilter === 'accepted' ? '3px solid #FFC300' : '2px solid #002855',
+            border: statusFilter === 'accepted' ? '3px solid #000' : '2px solid #000',
           }}
           onClick={() => setStatusFilter(statusFilter === 'accepted' ? '' : 'accepted')}
         >
@@ -140,11 +138,10 @@ export function StaffDashboard() {
         <div
           className="neo-card"
           style={{
-            background: '#002855',
-            color: '#FFD60A',
+            background: '#93C5FD',
             padding: '16px',
             cursor: 'pointer',
-            border: statusFilter === 'processing' ? '3px solid #FFD60A' : '2px solid #003566',
+            border: statusFilter === 'processing' ? '3px solid #000' : '2px solid #000',
           }}
           onClick={() => setStatusFilter(statusFilter === 'processing' ? '' : 'processing')}
         >
@@ -159,11 +156,10 @@ export function StaffDashboard() {
         <div
           className="neo-card"
           style={{
-            background: '#064E3B',
-            color: '#6EE7B7',
+            background: '#86EFAC',
             padding: '16px',
             cursor: 'pointer',
-            border: statusFilter === 'ready' ? '3px solid #34D399' : '2px solid #003566',
+            border: statusFilter === 'ready' ? '3px solid #000' : '2px solid #000',
           }}
           onClick={() => setStatusFilter(statusFilter === 'ready' ? '' : 'ready')}
         >
@@ -178,16 +174,14 @@ export function StaffDashboard() {
         <div
           className="neo-card"
           style={{
-            background: 'var(--surface-white)',
-            color: 'var(--text-main)',
-            border: '2px solid #003566',
+            background: '#FFFDF9',
             padding: '16px',
           }}
         >
           <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text-muted)' }}>
             TODAY'S ORDERS
           </div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px', color: '#FFC300' }}>
+          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
             {stats.todayTotal || stats.totalOrders || 0}
           </div>
         </div>
@@ -200,11 +194,11 @@ export function StaffDashboard() {
           gap: '12px',
           flexWrap: 'wrap',
           alignItems: 'center',
-          background: 'var(--surface-white)',
-          border: '2px solid #003566',
+          background: '#fff',
+          border: '2px solid #000',
           borderRadius: '8px',
           padding: '12px 16px',
-          boxShadow: '2px 2px 0px #000814',
+          boxShadow: '2px 2px 0px #000',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: '220px' }}>
@@ -220,8 +214,6 @@ export function StaffDashboard() {
               width: '100%',
               fontSize: '0.9rem',
               fontFamily: 'inherit',
-              background: 'transparent',
-              color: 'var(--text-main)',
             }}
           />
         </div>

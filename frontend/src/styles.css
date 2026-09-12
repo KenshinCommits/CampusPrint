@@ -5,44 +5,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap');
 
 :root {
-  /* Golden Twilight Color Palette */
-  --bg-cream: #000814;          /* Deepest Midnight Navy Background */
-  --bg-subtle: #001428;         /* Subtle Secondary Dark Surface */
-  --surface-white: #001D3D;     /* Dark Navy Surface (Cards, Tables, Panels) */
-  --border-black: #003566;      /* Twilight Royal Blue Borders */
+  /* Color Palette */
+  --bg-cream: #FBF8F1;
+  --bg-subtle: #F3EFE6;
+  --surface-white: #FFFFFF;
+  --border-black: #000000;
   
-  --yellow-primary: #FFC300;    /* Warm Golden Amber Primary */
-  --yellow-light: #FFD60A;      /* Radiant Sun Yellow Highlight */
-  --yellow-subtle: #002855;     /* Deep Twilight Accent */
+  --yellow-primary: #FFD028;
+  --yellow-light: #FFF066;
+  --yellow-subtle: #FEF9C3;
   
-  --blue-processing: #003566;   /* Royal Twilight Blue */
-  --blue-pastel: #002244;       /* Deep Navy Pastel */
-  --blue-dark: #FFC300;         /* Primary Contrast Accent */
+  --blue-processing: #3B82F6;
+  --blue-pastel: #DCECFE;
+  --blue-dark: #1D4ED8;
   
   --green-ready: #10B981;
-  --green-pastel: #064E3B;
-  --green-dark: #34D399;
+  --green-pastel: #D1FBE2;
+  --green-dark: #047857;
   
   --red-rejected: #EF4444;
-  --red-pastel: #450A0A;
+  --red-pastel: #FEE2E2;
   
-  --text-main: #F8FAFC;         /* High-contrast crisp white text */
-  --text-muted: #94A3B8;        /* Soft slate text */
-  --text-subtle: #64748B;       /* Dim text */
+  --text-main: #111111;
+  --text-muted: #555555;
+  --text-subtle: #777777;
   
   /* Neo-Brutalist Tokens */
-  --border-thick: 2px solid #003566;
-  --border-extra: 3px solid #003566;
+  --border-thick: 2px solid #000000;
+  --border-extra: 3px solid #000000;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-full: 9999px;
   
-  --shadow-neo: 3px 3px 0px #000814;
-  --shadow-neo-lg: 4px 4px 0px #000814;
-  --shadow-neo-sm: 2px 2px 0px #000814;
-  --shadow-neo-hover: 5px 5px 0px #000814;
-  --shadow-neo-active: 1px 1px 0px #000814;
+  --shadow-neo: 3px 3px 0px #000000;
+  --shadow-neo-lg: 4px 4px 0px #000000;
+  --shadow-neo-sm: 2px 2px 0px #000000;
+  --shadow-neo-hover: 5px 5px 0px #000000;
+  --shadow-neo-active: 1px 1px 0px #000000;
   
   --font-heading: 'Space Grotesk', -apple-system, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
@@ -109,16 +109,14 @@ body {
   font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #000814;
+  color: var(--border-black);
   text-decoration: none;
   border-radius: var(--radius-sm);
-  transition: transform 0.1s ease, background 0.15s ease;
+  transition: transform 0.1s ease;
 }
 
 .brand-badge:hover {
   transform: translate(-1px, -1px);
-  background: var(--yellow-light);
-  color: #000814;
   box-shadow: var(--shadow-neo);
 }
 
@@ -132,7 +130,7 @@ body {
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 0.95rem;
-  color: #CBD5E1;
+  color: var(--text-main);
   text-decoration: none;
   padding: 6px 12px;
   border-radius: var(--radius-sm);
@@ -140,14 +138,12 @@ body {
 }
 
 .nav-link:hover {
-  background: #001D3D;
-  color: #FFD60A;
+  background: var(--bg-subtle);
 }
 
 .nav-link.active {
-  background: #001D3D;
+  background: var(--surface-white);
   border: var(--border-thick);
-  color: #FFC300;
   box-shadow: var(--shadow-neo-sm);
 }
 
@@ -169,7 +165,6 @@ body {
   justify-content: center;
   cursor: pointer;
   position: relative;
-  color: var(--text-main);
 }
 
 .nav-bell-dot {
@@ -178,8 +173,8 @@ body {
   right: 6px;
   width: 8px;
   height: 8px;
-  background: var(--yellow-primary);
-  border: 1.5px solid #000814;
+  background: var(--red-rejected);
+  border: 1.5px solid #000;
   border-radius: 50%;
 }
 
@@ -198,7 +193,7 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 2px solid #003566;
+  border: 2px solid #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,15 +204,11 @@ body {
 }
 
 .user-avatar.student {
-  background: #003566;
-  color: #FFD60A;
-  border: 2px solid #FFC300;
+  background: #2563EB;
 }
 
 .user-avatar.staff {
-  background: #FFC300;
-  color: #000814;
-  border: 2px solid #003566;
+  background: #0D9488;
 }
 
 .user-info {
@@ -269,18 +260,14 @@ body {
 
 .neo-card.yellow {
   background: var(--yellow-primary);
-  color: #000814;
-  border: var(--border-thick);
 }
 
 .neo-card.blue {
-  background: var(--blue-processing);
-  color: #F8FAFC;
+  background: var(--blue-pastel);
 }
 
 .neo-card.green {
-  background: #064E3B;
-  color: #6EE7B7;
+  background: var(--green-pastel);
 }
 
 /* ---------------- Neo-Brutalist Buttons ---------------- */
@@ -308,8 +295,6 @@ body {
 .neo-btn:hover:not(:disabled) {
   transform: translate(-1px, -1px);
   box-shadow: var(--shadow-neo-hover);
-  background: #002855;
-  color: #FFD60A;
 }
 
 .neo-btn:active:not(:disabled) {
@@ -326,37 +311,27 @@ body {
 
 .neo-btn.primary {
   background: var(--yellow-primary);
-  color: #000814;
-  border: var(--border-thick);
-}
-
-.neo-btn.primary:hover:not(:disabled) {
-  background: var(--yellow-light);
-  color: #000814;
+  color: #000;
 }
 
 .neo-btn.success {
-  background: #065F46;
-  color: #6EE7B7;
-  border-color: #047857;
+  background: var(--green-pastel);
+  color: #000;
 }
 
 .neo-btn.blue {
-  background: #003566;
-  color: #F8FAFC;
-  border-color: #004B8D;
+  background: var(--blue-pastel);
+  color: #000;
 }
 
 .neo-btn.danger {
-  background: #7F1D1D;
-  color: #FECACA;
-  border-color: #DC2626;
+  background: var(--red-pastel);
+  color: var(--border-black);
 }
 
 .neo-btn.dark {
-  background: #000814;
-  color: #FFC300;
-  border: 2px solid #FFC300;
+  background: var(--border-black);
+  color: #fff;
 }
 
 .neo-btn.full-width {
@@ -398,7 +373,7 @@ body {
   box-shadow: var(--shadow-neo-sm);
   font-family: var(--font-body);
   font-size: 0.95rem;
-  background: #000E20;
+  background: #fff;
   color: var(--text-main);
   transition: all 0.15s ease;
 }
@@ -407,15 +382,9 @@ body {
 .neo-select:focus,
 .neo-textarea:focus {
   outline: none;
-  background: #00142B;
-  border-color: #FFD60A;
-  box-shadow: 3px 3px 0px #FFC300;
+  background: #fff;
+  box-shadow: var(--shadow-neo);
   transform: translate(-1px, -1px);
-}
-
-.neo-select option {
-  background: #001D3D;
-  color: #F8FAFC;
 }
 
 /* ---------------- Neo Pills & Badges ---------------- */
@@ -431,58 +400,50 @@ body {
   padding: 4px 10px;
   border: var(--border-thick);
   border-radius: var(--radius-full);
-  box-shadow: 1.5px 1.5px 0px #000814;
+  box-shadow: 1.5px 1.5px 0px #000;
   white-space: nowrap;
 }
 
 .neo-badge.placed {
   background: var(--yellow-primary);
-  color: #000814;
-  border-color: #003566;
+  color: #000;
 }
 
 .neo-badge.accepted {
-  background: #003566;
-  color: #FFD60A;
-  border-color: #004B8D;
+  background: var(--blue-pastel);
+  color: #000;
 }
 
 .neo-badge.processing,
 .neo-badge.printing {
-  background: #002855;
-  color: #60A5FA;
-  border-color: #003566;
+  background: #BFDBFE;
+  color: #000;
 }
 
 .neo-badge.ready {
-  background: #065F46;
-  color: #6EE7B7;
-  border-color: #047857;
+  background: #86EFAC;
+  color: #000;
 }
 
 .neo-badge.completed {
-  background: #1E293B;
-  color: #94A3B8;
-  border-color: #334155;
+  background: #E5E7EB;
+  color: #111;
 }
 
 .neo-badge.rejected,
 .neo-badge.cancelled {
-  background: #7F1D1D;
-  color: #FCA5A5;
-  border-color: #991B1B;
+  background: #FECACA;
+  color: #000;
 }
 
 .neo-badge.paid {
-  background: #065F46;
-  color: #6EE7B7;
-  border-color: #047857;
+  background: #86EFAC;
+  color: #000;
 }
 
 .neo-badge.unpaid {
-  background: #78350F;
-  color: #FDE68A;
-  border-color: #92400E;
+  background: #FDE68A;
+  color: #000;
 }
 
 /* ---------------- Neo Status Tracker (5-Step) ---------------- */
@@ -505,8 +466,8 @@ body {
   left: 30px;
   right: 30px;
   height: 4px;
-  background: #001428;
-  border: 1.5px solid #003566;
+  background: #E5E7EB;
+  border: 1.5px solid #000;
   z-index: 1;
 }
 
@@ -515,8 +476,8 @@ body {
   top: 18px;
   left: 30px;
   height: 4px;
-  background: #FFC300;
-  border: 1.5px solid #FFD60A;
+  background: var(--green-ready);
+  border: 1.5px solid #000;
   z-index: 2;
   transition: width 0.3s ease;
 }
@@ -536,8 +497,7 @@ body {
   height: 36px;
   border-radius: 50%;
   border: var(--border-thick);
-  background: #001D3D;
-  color: #94A3B8;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -549,15 +509,13 @@ body {
 }
 
 .timeline-step.completed .step-circle {
-  background: #FFD60A;
-  color: #000814;
-  border-color: #FFC300;
+  background: var(--green-pastel);
+  color: #000;
 }
 
 .timeline-step.active .step-circle {
-  background: #FFC300;
-  color: #000814;
-  border-color: #FFD60A;
+  background: var(--blue-processing);
+  color: #fff;
   transform: scale(1.1);
   box-shadow: var(--shadow-neo);
 }
@@ -583,7 +541,7 @@ body {
   border: var(--border-thick);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-neo);
-  background: var(--surface-white);
+  background: #fff;
 }
 
 .neo-table {
@@ -594,16 +552,15 @@ body {
 }
 
 .neo-table th {
-  background: #001428;
+  background: var(--bg-cream);
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #FFC300;
   padding: 12px 16px;
   border-bottom: var(--border-thick);
-  border-right: 1px solid #003566;
+  border-right: 1px solid #E5E7EB;
 }
 
 .neo-table th:last-child {
@@ -612,9 +569,8 @@ body {
 
 .neo-table td {
   padding: 12px 16px;
-  border-bottom: 1px solid #002855;
-  border-right: 1px solid #002855;
-  color: var(--text-main);
+  border-bottom: 1px solid #E5E7EB;
+  border-right: 1px solid #F3F4F6;
   vertical-align: middle;
 }
 
@@ -627,20 +583,19 @@ body {
 }
 
 .neo-table tr:hover td {
-  background-color: #002952;
+  background-color: #FAF8F2;
 }
 
 /* ---------------- Neo Ticket Token ---------------- */
 .neo-ticket {
   background: var(--yellow-primary);
-  border: 3px solid #000814;
+  border: 3px solid #000;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-neo-lg);
   padding: 20px 32px;
   text-align: center;
   position: relative;
   display: inline-block;
-  color: #000814;
 }
 
 .ticket-number {
@@ -648,7 +603,7 @@ body {
   font-size: 2.2rem;
   font-weight: 900;
   letter-spacing: 0.05em;
-  color: #000814;
+  color: #000;
 }
 
 .ticket-subtitle {
@@ -669,7 +624,7 @@ body {
 }
 
 .metric-card {
-  background: var(--surface-white);
+  background: #fff;
   border: var(--border-thick);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-neo);
@@ -696,13 +651,12 @@ body {
   font-size: 2rem;
   font-weight: 800;
   line-height: 1;
-  color: var(--yellow-primary);
 }
 
 /* ---------------- Drag & Drop Upload Zone ---------------- */
 .dropzone {
-  border: 2px dashed #003566;
-  background: #001428;
+  border: 2px dashed #000;
+  background: #FFFDF9;
   border-radius: var(--radius-md);
   padding: 36px 20px;
   text-align: center;
@@ -712,13 +666,12 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: var(--text-main);
 }
 
 .dropzone:hover,
 .dropzone.drag-active {
-  background: #002244;
-  border-color: var(--yellow-primary);
+  background: var(--yellow-subtle);
+  border-color: #000;
   transform: translate(-1px, -1px);
   box-shadow: var(--shadow-neo-sm);
 }
@@ -729,7 +682,6 @@ body {
   font-size: 1.05rem;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  color: var(--yellow-primary);
 }
 
 .dropzone-desc {
@@ -751,11 +703,10 @@ body {
   padding: 8px 14px;
   border: var(--border-thick);
   border-radius: var(--radius-sm);
-  background: var(--surface-white);
+  background: #fff;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 0.88rem;
-  color: var(--text-main);
   cursor: pointer;
   text-align: center;
   box-shadow: var(--shadow-neo-sm);
@@ -765,20 +716,17 @@ body {
 .option-btn:hover {
   transform: translate(-1px, -1px);
   box-shadow: var(--shadow-neo);
-  background: #002855;
-  color: #FFD60A;
 }
 
 .option-btn.selected {
   background: var(--yellow-primary);
-  border-color: #FFD60A;
-  color: #000814;
+  border-color: #000;
   box-shadow: var(--shadow-neo);
 }
 
 /* ---------------- Sticky Receipt / Order Summary ---------------- */
 .sticky-receipt {
-  background: var(--surface-white);
+  background: #fff;
   border: var(--border-thick);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-neo-lg);
@@ -788,7 +736,6 @@ body {
 
 .receipt-header {
   background: var(--yellow-primary);
-  color: #000814;
   padding: 14px 20px;
   border-bottom: var(--border-thick);
   border-radius: var(--radius-md) var(--radius-md) 0 0;
@@ -803,7 +750,6 @@ body {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #000814;
 }
 
 .receipt-body {
@@ -828,23 +774,21 @@ body {
 .receipt-row-val {
   font-family: var(--font-heading);
   font-weight: 700;
-  color: var(--text-main);
 }
 
 .receipt-divider {
-  border-top: 2px dashed #003566;
+  border-top: 2px dashed #000;
   margin: 6px 0;
 }
 
 .receipt-total-bar {
-  background: #001428;
+  background: var(--yellow-subtle);
   border: var(--border-thick);
   border-radius: var(--radius-sm);
   padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--yellow-light);
 }
 
 .receipt-total-label {
@@ -857,7 +801,6 @@ body {
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 900;
-  color: var(--yellow-primary);
 }
 
 /* ---------------- Auth Split Page ---------------- */
@@ -883,7 +826,6 @@ body {
   line-height: 1.05;
   letter-spacing: -0.03em;
   text-transform: uppercase;
-  color: var(--text-main);
 }
 
 .auth-hero-desc {
@@ -901,7 +843,7 @@ body {
 }
 
 .hero-feature-card {
-  background: var(--surface-white);
+  background: #fff;
   border: var(--border-thick);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-neo-sm);
@@ -916,7 +858,6 @@ body {
   font-size: 0.85rem;
   font-weight: 800;
   text-transform: uppercase;
-  color: var(--yellow-primary);
 }
 
 .hero-feature-desc {
@@ -929,7 +870,7 @@ body {
   display: flex;
   border: var(--border-thick);
   border-radius: var(--radius-sm);
-  background: #001428;
+  background: #E5E7EB;
   margin-top: 12px;
   overflow: hidden;
 }
@@ -937,8 +878,7 @@ body {
 .auth-role-tab {
   flex: 1;
   padding: 8px 12px;
-  background: var(--surface-white);
-  color: var(--text-muted);
+  background: #fff;
   border: none;
   font-family: var(--font-heading);
   font-weight: 700;
@@ -949,8 +889,7 @@ body {
 
 .auth-role-tab.active {
   background: var(--yellow-primary);
-  color: #000814;
-  box-shadow: inset 0 -2px 0 #000814;
+  box-shadow: inset 0 -2px 0 #000;
 }
 
 /* ---------------- Responsive ---------------- */
