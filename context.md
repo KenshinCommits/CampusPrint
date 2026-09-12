@@ -126,5 +126,51 @@ Custom-crafted 128x128 pixel-grid vector graphics embedded natively in the appli
 ## 7. Git Branches & Synchronization Status
 
 - **Main Branch (`origin/main`)**: Contains all Golden Twilight pixel overhaul commits, 3D printer hardware simulations, and clean production builds.
-- **Feature Branch (`origin/rithwik`)**: Fully synchronized with `main` at commit `19cb083` via fast-forward push.
-- **Latest Commit**: `19cb083` — `feat(ui): complete Golden Twilight 5-color pixel UI design system overhaul`
+- **Feature Branch (`origin/rithwik`)**: Fully synchronized with `main` at commit `f79b743` via fast-forward push.
+- **Latest Commit**: `f79b743` — `feat: implement crisp embedded pixel-art SVG components in Golden Twilight palette`
+
+---
+
+## 8. Embedded Pixel-Art SVG Component Suite (`frontend/src/components/pixel/`)
+
+Implemented pure, crisp SVG React components with `shapeRendering="crispEdges"` in the Golden Twilight palette:
+1. **`PixelCampusBuilding` (`PixelCampusBuilding.jsx`)**:
+   - Isometric 16-bit university campus building (ViewBox `0 0 160 140`).
+   - Central terracotta brick tower (`#E05A47`, `#C2410C`, `#7C2D12`) with pointed slate roof, gold spire, belfry louvers, arched double entrance doors, and round clock face near peak.
+   - Stepped flanking wings with illuminated blue/yellow pixel grid windows (`#7DD3FC`, `#FFD60A`).
+   - Stepped pixel evergreen trees and entrance bushes (`#22C55E`, `#15803D`, `#166534`).
+   - Integrated into the left sidebar bottom directly above `"SAME CAMPUS. BRIGHTER IDEAS."`.
+
+2. **`PixelHeroPrinter` (`PixelHeroPrinter.jsx`)**:
+   - Hero isometric workstation scene (ViewBox `0 0 320 180`).
+   - Chunky dark navy printer chassis (`#001D3D`) outlined in `#000814`.
+   - Top paper input tray with loaded white paper sheets.
+   - Front feeder slot ejecting a clean white A4 document with black horizontal text lines.
+   - Front control panel with two glowing yellow pixel display indicator LEDs (`#FFD60A`) and LCD screen.
+   - Background campus dorm building silhouettes with pixel window cutouts (`#BAE6FD`, `#7DD3FC`).
+   - Potted desk plant / pixel bonsai with graduation cap badge on left desk corner.
+   - Pixel terminal monitor on left desk.
+   - Paper catch tray on right with a loose sheet fluttering down.
+   - 5 floating 8-bit sparkle crosses (`+`) in `#FFD60A`.
+   - Integrated into the Student Dashboard hero card next to `"HEY, STUDENT. READY TO PRINT?"`.
+
+3. **`PixelPrintShopStation` (`PixelPrintShopStation.jsx`)**:
+   - Top-right Print Shop graphic (ViewBox `0 0 200 130`).
+   - Angled isometric navy printer chassis with side panel cooling vents and green status light LED (`#22C55E`).
+   - Multi-tiered stacks of freshly printed white paper sheets piled high on the right tray with approved gold stamp.
+   - Integrated into the top card of the right settings column.
+
+4. **`PixelMetricIcons` (`PixelMetricIcons.jsx`)**:
+   - Three 32x32 crisp isometric pixel icons:
+     - `PixelDocIcon`: White folded paper sheet with cyan/blue text lines and yellow drop shadow. Used for `ACTIVE ORDERS`.
+     - `PixelPackageIcon`: 3D isometric delivery cardboard box with yellow/gold face panels and black pixel seam tape. Used for `READY FOR PICKUP`.
+     - `PixelChartIcon`: 3 ascending pixel bar graph pillars (Green, Yellow, Blue) with black 1px stepped border and gold trend arrow. Used for `TOTAL ORDERS`.
+
+---
+
+## 9. Resend API Email Notifications (`backend/src/utils/mailer.js`)
+- Integrated Resend API with `RESEND_API_KEY`.
+- Helper `sendOrderReadyEmail({ toEmail, studentName, orderToken, fileName, totalCost, pickupTime })`.
+- Retro pixel-styled HTML receipt email template with deep navy header, golden text, dashed token ticket (`CP-1042`), and stationery desk pickup instructions.
+- Automated non-blocking dispatch on order status transition to `ready` or `completed` in `backend/src/routes/staff.js`.
+
