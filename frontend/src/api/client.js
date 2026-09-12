@@ -62,6 +62,7 @@ export const api = {
 
   // Student Order endpoints
   placeOrder: (formData) => request('/orders', { method: 'POST', body: formData, isMultipart: true }),
+  createOrder: (formData) => request('/orders', { method: 'POST', body: formData, isMultipart: true }),
   myOrders: () => request('/orders/mine'),
   getOrder: (id) => request(`/orders/${id}`),
   orderFileUrl: (id) => `${baseURL}/orders/${id}/file?token=${encodeURIComponent(getToken() || '')}`,

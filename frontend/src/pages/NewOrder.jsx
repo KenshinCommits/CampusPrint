@@ -90,12 +90,15 @@ export function NewOrder() {
       formData.append('sided', sided);
       formData.append('paperSize', paperSize);
       formData.append('binding', binding);
+      formData.append('pages', pages);
       formData.append('manualPages', pages);
       formData.append('notes', notes);
       formData.append('paymentMethod', paymentMethod);
 
-      const res = await api.createOrder(formData);
-      navigate(`/order/${res.order.orderId}/success`);
+      const orderFn = api.placeOrder || api.createOrder;
+      const res = await orderFn.call(api, formData);
+      const targetOrderId = res?.order?.orderId || res?.orderId || res?.id;
+      navigate(`/order/${targetOrderId}/success`, { state: { order: res?.order } });
     } catch (err) {
       setError(err.message || 'Failed to submit order');
     } finally {
