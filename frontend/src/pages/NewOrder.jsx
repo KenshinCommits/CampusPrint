@@ -9,7 +9,7 @@ export function NewOrder() {
 
   const [file, setFile] = useState(null);
   const [dragActive, setDragActive] = useState(false);
-  const [pages, setPages] = useState(1);
+  const [pages, setPages] = useState(0);
   const [copies, setCopies] = useState(1);
   const [colorMode, setColorMode] = useState('bw');
   const [sided, setSided] = useState('double');
@@ -24,12 +24,12 @@ export function NewOrder() {
   // Cost calculation matching backend:
   // RATE_BW = 2, RATE_COLOR = 8, none: 0, staple: 5, spiral: 30
   const ratePerPage = colorMode === 'color' ? 8 : 2;
-  const printCost = ratePerPage * pages * copies;
+  const printCost = file && pages > 0 ? ratePerPage * pages * copies : 0;
   const bindingFee = binding === 'spiral' ? 30 : binding === 'staple' ? 5 : 0;
-  const bindingCost = bindingFee * copies;
+  const bindingCost = file && pages > 0 ? bindingFee * copies : 0;
   const totalCost = printCost + bindingCost;
 
-  function handleFileSelect(selectedFile) {
+  async function handleFileSelect(selectedFile) {
     if (!selectedFile) return;
     if (selectedFile.type !== 'application/pdf' && !selectedFile.name.endsWith('.pdf')) {
       setError('Please upload a PDF document.');
@@ -38,9 +38,27 @@ export function NewOrder() {
     setError('');
     setFile(selectedFile);
 
-    // Try reading page count or default based on file size
-    const estPages = Math.max(1, Math.min(50, Math.round(selectedFile.size / 65000)));
-    setPages(estPages || 1);
+    // Accurately parse PDF page count from file buffer
+    try {
+      const buffer = await selectedFile.slice(0, 150000).arrayBuffer();
+      const text = new TextDecoder('latin1').decode(buffer);
+      const countMatch = text.match(/\/Count\s+(\d+)/);
+      if (countMatch && Number(countMatch[1]) > 0) {
+        setPages(Number(countMatch[1]));
+        return;
+      }
+      
+      const fullBuffer = await selectedFile.arrayBuffer();
+      const fullText = new TextDecoder('latin1').decode(fullBuffer);
+      const pageMatches = fullText.match(/\/Type\s*\/Page\b/g);
+      if (pageMatches && pageMatches.length > 0) {
+        setPages(pageMatches.length);
+        return;
+      }
+    } catch {
+      // fallback
+    }
+    setPages(1);
   }
 
   function handleDrop(e) {
@@ -251,7 +269,11 @@ export function NewOrder() {
                   />
                   <button
                     type="button"
-                    onClick={() => setFile(null)}
+                    onClick={() => {
+                      setFile(null);
+                      setPages(0);
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                    }}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -447,7 +469,9 @@ export function NewOrder() {
           <div className="receipt-body">
             <div className="receipt-row">
               <span className="receipt-row-label">Pages</span>
-              <span className="receipt-row-val">{pages}</span>
+              <span className="receipt-row-val">
+                {file && pages > 0 ? `${pages} ${pages === 1 ? 'page' : 'pages'}` : '—'}
+              </span>
             </div>
 
             <div className="receipt-row">
@@ -501,11 +525,17 @@ export function NewOrder() {
             <button
               type="button"
               className="neo-btn primary full-width"
-              disabled={submitting || !file}
+              disabled={submitting || !file || pages <= 0}
               onClick={handleSubmit}
               style={{ padding: '14px', fontSize: '1.05rem', marginTop: '6px' }}
             >
-              <span>{submitting ? 'PROCESSING…' : 'PLACE ORDER'}</span>
+              <span>
+                {submitting
+                  ? 'PROCESSING…'
+                  : !file
+                  ? 'ATTACH PDF FIRST'
+                  : 'PLACE ORDER'}
+              </span>
               <ArrowRight size={20} strokeWidth={2.5} />
             </button>
           </div>
