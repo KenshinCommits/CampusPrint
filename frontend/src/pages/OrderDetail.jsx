@@ -328,10 +328,12 @@ export function OrderDetail() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                background: '#FFD028',
+                background: '#FFC300',
                 boxShadow: '2px 2px 0px #000',
                 border: '2px solid #000',
-                fontWeight: 800,
+                fontWeight: 900,
+                textTransform: 'uppercase',
+                borderRadius: '10px',
               }}
             >
               <Sparkles size={14} />

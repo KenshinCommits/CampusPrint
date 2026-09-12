@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../api/client.js';
 import { PixelPrinter } from '../components/PixelArt.jsx';
+import { NeoCard, NeoButton, StatusBadge } from '../components/ui/index.js';
 import { Plus, FileText, ArrowRight } from 'lucide-react';
 
 export function StudentDashboard() {
@@ -29,22 +30,6 @@ export function StudentDashboard() {
 
   // Most prominent current order (first active or first ready or most recent)
   const currentOrder = activeOrders[0] || readyOrders[0] || orders[0];
-
-  function getStatusBadge(status) {
-    switch (status) {
-      case 'processing':
-        return <span className="neo-badge processing">PRINTING</span>;
-      case 'ready':
-        return <span className="neo-badge ready">READY</span>;
-      case 'completed':
-        return <span className="neo-badge completed">COMPLETED</span>;
-      case 'rejected':
-      case 'cancelled':
-        return <span className="neo-badge rejected">{status}</span>;
-      default:
-        return <span className="neo-badge placed">PLACED</span>;
-    }
-  }
 
   function getProgressPercentage(status) {
     switch (status) {
@@ -75,97 +60,189 @@ export function StudentDashboard() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-      {/* Top Banner with Heading, Button & Pixel Printer */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      {/* 1. Hero Section: Left title & button, Right 2D/pixel printer illustration */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
-          gap: '20px',
+          gap: '24px',
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2rem, 4vw, 2.8rem)',
+              fontSize: 'clamp(2.2rem, 4.5vw, 3rem)',
               fontWeight: 900,
               letterSpacing: '-0.03em',
-              lineHeight: 1.08,
+              lineHeight: 1.05,
               textTransform: 'uppercase',
+              color: '#000000',
             }}
           >
             HEY, {firstName}.<br />READY TO PRINT?
           </h1>
 
           <div>
-            <Link
-              to="/order"
-              className="neo-btn primary"
+            <NeoButton
+              variant="primary"
+              size="lg"
+              onClick={() => navigate('/new-order')}
               style={{
-                fontSize: '0.9rem',
-                padding: '10px 20px',
-                gap: '8px',
+                boxShadow: '4px 4px 0px 0px #000000',
               }}
             >
-              <Plus size={16} strokeWidth={3} />
+              <Plus size={18} strokeWidth={3} />
               <span>+ NEW PRINT ORDER</span>
-            </Link>
+            </NeoButton>
           </div>
         </div>
 
-        {/* Pixel Art Printer Graphic on Top Right */}
+        {/* Right: Clean 2D/pixel printer illustration with yellow accent stars */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <PixelPrinter width={180} height={140} />
+          <PixelPrinter width={190} height={145} />
         </div>
       </div>
 
-      {/* 3-Column Stats Row (Yellow, Sky Blue, White) */}
+      {/* 2. Top Metrics Strip (3 Cards in a row) */}
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '18px',
+          gap: '20px',
         }}
       >
-        <div className="stat-card yellow">
-          <div className="stat-card-label">ACTIVE ORDERS</div>
-          <div className="stat-card-number">{activeOrders.length}</div>
-        </div>
-
-        <div className="stat-card sky-blue">
-          <div className="stat-card-label">READY FOR PICKUP</div>
-          <div className="stat-card-number">{readyOrders.length}</div>
-        </div>
-
-        <div className="stat-card cream">
-          <div className="stat-card-label">TOTAL ORDERS</div>
-          <div className="stat-card-number">{totalOrders}</div>
-        </div>
-      </div>
-
-      {/* CURRENT ORDER Ticket Card */}
-      {currentOrder && (
-        <div
-          className="neo-card"
+        {/* Card 1 ("ACTIVE ORDERS"): Pale yellow background (#FEF08A) */}
+        <NeoCard
+          variant="yellow"
           style={{
-            background: '#FFFFFF',
+            padding: '20px 24px',
+            boxShadow: '3px 3px 0px 0px #000000',
             display: 'flex',
             flexDirection: 'column',
-            gap: '14px',
-            padding: '24px 28px',
+            gap: '8px',
           }}
         >
           <div
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '0.78rem',
+              fontSize: '0.8rem',
+              fontWeight: 900,
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              color: '#000000',
+            }}
+          >
+            ACTIVE ORDERS
+          </div>
+          <div
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '2.5rem',
+              fontWeight: 900,
+              lineHeight: 1,
+              color: '#000000',
+            }}
+          >
+            {activeOrders.length}
+          </div>
+        </NeoCard>
+
+        {/* Card 2 ("READY FOR PICKUP"): Pale sky blue background (#BAE6FD) */}
+        <NeoCard
+          variant="sky"
+          style={{
+            padding: '20px 24px',
+            boxShadow: '3px 3px 0px 0px #000000',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '0.8rem',
+              fontWeight: 900,
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              color: '#000000',
+            }}
+          >
+            READY FOR PICKUP
+          </div>
+          <div
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '2.5rem',
+              fontWeight: 900,
+              lineHeight: 1,
+              color: '#000000',
+            }}
+          >
+            {readyOrders.length}
+          </div>
+        </NeoCard>
+
+        {/* Card 3 ("TOTAL ORDERS"): Clean white/cream background */}
+        <NeoCard
+          variant="default"
+          style={{
+            padding: '20px 24px',
+            boxShadow: '3px 3px 0px 0px #000000',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '0.8rem',
+              fontWeight: 900,
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              color: '#000000',
+            }}
+          >
+            TOTAL ORDERS
+          </div>
+          <div
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '2.5rem',
+              fontWeight: 900,
+              lineHeight: 1,
+              color: '#000000',
+            }}
+          >
+            {totalOrders}
+          </div>
+        </NeoCard>
+      </div>
+
+      {/* 3. Current Active Order Card */}
+      {currentOrder && (
+        <NeoCard
+          variant="default"
+          style={{
+            padding: '24px 28px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '0.8rem',
               fontWeight: 900,
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
-              color: 'var(--text-muted)',
+              color: '#6B7280',
             }}
           >
             CURRENT ORDER
@@ -177,55 +254,60 @@ export function StudentDashboard() {
               alignItems: 'center',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
-              gap: '14px',
+              gap: '16px',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.6rem',
+                  fontSize: '1.75rem',
                   fontWeight: 900,
                   letterSpacing: '-0.02em',
+                  color: '#000000',
                 }}
               >
                 {currentOrder.orderId}
               </span>
 
-              {getStatusBadge(currentOrder.status)}
+              <StatusBadge status={currentOrder.status} />
 
-              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: '0.9rem', color: '#4B5563', fontWeight: 600 }}>
                 {currentOrder.fileName} · {currentOrder.pages} {currentOrder.pages === 1 ? 'page' : 'pages'} ·{' '}
                 {currentOrder.options?.colorMode === 'color' ? 'Color' : 'B&W'} ·{' '}
                 {currentOrder.options?.sided === 'double' ? 'Double-sided' : 'Single'}
               </span>
             </div>
 
-            <Link to={`/order/${currentOrder.orderId}`} className="neo-btn primary sm">
+            <NeoButton
+              variant="primary"
+              size="sm"
+              onClick={() => navigate(`/order/${currentOrder.orderId}`)}
+            >
               <span>VIEW ORDER</span>
               <ArrowRight size={14} strokeWidth={2.5} />
-            </Link>
+            </NeoButton>
           </div>
 
-          {/* Yellow Progress Bar */}
-          <div style={{ marginTop: '6px' }}>
+          {/* Progress Bar: thick progress track with 2px black border and yellow #FFC300 fill */}
+          <div style={{ marginTop: '8px' }}>
             <div
               style={{
                 width: '100%',
-                height: '12px',
-                background: '#F1F5F9',
-                border: '2px solid #000',
-                borderRadius: '999px',
+                height: '14px',
+                backgroundColor: '#F1F5F9',
+                border: '2px solid #000000',
+                borderRadius: '9999px',
                 overflow: 'hidden',
-                boxShadow: '1px 1px 0px #000',
+                boxShadow: '1px 1px 0px 0px #000000',
               }}
             >
               <div
                 style={{
                   width: `${getProgressPercentage(currentOrder.status)}%`,
                   height: '100%',
-                  background: '#FFD028',
-                  borderRight: '2px solid #000',
+                  backgroundColor: '#FFC300',
+                  borderRight: '2px solid #000000',
                   transition: 'width 0.4s ease',
                 }}
               />
@@ -235,35 +317,47 @@ export function StudentDashboard() {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                fontSize: '0.78rem',
+                alignItems: 'center',
+                fontSize: '0.8rem',
                 fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                color: 'var(--text-muted)',
-                marginTop: '8px',
+                fontWeight: 800,
+                color: '#4B5563',
+                marginTop: '10px',
               }}
             >
               <span>{getProgressPercentage(currentOrder.status)}% Completed</span>
-              <span>
+              <span
+                style={{
+                  backgroundColor: '#FEF08A',
+                  border: '1.5px solid #000000',
+                  borderRadius: '9999px',
+                  padding: '2px 10px',
+                  fontSize: '0.72rem',
+                  fontWeight: 900,
+                  color: '#000000',
+                }}
+              >
                 {currentOrder.status === 'ready'
-                  ? 'Ready Now!'
+                  ? 'READY NOW!'
                   : currentOrder.status === 'completed'
-                  ? 'Collected'
-                  : '~5-10 min'}
+                  ? 'COLLECTED'
+                  : '~5-10 MIN'}
               </span>
             </div>
           </div>
-        </div>
+        </NeoCard>
       )}
 
-      {/* RECENT ORDERS Table Container */}
-      <div className="neo-table-container">
+      {/* 4. Recent Orders Table */}
+      <NeoCard variant="default" style={{ padding: 0, overflow: 'hidden' }}>
         <div
           style={{
-            padding: '16px 20px',
-            borderBottom: '2px solid #000',
+            padding: '18px 24px',
+            borderBottom: '2px solid #000000',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            backgroundColor: '#FDFBF7',
           }}
         >
           <div
@@ -273,6 +367,7 @@ export function StudentDashboard() {
               fontSize: '1rem',
               letterSpacing: '0.02em',
               textTransform: 'uppercase',
+              color: '#000000',
             }}
           >
             RECENT ORDERS
@@ -282,9 +377,9 @@ export function StudentDashboard() {
             to="/orders"
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: '0.82rem',
+              fontSize: '0.85rem',
               fontWeight: 800,
-              color: '#000',
+              color: '#000000',
               textDecoration: 'underline',
             }}
           >
@@ -293,52 +388,78 @@ export function StudentDashboard() {
         </div>
 
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center' }}>Loading recent orders…</div>
+          <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
+            Loading recent orders…
+          </div>
         ) : orders.length === 0 ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+          <div style={{ padding: '40px', textAlign: 'center', color: '#6B7280', fontFamily: 'var(--font-heading)', fontWeight: 600 }}>
             No orders placed yet. Click "+ NEW PRINT ORDER" to start.
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
-            <table className="neo-table">
+            <table
+              style={{
+                width: '100%',
+                borderCollapse: 'collapse',
+                textAlign: 'left',
+              }}
+            >
               <thead>
-                <tr>
-                  <th>TOKEN</th>
-                  <th>FILE</th>
-                  <th>STATUS</th>
-                  <th>TOTAL</th>
-                  <th>PLACED</th>
-                  <th>ACTION</th>
+                <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '2px solid #000000' }}>
+                  {['TOKEN', 'FILE', 'STATUS', 'TOTAL', 'PLACED', 'ACTION'].map((h, i) => (
+                    <th
+                      key={i}
+                      style={{
+                        padding: '12px 18px',
+                        fontFamily: 'var(--font-heading)',
+                        fontWeight: 900,
+                        fontSize: '0.78rem',
+                        letterSpacing: '0.04em',
+                        color: '#000000',
+                      }}
+                    >
+                      {h}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {orders.slice(0, 5).map((order) => (
-                  <tr key={order.orderId}>
-                    <td style={{ fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+                {orders.slice(0, 5).map((order, idx) => (
+                  <tr
+                    key={order.orderId}
+                    style={{
+                      borderBottom: idx !== orders.slice(0, 5).length - 1 ? '1.5px solid #E2E8F0' : 'none',
+                      backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FDFBF7',
+                    }}
+                  >
+                    <td style={{ padding: '14px 18px', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.9rem' }}>
                       {order.orderId}
                     </td>
-                    <td>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
-                        <FileText size={15} color="#DC2626" />
+                    <td style={{ padding: '14px 18px' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '0.85rem' }}>
+                        <FileText size={16} color="#DC2626" />
                         <span>{order.fileName}</span>
                       </span>
                     </td>
-                    <td>{getStatusBadge(order.status)}</td>
-                    <td style={{ fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+                    <td style={{ padding: '14px 18px' }}>
+                      <StatusBadge status={order.status} />
+                    </td>
+                    <td style={{ padding: '14px 18px', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.9rem' }}>
                       ₹{order.cost?.total || 0}
                     </td>
-                    <td style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>
+                    <td style={{ padding: '14px 18px', color: '#6B7280', fontSize: '0.82rem', fontWeight: 600 }}>
                       {formatTimeAgo(order.createdAt)}
                     </td>
-                    <td>
-                      <Link
-                        to={`/order/${order.orderId}`}
-                        className="neo-btn sm"
-                        style={{ padding: '4px 10px', fontSize: '0.78rem' }}
+                    <td style={{ padding: '14px 18px' }}>
+                      <NeoButton
+                        variant="primary"
+                        size="sm"
+                        onClick={() => navigate(`/order/${order.orderId}`)}
+                        style={{ padding: '4px 12px', fontSize: '0.75rem' }}
                       >
                         <span>View</span>
-                        <ArrowRight size={12} />
-                      </Link>
+                        <ArrowRight size={12} strokeWidth={2.5} />
+                      </NeoButton>
                     </td>
                   </tr>
                 ))}
@@ -346,7 +467,9 @@ export function StudentDashboard() {
             </table>
           </div>
         )}
-      </div>
+      </NeoCard>
     </div>
   );
 }
+
+export default StudentDashboard;

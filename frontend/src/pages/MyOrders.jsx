@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
+import { NeoCard, NeoButton, StatusBadge } from '../components/ui/index.js';
 import { Search, Filter, FileText, ArrowRight, Plus } from 'lucide-react';
 
 export function MyOrders() {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -32,148 +34,215 @@ export function MyOrders() {
   const totalPages = Math.max(1, Math.ceil(filteredOrders.length / pageSize));
   const paginatedOrders = filteredOrders.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-  function getStatusBadge(status) {
-    switch (status) {
-      case 'processing':
-        return <span className="neo-badge processing">PRINTING</span>;
-      case 'ready':
-        return <span className="neo-badge ready">READY</span>;
-      case 'completed':
-        return <span className="neo-badge completed">COMPLETED</span>;
-      case 'rejected':
-      case 'cancelled':
-        return <span className="neo-badge rejected">{status}</span>;
-      default:
-        return <span className="neo-badge placed">PLACED</span>;
-    }
-  }
-
   function formatDate(dateStr) {
     if (!dateStr) return '11 Sep, 2:03 PM';
     const d = new Date(dateStr);
-    return d.toLocaleDateString([], { day: 'numeric', month: 'short' }) + ', ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    return (
+      d.toLocaleDateString([], { day: 'numeric', month: 'short' }) +
+      ', ' +
+      d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+    );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Top Header: Title & Search Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+      {/* Top Header: Title & Search/Filter Bar */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          gap: '20px',
+        }}
+      >
         <div>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)',
+              fontSize: 'clamp(2rem, 3.8vw, 2.6rem)',
               fontWeight: 900,
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.03em',
               margin: 0,
+              textTransform: 'uppercase',
+              color: '#000000',
             }}
           >
             MY ORDERS
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '4px' }}>
-            Track your print orders and their status
+          <p style={{ color: '#4B5563', fontSize: '0.9rem', marginTop: '4px', fontWeight: 600 }}>
+            Track and inspect your print orders in real time
           </p>
         </div>
 
-        {/* Search & Filter Bar */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', maxWidth: '340px', width: '100%' }}>
+        {/* Top search & filter bar with 2px black borders and hard shadows */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', maxWidth: '380px', width: '100%' }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <Search
-              size={15}
-              style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748B' }}
+              size={18}
+              style={{
+                position: 'absolute',
+                left: '14px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: '#6B7280',
+              }}
             />
             <input
               type="text"
-              className="neo-input"
-              style={{ paddingLeft: '36px', height: '40px', fontSize: '0.85rem' }}
               placeholder="Search token, file or status..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
+              style={{
+                width: '100%',
+                height: '44px',
+                backgroundColor: '#FFFFFF',
+                border: '2px solid #000000',
+                borderRadius: '12px',
+                boxShadow: '3px 3px 0px 0px #000000',
+                paddingLeft: '42px',
+                paddingRight: '14px',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                outline: 'none',
+              }}
             />
           </div>
 
           <button
             type="button"
-            className="neo-btn sm"
-            style={{ height: '40px', width: '40px', padding: 0 }}
-            title="Filters"
+            title="Filter options"
+            style={{
+              height: '44px',
+              width: '44px',
+              borderRadius: '12px',
+              border: '2px solid #000000',
+              backgroundColor: '#FFFFFF',
+              boxShadow: '3px 3px 0px 0px #000000',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+            }}
           >
-            <Filter size={15} />
+            <Filter size={18} />
           </button>
         </div>
       </div>
 
       {/* Orders Table Container */}
-      <div className="neo-table-container">
+      <NeoCard variant="default" style={{ padding: 0, overflow: 'hidden' }}>
         {loading ? (
-          <div style={{ padding: '60px', textAlign: 'center' }}>Loading orders…</div>
+          <div style={{ padding: '60px', textAlign: 'center', fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
+            Loading orders…
+          </div>
         ) : error ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#DC2626' }}>{error}</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: '#DC2626', fontWeight: 700 }}>
+            {error}
+          </div>
         ) : filteredOrders.length === 0 ? (
-          <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
-            <FileText size={44} style={{ margin: '0 auto 12px', opacity: 0.4 }} />
-            <h3 style={{ fontFamily: 'var(--font-heading)', color: '#000', marginBottom: '6px' }}>
+          <div style={{ padding: '60px 20px', textAlign: 'center', color: '#6B7280' }}>
+            <FileText size={48} style={{ margin: '0 auto 14px', opacity: 0.4 }} />
+            <h3 style={{ fontFamily: 'var(--font-heading)', color: '#000000', marginBottom: '6px', fontWeight: 900 }}>
               No orders found
             </h3>
-            <p style={{ fontSize: '0.9rem' }}>You don't have any matching print orders.</p>
-            <Link to="/order" className="neo-btn primary sm" style={{ marginTop: '16px' }}>
-              <Plus size={14} />
-              <span>+ New Print Order</span>
-            </Link>
+            <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>You don't have any matching print orders.</p>
+            <div style={{ marginTop: '20px' }}>
+              <NeoButton variant="primary" size="sm" onClick={() => navigate('/new-order')}>
+                <Plus size={16} strokeWidth={3} />
+                <span>+ New Print Order</span>
+              </NeoButton>
+            </div>
           </div>
         ) : (
           <div>
             <div style={{ overflowX: 'auto' }}>
-              <table className="neo-table">
+              <table
+                style={{
+                  width: '100%',
+                  borderCollapse: 'collapse',
+                  textAlign: 'left',
+                }}
+              >
                 <thead>
-                  <tr>
-                    <th>TOKEN</th>
-                    <th>FILE</th>
-                    <th>DATE</th>
-                    <th>STATUS</th>
-                    <th>PAYMENT</th>
-                    <th>TOTAL</th>
-                    <th>ACTION</th>
+                  <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '2px solid #000000' }}>
+                    {['TOKEN', 'FILE', 'DATE', 'STATUS', 'PAYMENT', 'TOTAL', 'ACTION'].map((h, i) => (
+                      <th
+                        key={i}
+                        style={{
+                          padding: '14px 18px',
+                          fontFamily: 'var(--font-heading)',
+                          fontWeight: 900,
+                          fontSize: '0.8rem',
+                          letterSpacing: '0.04em',
+                          color: '#000000',
+                        }}
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedOrders.map((order) => {
+                  {paginatedOrders.map((order, idx) => {
                     const isPaid = order.paymentStatus === 'paid';
                     return (
-                      <tr key={order.orderId}>
-                        <td style={{ fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+                      <tr
+                        key={order.orderId}
+                        style={{
+                          borderBottom: idx !== paginatedOrders.length - 1 ? '1.5px solid #E2E8F0' : 'none',
+                          backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FDFBF7', // alternating cream/white rows
+                        }}
+                      >
+                        <td style={{ padding: '14px 18px', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.92rem' }}>
                           {order.orderId}
                         </td>
-                        <td>
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
-                            <FileText size={15} color="#DC2626" />
+                        <td style={{ padding: '14px 18px' }}>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '0.88rem' }}>
+                            <FileText size={16} color="#DC2626" />
                             <span>{order.fileName}</span>
                           </span>
                         </td>
-                        <td style={{ color: 'var(--text-muted)', fontSize: '0.84rem' }}>
+                        <td style={{ padding: '14px 18px', color: '#6B7280', fontSize: '0.84rem', fontWeight: 600 }}>
                           {formatDate(order.createdAt)}
                         </td>
-                        <td>{getStatusBadge(order.status)}</td>
-                        <td>
-                          <span className={`neo-badge ${isPaid ? 'paid' : 'unpaid'}`}>
+                        <td style={{ padding: '14px 18px' }}>
+                          <StatusBadge status={order.status} />
+                        </td>
+                        <td style={{ padding: '14px 18px' }}>
+                          <span
+                            style={{
+                              backgroundColor: isPaid ? '#BBF7D0' : '#FECACA',
+                              border: '1.5px solid #000000',
+                              borderRadius: '9999px',
+                              padding: '2px 10px',
+                              fontSize: '0.72rem',
+                              fontFamily: 'var(--font-heading)',
+                              fontWeight: 900,
+                              color: '#000000',
+                              letterSpacing: '0.02em',
+                            }}
+                          >
                             {isPaid ? 'PAID' : 'UNPAID'}
                           </span>
                         </td>
-                        <td style={{ fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+                        <td style={{ padding: '14px 18px', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.92rem' }}>
                           ₹{order.cost?.total || 0}
                         </td>
-                        <td>
-                          <Link
-                            to={`/order/${order.orderId}`}
-                            className="neo-btn sm"
-                            style={{ padding: '4px 10px', fontSize: '0.78rem' }}
+                        <td style={{ padding: '14px 18px' }}>
+                          <NeoButton
+                            variant="primary"
+                            size="sm"
+                            onClick={() => navigate(`/order/${order.orderId}`)}
+                            style={{ padding: '5px 12px', fontSize: '0.75rem' }}
                           >
                             <span>View</span>
-                            <ArrowRight size={12} />
-                          </Link>
+                            <ArrowRight size={12} strokeWidth={2.5} />
+                          </NeoButton>
                         </td>
                       </tr>
                     );
@@ -182,16 +251,16 @@ export function MyOrders() {
               </table>
             </div>
 
-            {/* Pagination Controls at Bottom Right */}
+            {/* Numbered pagination controls at the bottom (< [1] [2] >) */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                padding: '12px 18px',
-                borderTop: '2px solid #000',
-                gap: '6px',
-                background: '#FFF',
+                padding: '14px 20px',
+                borderTop: '2px solid #000000',
+                gap: '8px',
+                backgroundColor: '#FFFFFF',
               }}
             >
               <button
@@ -199,18 +268,19 @@ export function MyOrders() {
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '6px',
-                  border: '2px solid #000',
-                  background: '#FFF',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '8px',
+                  border: '2px solid #000000',
+                  backgroundColor: '#FFFFFF',
                   cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                  opacity: currentPage === 1 ? 0.5 : 1,
-                  fontWeight: 800,
+                  opacity: currentPage === 1 ? 0.4 : 1,
+                  fontWeight: 900,
+                  fontSize: '0.9rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '1px 1px 0px #000',
+                  boxShadow: '2px 2px 0px 0px #000000',
                 }}
               >
                 &lt;
@@ -222,17 +292,19 @@ export function MyOrders() {
                   type="button"
                   onClick={() => setCurrentPage(page)}
                   style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '6px',
-                    border: '2px solid #000',
-                    background: currentPage === page ? '#FFD028' : '#FFF',
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '8px',
+                    border: '2px solid #000000',
+                    backgroundColor: currentPage === page ? '#FFC300' : '#FFFFFF',
                     cursor: 'pointer',
-                    fontWeight: 800,
+                    fontWeight: 900,
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '0.9rem',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '1px 1px 0px #000',
+                    boxShadow: '2px 2px 0px 0px #000000',
                   }}
                 >
                   {page}
@@ -244,18 +316,19 @@ export function MyOrders() {
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '6px',
-                  border: '2px solid #000',
-                  background: '#FFF',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '8px',
+                  border: '2px solid #000000',
+                  backgroundColor: '#FFFFFF',
                   cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                  opacity: currentPage === totalPages ? 0.5 : 1,
-                  fontWeight: 800,
+                  opacity: currentPage === totalPages ? 0.4 : 1,
+                  fontWeight: 900,
+                  fontSize: '0.9rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '1px 1px 0px #000',
+                  boxShadow: '2px 2px 0px 0px #000000',
                 }}
               >
                 &gt;
@@ -263,7 +336,9 @@ export function MyOrders() {
             </div>
           </div>
         )}
-      </div>
+      </NeoCard>
     </div>
   );
 }
+
+export default MyOrders;

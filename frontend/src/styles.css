@@ -12,13 +12,13 @@
   --border-black: #000000;
   
   /* Retro Dark Navy for Login / Footer */
-  --navy-deep: #0B132B;
-  --navy-surface: #1C2541;
+  --navy-deep: #000814;
+  --navy-surface: #001D3D;
   --navy-border: #000000;
   
   /* Primary Arcade Yellow */
-  --yellow-primary: #FFD028;
-  --yellow-arcade: #FFC700;
+  --yellow-primary: #FFC300;
+  --yellow-arcade: #FFD60A;
   --yellow-light: #FEF08A;
   --yellow-subtle: #FFFDEB;
   
