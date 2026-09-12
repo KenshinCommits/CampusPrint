@@ -1,87 +1,117 @@
-# CampusPrint AWS Deployment Script (PowerShell)
-# Pushes Docker images to ECR and creates ECS cluster
-# Usage: .\deploy.ps1 -AccountId 666036096455 -Region ap-south-1
-
+<#
+.SYNOPSIS
+    Deploys code changes to the permanent AWS deployment without changing the live URL.
+.DESCRIPTION
+    Builds the Docker containers, pushes to ECR, triggers an ECS rolling update,
+    and updates the ALB target group so the permanent link remains unchanged.
+.EXAMPLE
+    .\deploy.ps1
+    .\deploy.ps1 -Target both
+    .\deploy.ps1 -Target backend
+#>
 param(
-    [string]$AccountId = "666036096455",
-    [string]$Region = "ap-south-1"
+    [ValidateSet("frontend", "backend", "both")]
+    [string]$Target = "frontend"
 )
 
-$ECR_REGISTRY = "$AccountId.dkr.ecr.$Region.amazonaws.com"
+$ErrorActionPreference = "Stop"
 
-Write-Host "==================================`n" -ForegroundColor Cyan
-Write-Host "CampusPrint AWS Deployment`n" -ForegroundColor Cyan
-Write-Host "==================================`n" -ForegroundColor Cyan
-Write-Host "AWS Account: $AccountId"
-Write-Host "AWS Region: $Region"
-Write-Host "ECR Registry: $ECR_REGISTRY`n"
+$AWS_REGION = "ap-south-1"
+$AWS_ACCOUNT_ID = "666036096455"
+$ECR_REGISTRY = "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+$CLUSTER = "campusprint-cluster"
+$FRONTEND_TG = "arn:aws:elasticloadbalancing:ap-south-1:666036096455:targetgroup/campusprint-tg-frontend/ac8024d4104d726c"
+$BACKEND_TG = "arn:aws:elasticloadbalancing:ap-south-1:666036096455:targetgroup/campusprint-tg-backend/49847851921a0a39"
 
-# Step 1: Create ECR Repositories
-Write-Host "[1/7] Creating ECR Repositories..." -ForegroundColor Yellow
-aws ecr create-repository --repository-name campusprint-backend --region $Region --image-tag-mutability IMMUTABLE 2>$null
-Write-Host "  ✓ Backend repo ready"
+Write-Host "========================================================" -ForegroundColor Cyan
+Write-Host "  CampusPrint: In-Place AWS Rolling Deployment" -ForegroundColor Cyan
+Write-Host "  Live URL will NOT change: https://effjm7shr3.execute-api.ap-south-1.amazonaws.com" -ForegroundColor Green
+Write-Host "========================================================" -ForegroundColor Cyan
 
-aws ecr create-repository --repository-name campusprint-frontend --region $Region --image-tag-mutability IMMUTABLE 2>$null
-Write-Host "  ✓ Frontend repo ready"
+# 1. ECR Login
+Write-Host "`n[1/4] Authenticating Docker with Amazon ECR..." -ForegroundColor Yellow
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+if ($LASTEXITCODE -ne 0) { throw "ECR login failed." }
 
-# Step 2: Authenticate Docker with ECR
-Write-Host "`n[2/7] Authenticating Docker with ECR..." -ForegroundColor Yellow
-$password = aws ecr get-login-password --region $Region
-$password | docker login --username AWS --password-stdin $ECR_REGISTRY
-Write-Host "  ✓ Docker authenticated"
+# 2. Build & Push Frontend
+if ($Target -eq "frontend" -or $Target -eq "both") {
+    Write-Host "`n[2/4] Building and pushing Frontend image..." -ForegroundColor Yellow
+    docker build -t campusprint-frontend:latest -t "$ECR_REGISTRY/campusprint-frontend:latest" ./frontend
+    if ($LASTEXITCODE -ne 0) { throw "Frontend docker build failed." }
 
-# Step 3: Tag Images
-Write-Host "`n[3/7] Tagging Docker Images..." -ForegroundColor Yellow
-docker tag campusprint-backend:test "$ECR_REGISTRY/campusprint-backend:latest"
-docker tag campusprint-backend:test "$ECR_REGISTRY/campusprint-backend:v1"
-docker tag campusprint-frontend:test "$ECR_REGISTRY/campusprint-frontend:latest"
-docker tag campusprint-frontend:test "$ECR_REGISTRY/campusprint-frontend:v1"
-Write-Host "  ✓ Images tagged"
+    docker push "$ECR_REGISTRY/campusprint-frontend:latest"
+    if ($LASTEXITCODE -ne 0) { throw "Frontend docker push failed." }
 
-# Step 4: Push Backend Image
-Write-Host "`n[4/7] Pushing Backend Image to ECR..." -ForegroundColor Yellow
-docker push "$ECR_REGISTRY/campusprint-backend:latest"
-docker push "$ECR_REGISTRY/campusprint-backend:v1"
-Write-Host "  ✓ Backend image pushed"
+    Write-Host "Triggering ECS frontend rolling update..." -ForegroundColor Yellow
+    aws ecs update-service --cluster $CLUSTER --service campusprint-frontend --force-new-deployment --region $AWS_REGION | Out-Null
 
-# Step 5: Push Frontend Image
-Write-Host "`n[5/7] Pushing Frontend Image to ECR..." -ForegroundColor Yellow
-docker push "$ECR_REGISTRY/campusprint-frontend:latest"
-docker push "$ECR_REGISTRY/campusprint-frontend:v1"
-Write-Host "  ✓ Frontend image pushed"
+    Write-Host "Waiting for new ECS frontend task to initialize..." -ForegroundColor Gray
+    Start-Sleep -Seconds 20
 
-# Step 6: Create ECS Cluster
-Write-Host "`n[6/7] Creating ECS Cluster..." -ForegroundColor Yellow
-aws ecs create-cluster --cluster-name campusprint-cluster --region $Region --settings name=containerInsights,value=enabled 2>$null
-Write-Host "  ✓ ECS Cluster created"
+    $newTasks = aws ecs list-tasks --cluster $CLUSTER --service-name campusprint-frontend --region $AWS_REGION --query "taskArns" --output json | ConvertFrom-Json
+    if ($newTasks.Count -gt 0) {
+        $taskDetails = aws ecs describe-tasks --cluster $CLUSTER --tasks $newTasks --region $AWS_REGION --query "tasks[*].[taskArn,createdAt,containers[0].networkInterfaces[0].privateIpv4Address]" --output json | ConvertFrom-Json
+        $sorted = $taskDetails | Sort-Object { $_[1] } -Descending
+        $newIp = $sorted[0][2]
+        
+        if ($newIp) {
+            Write-Host "Registering new frontend IP ($newIp) to ALB target group..." -ForegroundColor Yellow
+            aws elbv2 register-targets --target-group-arn $FRONTEND_TG --targets Id=$newIp,Port=80,AvailabilityZone=ap-south-1a --region $AWS_REGION | Out-Null
+            
+            # Deregister older IPs if any
+            if ($sorted.Count -gt 1) {
+                for ($i = 1; $i -lt $sorted.Count; $i++) {
+                    $oldIp = $sorted[$i][2]
+                    if ($oldIp -and $oldIp -ne $newIp) {
+                        Write-Host "Deregistering previous target IP ($oldIp)..." -ForegroundColor Gray
+                        aws elbv2 deregister-targets --target-group-arn $FRONTEND_TG --targets Id=$oldIp,Port=80,AvailabilityZone=ap-south-1a --region $AWS_REGION | Out-Null
+                    }
+                }
+            }
+        }
+    }
+}
 
-# Step 7: Get VPC Configuration
-Write-Host "`n[7/7] Getting VPC Configuration..." -ForegroundColor Yellow
-$DefaultVPC = aws ec2 describe-vpcs --filters Name=isDefault,Values=true --region $Region --query 'Vpcs[0].VpcId' --output text
-$Subnet = aws ec2 describe-subnets --filters Name=vpc-id,Values=$DefaultVPC --region $Region --query 'Subnets[0].SubnetId' --output text
-$SecurityGroup = aws ec2 describe-security-groups --filters Name=vpc-id,Values=$DefaultVPC --region $Region --query 'SecurityGroups[0].GroupId' --output text
-Write-Host "  ✓ VPC info retrieved"
+# 3. Build & Push Backend
+if ($Target -eq "backend" -or $Target -eq "both") {
+    Write-Host "`n[3/4] Building and pushing Backend image..." -ForegroundColor Yellow
+    docker build -t campusprint-backend:latest -t "$ECR_REGISTRY/campusprint-backend:latest" ./backend
+    if ($LASTEXITCODE -ne 0) { throw "Backend docker build failed." }
 
-Write-Host "`n==================================`n" -ForegroundColor Green
-Write-Host "✅ Deployment Complete!`n" -ForegroundColor Green
-Write-Host "==================================`n" -ForegroundColor Green
+    docker push "$ECR_REGISTRY/campusprint-backend:latest"
+    if ($LASTEXITCODE -ne 0) { throw "Backend docker push failed." }
 
-Write-Host "Backend Image:" -ForegroundColor Cyan
-Write-Host "  $ECR_REGISTRY/campusprint-backend:latest`n"
+    Write-Host "Triggering ECS backend rolling update..." -ForegroundColor Yellow
+    aws ecs update-service --cluster $CLUSTER --service campusprint-backend --force-new-deployment --region $AWS_REGION | Out-Null
 
-Write-Host "Frontend Image:" -ForegroundColor Cyan
-Write-Host "  $ECR_REGISTRY/campusprint-frontend:latest`n"
+    Write-Host "Waiting for new ECS backend task to initialize..." -ForegroundColor Gray
+    Start-Sleep -Seconds 20
 
-Write-Host "ECS Cluster: campusprint-cluster" -ForegroundColor Cyan
-Write-Host "AWS Region: $Region`n"
+    $newTasks = aws ecs list-tasks --cluster $CLUSTER --service-name campusprint-backend --region $AWS_REGION --query "taskArns" --output json | ConvertFrom-Json
+    if ($newTasks.Count -gt 0) {
+        $taskDetails = aws ecs describe-tasks --cluster $CLUSTER --tasks $newTasks --region $AWS_REGION --query "tasks[*].[taskArn,createdAt,containers[0].networkInterfaces[0].privateIpv4Address]" --output json | ConvertFrom-Json
+        $sorted = $taskDetails | Sort-Object { $_[1] } -Descending
+        $newIp = $sorted[0][2]
+        
+        if ($newIp) {
+            Write-Host "Registering new backend IP ($newIp) to ALB target group..." -ForegroundColor Yellow
+            aws elbv2 register-targets --target-group-arn $BACKEND_TG --targets Id=$newIp,Port=4000,AvailabilityZone=ap-south-1a --region $AWS_REGION | Out-Null
+            
+            if ($sorted.Count -gt 1) {
+                for ($i = 1; $i -lt $sorted.Count; $i++) {
+                    $oldIp = $sorted[$i][2]
+                    if ($oldIp -and $oldIp -ne $newIp) {
+                        Write-Host "Deregistering previous backend target IP ($oldIp)..." -ForegroundColor Gray
+                        aws elbv2 deregister-targets --target-group-arn $BACKEND_TG --targets Id=$oldIp,Port=4000,AvailabilityZone=ap-south-1a --region $AWS_REGION | Out-Null
+                    }
+                }
+            }
+        }
+    }
+}
 
-Write-Host "VPC Configuration for Services:" -ForegroundColor Cyan
-Write-Host "  VPC: $DefaultVPC"
-Write-Host "  Subnet: $Subnet"
-Write-Host "  Security Group: $SecurityGroup`n"
-
-Write-Host "Next Steps:" -ForegroundColor Yellow
-Write-Host "1. Register task definitions"
-Write-Host "2. Create ECS services"
-Write-Host "3. Get public IPs from tasks"
-Write-Host "4. Open frontend URL`n"
+Write-Host "`n========================================================" -ForegroundColor Cyan
+Write-Host "  Deployment Completed Successfully!" -ForegroundColor Green
+Write-Host "  Permanent Secure HTTPS Link (Unchanged):" -ForegroundColor Cyan
+Write-Host "  👉 https://effjm7shr3.execute-api.ap-south-1.amazonaws.com" -ForegroundColor Green
+Write-Host "========================================================" -ForegroundColor Cyan
