@@ -7,7 +7,7 @@ import {
   PixelStudentAvatar,
   PixelLogo 
 } from './PixelArt.jsx';
-import { PixelCampusBuilding } from './pixel/index.js';
+import { PixelCampusBuilding, PixelArt } from './pixel/index.js';
 import { 
   LayoutDashboard, 
   PlusCircle, 
@@ -999,26 +999,8 @@ export function AppLayout({ children }) {
 
             {/* Profile Body */}
             <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div
-                  style={{
-                    width: '54px',
-                    height: '54px',
-                    borderRadius: '9999px',
-                    backgroundColor: '#FFC300',
-                    border: '2px solid #000814',
-                    color: '#000814',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 900,
-                    fontSize: '1.2rem',
-                    boxShadow: '2px 2px 0px #000814',
-                  }}
-                >
-                  {initials}
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <PixelArt name="studentCard" size={90} style={{ filter: 'drop-shadow(3px 3px 0px #000814)' }} />
                 <div>
                   <h3 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.1rem', color: '#000814' }}>
                     {user.name || 'Demo Student'}

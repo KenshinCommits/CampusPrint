@@ -4,6 +4,7 @@ import { Search, Download, Check, X, RefreshCw, Clock, ArrowRight, Eye, FileText
 import { PrinterDemo } from '../components/PrinterDemo.jsx';
 import { NeoCard, NeoButton, StatusBadge } from '../components/ui/index.js';
 import { PixelUploadDoc, PixelPrinterGraphic } from '../components/PixelArt.jsx';
+import { PixelArt } from '../components/pixel/index.js';
 
 export function StaffDashboard() {
   const [orders, setOrders] = useState([]);
@@ -74,35 +75,43 @@ export function StaffDashboard() {
           gap: '16px',
         }}
       >
-        <div>
-          <h1
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2rem, 3.8vw, 2.6rem)',
-              fontWeight: 900,
-              letterSpacing: '-0.03em',
-              margin: 0,
-              textTransform: 'uppercase',
-              color: '#000814',
-            }}
-          >
-            SHOP QUEUE
-          </h1>
-          <p style={{ color: '#4B5563', fontSize: '0.9rem', marginTop: '4px', fontWeight: 600 }}>
-            Live print queue awaiting shop processing and hardware dispatch
-          </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div>
+            <h1
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(2rem, 3.8vw, 2.6rem)',
+                fontWeight: 900,
+                letterSpacing: '-0.03em',
+                margin: 0,
+                textTransform: 'uppercase',
+                color: '#000814',
+              }}
+            >
+              SHOP QUEUE
+            </h1>
+            <p style={{ color: '#4B5563', fontSize: '0.9rem', marginTop: '4px', fontWeight: 600 }}>
+              Live print queue awaiting shop processing and hardware dispatch
+            </p>
+          </div>
         </div>
 
-        <NeoButton
-          variant="secondary"
-          size="sm"
-          onClick={loadQueue}
-          disabled={loading}
-          style={{ gap: '8px' }}
-        >
-          <RefreshCw size={15} className={loading ? 'spin' : ''} />
-          <span>Refresh Queue</span>
-        </NeoButton>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <PixelArt name="printShopSign" size={72} />
+            <PixelArt name="receptionDesk" size={100} />
+          </div>
+          <NeoButton
+            variant="secondary"
+            size="sm"
+            onClick={loadQueue}
+            disabled={loading}
+            style={{ gap: '8px' }}
+          >
+            <RefreshCw size={15} className={loading ? 'spin' : ''} />
+            <span>Refresh Queue</span>
+          </NeoButton>
+        </div>
       </div>
 
       {/* Top 5 Metric Cards: NEW ORDERS, ACCEPTED, PROCESSING, READY, TODAY'S ORDERS */}
@@ -318,7 +327,7 @@ export function StaffDashboard() {
           </div>
         ) : displayOrders.length === 0 ? (
           <div style={{ padding: '60px 20px', textAlign: 'center', color: '#6B7280', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-            <PixelPrinterGraphic size={72} />
+            <PixelArt name="receptionDesk" size={120} />
             <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#000814', fontSize: '1.1rem' }}>
               All Clear! No Orders in Queue
             </div>
@@ -376,7 +385,7 @@ export function StaffDashboard() {
                       </td>
                       <td style={{ padding: '12px 16px' }}>
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '0.85rem' }}>
-                          <FileText size={16} color="#DC2626" />
+                          <PixelArt name="pdfBadge" size={20} />
                           <span>{order.fileName}</span>
                         </span>
                       </td>

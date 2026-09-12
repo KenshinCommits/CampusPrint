@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { PixelUploadDoc } from '../components/PixelArt.jsx';
+import { PixelArt } from '../components/pixel/index.js';
 import { NeoCard, NeoButton } from '../components/ui/index.js';
 import { ArrowLeft, Trash2, CheckCircle2, ArrowRight, Minus, Plus } from 'lucide-react';
 
@@ -186,8 +187,15 @@ export function NewOrder() {
                 onChange={(e) => handleFileSelect(e.target.files?.[0])}
               />
 
-              {/* Centered Handcrafted Dual Documents with Blue Upload Arrow & Sparkles */}
-              <PixelUploadDoc size={110} />
+              {/* Authentic 16-bit Pixel Art Poster Document & File Badges */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <PixelArt name="goodIdeasDoc" size={76} style={{ filter: 'drop-shadow(3px 3px 0px #000814)' }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                  <PixelArt name="pdfBadge" size={26} />
+                  <PixelArt name="wordBadge" size={26} />
+                  <PixelArt name="imageBadge" size={26} />
+                </div>
+              </div>
 
               <div>
                 <div

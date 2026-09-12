@@ -1,7 +1,13 @@
-export function EmptyState({ icon = '📭', title, subtitle, action }) {
+import { PixelArt, SPRITES } from './pixel/PixelArt.jsx';
+
+export function EmptyState({ icon = 'parcelBox', title, subtitle, action }) {
+  const isSprite = typeof icon === 'string' && SPRITES[icon];
+
   return (
     <div className="state-block">
-      <div className="state-icon">{icon}</div>
+      <div className="state-icon" style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+        {isSprite ? <PixelArt name={icon} size={72} /> : icon}
+      </div>
       <h2>{title}</h2>
       {subtitle && <p>{subtitle}</p>}
       {action}

@@ -7,7 +7,8 @@ import {
   PixelPrintShopStation, 
   PixelDocIcon, 
   PixelPackageIcon, 
-  PixelChartIcon 
+  PixelChartIcon,
+  PixelArt
 } from '../components/pixel/index.js';
 import { PixelShopIcon } from '../components/PixelArt.jsx';
 import { 
@@ -351,11 +352,12 @@ export function StudentDashboard() {
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <PixelArt name="ticketToken" size={54} />
                 <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 900, color: '#000814' }}>
                   {currentOrder.token}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#003566', fontSize: '0.88rem', fontWeight: 700 }}>
-                  <FileText size={16} />
+                  <PixelArt name="pdfBadge" size={18} />
                   <span>{currentOrder.fileName}</span>
                 </div>
                 {/* Status badge */}
@@ -382,7 +384,7 @@ export function StudentDashboard() {
 
               {/* Ready time */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Clock size={18} color="#003566" />
+                <PixelArt name="pixelClock" size={20} />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <span style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 700 }}>Ready around</span>
                   <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.95rem', color: '#000814' }}>
@@ -548,7 +550,7 @@ export function StudentDashboard() {
                     {/* File */}
                     <td style={{ padding: '12px 10px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#003566' }}>
-                        <FileText size={15} />
+                        <PixelArt name="pdfBadge" size={18} />
                         <span>{o.fileName}</span>
                       </div>
                     </td>
@@ -577,7 +579,10 @@ export function StudentDashboard() {
 
                     {/* Price */}
                     <td style={{ padding: '12px 10px', fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.85rem', color: '#000814' }}>
-                      ₹{o.price}
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <PixelArt name="rupeeCoin" size={16} />
+                        {o.price}
+                      </span>
                     </td>
 
                     {/* Date */}
