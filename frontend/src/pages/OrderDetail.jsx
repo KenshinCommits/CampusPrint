@@ -1,7 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { Check, Clock, FileText, AlertCircle, ArrowLeft, CreditCard, XCircle } from 'lucide-react';
+import { 
+  Check, 
+  Clock, 
+  FileText, 
+  AlertCircle, 
+  ArrowLeft, 
+  CreditCard, 
+  XCircle, 
+  Sparkles, 
+  RotateCcw,
+  CheckCircle2
+} from 'lucide-react';
+import { PrinterDemo } from '../components/PrinterDemo.jsx';
 
 const STATUS_STEPS = [
   { key: 'placed', label: 'ORDER PLACED' },
@@ -19,6 +31,14 @@ export function OrderDetail() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
+  // Fast-Forward Hackathon Demo Progression State
+  const [simulatedStatus, setSimulatedStatus] = useState(null);
+  const [simulatedTimes, setSimulatedTimes] = useState({});
+  const [isDemoActive, setIsDemoActive] = useState(false);
+  const demoTimersRef = useRef([]);
+  const hasAutoStartedRef = useRef(false);
+  const printerDemoRef = useRef(null);
+
   function loadOrder() {
     api
       .getOrder(id)
@@ -29,9 +49,92 @@ export function OrderDetail() {
 
   useEffect(() => {
     loadOrder();
-    const interval = setInterval(loadOrder, 8000);
+    const interval = setInterval(() => {
+      // Don't overwrite simulated status during active demo progression
+      if (!isDemoActive) {
+        loadOrder();
+      }
+    }, 8000);
     return () => clearInterval(interval);
-  }, [id]);
+  }, [id, isDemoActive]);
+
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => {
+      demoTimersRef.current.forEach((t) => clearTimeout(t));
+    };
+  }, []);
+
+  /**
+   * Fast-Forward Demo Progression:
+   * 0s: Step 1 (PLACED) -> badge shows "Order Placed"
+   * 1.5s: Step 2 (ACCEPTED) -> badge turns blue "Accepted by Shop"
+   * 3.0s: Step 3 (PROCESSING) -> badge turns yellow "Printing in Progress", 3D simulation starts printing & vibrating
+   * 3.5s - 5.5s: Paper emerges from slit onto catch tray
+   * 6.0s: Step 4 (READY FOR PICKUP) -> badge turns green "Ready for Pickup", 3D simulation "PRINT COMPLETE", estimated time "READY NOW!"
+   */
+  const startDemoProgression = useCallback(
+    (isReplay = false) => {
+      // Clear existing timers
+      demoTimersRef.current.forEach((t) => clearTimeout(t));
+      demoTimersRef.current = [];
+
+      setIsDemoActive(true);
+      const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      // 0.0s: Step 1 (PLACED)
+      setSimulatedStatus('placed');
+      setSimulatedTimes({ placed: nowStr });
+
+      // 1.5s: Step 2 (ACCEPTED)
+      const t1 = setTimeout(() => {
+        setSimulatedStatus('accepted');
+        setSimulatedTimes((prev) => ({
+          ...prev,
+          accepted: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }));
+      }, 1500);
+      demoTimersRef.current.push(t1);
+
+      // 3.0s: Step 3 (PROCESSING)
+      const t2 = setTimeout(() => {
+        setSimulatedStatus('processing');
+        setSimulatedTimes((prev) => ({
+          ...prev,
+          processing: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }));
+        if (printerDemoRef.current?.printPaper) {
+          printerDemoRef.current.printPaper();
+        }
+      }, 3000);
+      demoTimersRef.current.push(t2);
+
+      // 6.0s: Step 4 (READY FOR PICKUP)
+      const t3 = setTimeout(() => {
+        setSimulatedStatus('ready');
+        setSimulatedTimes((prev) => ({
+          ...prev,
+          ready: 'READY NOW!',
+        }));
+        setIsDemoActive(false);
+      }, 6000);
+      demoTimersRef.current.push(t3);
+    },
+    []
+  );
+
+  // Auto-start progression after 2 seconds on tracking page
+  useEffect(() => {
+    if (order && !hasAutoStartedRef.current && !loading) {
+      hasAutoStartedRef.current = true;
+      if (order.status === 'placed' || !order.status) {
+        const autoTimer = setTimeout(() => {
+          startDemoProgression(false);
+        }, 2000);
+        demoTimersRef.current.push(autoTimer);
+      }
+    }
+  }, [order, loading, startDemoProgression]);
 
   async function handlePay() {
     setBusy(true);
@@ -75,20 +178,104 @@ export function OrderDetail() {
     );
   }
 
-  // Determine active step index
-  const currentIndex = STATUS_STEPS.findIndex((s) => s.key === order.status);
-  const isRejected = order.status === 'rejected';
-  const isCancelled = order.status === 'cancelled';
+  // Active status (combines actual order status with fast demo progression)
+  const currentStatus = simulatedStatus || order.status;
+  const currentIndex = STATUS_STEPS.findIndex((s) => s.key === currentStatus);
+  const isRejected = currentStatus === 'rejected';
+  const isCancelled = currentStatus === 'cancelled';
   const isPaid = order.paymentStatus === 'paid';
 
   function getStepTime(stepKey) {
+    if (simulatedTimes[stepKey]) return simulatedTimes[stepKey];
     const historyItem = (order.statusHistory || []).find((h) => h.status === stepKey);
     if (!historyItem?.at) {
-      if (stepKey === 'ready' && currentIndex >= 2) return '~12 min';
+      if (stepKey === 'ready' && currentIndex >= 2) return currentStatus === 'ready' ? 'READY NOW!' : '~12 min';
       return '';
     }
     const d = new Date(historyItem.at);
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // Status Badge Label & Color mapping
+  function renderStatusBadge() {
+    if (currentStatus === 'processing') {
+      return (
+        <span
+          className="neo-badge processing"
+          style={{
+            fontSize: '0.88rem',
+            padding: '6px 14px',
+            background: '#FEF08A',
+            color: '#854D0E',
+            border: '2px solid #000',
+          }}
+        >
+          Printing in Progress
+        </span>
+      );
+    }
+    if (currentStatus === 'accepted') {
+      return (
+        <span
+          className="neo-badge accepted"
+          style={{
+            fontSize: '0.88rem',
+            padding: '6px 14px',
+            background: '#BFDBFE',
+            color: '#1E3A8A',
+            border: '2px solid #000',
+          }}
+        >
+          Accepted by Shop
+        </span>
+      );
+    }
+    if (currentStatus === 'ready') {
+      return (
+        <span
+          className="neo-badge ready"
+          style={{
+            fontSize: '0.88rem',
+            padding: '6px 14px',
+            background: '#86EFAC',
+            color: '#14532D',
+            border: '2px solid #000',
+          }}
+        >
+          Ready for Pickup
+        </span>
+      );
+    }
+    if (currentStatus === 'completed') {
+      return (
+        <span
+          className="neo-badge completed"
+          style={{
+            fontSize: '0.88rem',
+            padding: '6px 14px',
+            background: '#E5E7EB',
+            color: '#111',
+            border: '2px solid #000',
+          }}
+        >
+          Order Completed
+        </span>
+      );
+    }
+    return (
+      <span
+        className="neo-badge placed"
+        style={{
+          fontSize: '0.88rem',
+          padding: '6px 14px',
+          background: 'var(--yellow-primary)',
+          color: '#000',
+          border: '2px solid #000',
+        }}
+      >
+        Order Placed
+      </span>
+    );
   }
 
   return (
@@ -113,21 +300,44 @@ export function OrderDetail() {
           <span>Back to all orders</span>
         </Link>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-          <h1
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)',
-              fontWeight: 900,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            ORDER {order.orderId}
-          </h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+            <h1
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                margin: 0,
+              }}
+            >
+              ORDER {order.orderId}
+            </h1>
 
-          <span className={`neo-badge ${order.status}`} style={{ fontSize: '0.88rem', padding: '6px 14px' }}>
-            {order.status === 'processing' ? 'PRINTING' : order.status}
-          </span>
+            {renderStatusBadge()}
+          </div>
+
+          {/* Replay Fast-Forward Demo Action */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              type="button"
+              className="neo-btn sm"
+              onClick={() => startDemoProgression(true)}
+              title="Re-run 0s → 6s automated timeline progression with 3D printer hardware"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: '#FFD028',
+                boxShadow: '2px 2px 0px #000',
+                border: '2px solid #000',
+                fontWeight: 800,
+              }}
+            >
+              <Sparkles size={14} />
+              <span>Replay Fast-Forward Demo</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -144,7 +354,7 @@ export function OrderDetail() {
             />
 
             {STATUS_STEPS.map((step, idx) => {
-              const isDone = currentIndex > idx || order.status === 'completed';
+              const isDone = currentIndex > idx || currentStatus === 'completed';
               const isCurrent = currentIndex === idx;
               const time = getStepTime(step.key);
 
@@ -182,7 +392,7 @@ export function OrderDetail() {
           <XCircle size={24} color="#DC2626" />
           <div>
             <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, color: '#991B1B' }}>
-              ORDER {order.status.toUpperCase()}
+              ORDER {currentStatus.toUpperCase()}
             </div>
             {order.rejectionReason && (
               <div style={{ fontSize: '0.88rem', color: '#B91C1C', marginTop: '2px' }}>
@@ -191,6 +401,25 @@ export function OrderDetail() {
             )}
           </div>
         </div>
+      )}
+
+      {/* 3D Physical Hardware Simulator (Directly wired to timeline) */}
+      {!isCancelled && !isRejected && (
+        <PrinterDemo
+          ref={printerDemoRef}
+          pdfUrl={api.orderFileUrl(order.orderId)}
+          order={order}
+          orderStatus={currentStatus}
+          onTriggerDemo={() => startDemoProgression(true)}
+          title={
+            currentStatus === 'processing'
+              ? 'Physical Print Simulation (In Progress)'
+              : currentStatus === 'ready' || currentStatus === 'completed'
+              ? 'Hardware Simulation (Sheet Ready on Tray)'
+              : 'Interactive 3D Hardware Simulation'
+          }
+          height="420px"
+        />
       )}
 
       {/* Two Column Cards */}
@@ -274,7 +503,7 @@ export function OrderDetail() {
             </div>
           </div>
 
-          {order.status === 'placed' && (
+          {currentStatus === 'placed' && (
             <div style={{ marginTop: '20px', borderTop: '2px solid #E5E7EB', paddingTop: '16px' }}>
               <button
                 type="button"
@@ -310,12 +539,13 @@ export function OrderDetail() {
                 style={{
                   width: '42px',
                   height: '42px',
-                  background: 'var(--yellow-primary)',
+                  background: currentStatus === 'ready' ? '#86EFAC' : 'var(--yellow-primary)',
                   border: '2px solid #000',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  transition: 'background 0.3s ease',
                 }}
               >
                 <Clock size={22} strokeWidth={2.5} />
@@ -325,17 +555,58 @@ export function OrderDetail() {
                   fontFamily: 'var(--font-heading)',
                   fontSize: '1.8rem',
                   fontWeight: 900,
+                  color: currentStatus === 'ready' ? '#166534' : '#000',
                 }}
               >
-                {order.status === 'ready'
+                {currentStatus === 'ready'
                   ? 'READY NOW!'
-                  : order.status === 'completed'
+                  : currentStatus === 'completed'
                   ? 'COMPLETED'
-                  : order.status === 'processing'
+                  : currentStatus === 'processing'
+                  ? '~1-2 MIN'
+                  : currentStatus === 'accepted'
                   ? '~5-10 MIN'
                   : '~15-20 MIN'}
               </div>
             </div>
+
+            {/* If Ready: Manual "Complete Order" Button */}
+            {currentStatus === 'ready' ? (
+              <button
+                type="button"
+                className="neo-btn sm dark full-width"
+                onClick={() => setSimulatedStatus('completed')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  background: '#166534',
+                  color: '#FFFFFF',
+                  marginBottom: '10px',
+                }}
+              >
+                <CheckCircle2 size={16} />
+                <span>COLLECT DOCUMENT (COMPLETE)</span>
+              </button>
+            ) : currentStatus === 'completed' ? (
+              <button
+                type="button"
+                className="neo-btn sm full-width"
+                onClick={() => startDemoProgression(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  background: '#F1F5F9',
+                  marginBottom: '10px',
+                }}
+              >
+                <RotateCcw size={15} />
+                <span>Replay Hackathon Demo</span>
+              </button>
+            ) : null}
 
             <button
               type="button"

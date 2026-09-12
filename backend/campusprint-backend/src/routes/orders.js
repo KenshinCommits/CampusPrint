@@ -62,6 +62,35 @@ router.get('/:id', requireAuth, async (req, res) => {
   res.json({ order });
 });
 
+router.get('/:id/file', requireAuth, async (req, res) => {
+  const order = await db.getOrder(req.params.id);
+  if (!order) return res.status(404).json({ error: 'Order not found' });
+  if (order.userId !== req.user.email && req.user.role !== 'staff') {
+    return res.status(403).json({ error: 'Not your order' });
+  }
+
+  const filePath = path.isAbsolute(order.fileKey)
+    ? order.fileKey
+    : path.join(__dirname, '..', '..', 'uploads', order.fileKey);
+  const fs = require('fs');
+  if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found on server' });
+
+  const ext = path.extname(order.fileName || '').toLowerCase();
+  const mimeMap = {
+    '.pdf': 'application/pdf',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.txt': 'text/plain',
+  };
+  if (mimeMap[ext]) {
+    res.setHeader('Content-Type', mimeMap[ext]);
+  }
+  res.setHeader('Content-Disposition', `inline; filename="${(order.fileName || 'file').replace(/"/g, '')}"`);
+  res.sendFile(filePath);
+});
+
 // Simulated payment
 router.post('/:id/pay', requireAuth, async (req, res) => {
   const order = await db.getOrder(req.params.id);

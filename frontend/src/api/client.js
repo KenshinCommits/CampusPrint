@@ -59,6 +59,7 @@ export const api = {
   placeOrder: (formData) => request('/orders', { method: 'POST', body: formData, isMultipart: true }),
   myOrders: () => request('/orders/mine'),
   getOrder: (id) => request(`/orders/${id}`),
+  orderFileUrl: (id) => `${baseURL}/orders/${id}/file?token=${encodeURIComponent(getToken() || '')}`,
   payOrder: (id) => request(`/orders/${id}/pay`, { method: 'POST' }),
   cancelOrder: (id) => request(`/orders/${id}`, { method: 'DELETE' }),
 

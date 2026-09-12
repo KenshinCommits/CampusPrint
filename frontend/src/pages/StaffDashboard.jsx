@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client.js';
 import { Search, Download, Check, X, RefreshCw, Clock, ArrowRight, Eye, FileText, AlertTriangle } from 'lucide-react';
+import { PrinterDemo } from '../components/PrinterDemo.jsx';
 
 export function StaffDashboard() {
   const [orders, setOrders] = useState([]);
@@ -576,6 +577,17 @@ export function StaffDashboard() {
                   )}
                 </div>
               </div>
+            </div>
+
+            {/* 3D Physical Hardware Simulator */}
+            <div style={{ marginBottom: '20px' }}>
+              <PrinterDemo
+                pdfUrl={api.staffFileUrl(selectedOrder.orderId)}
+                order={selectedOrder}
+                autoPrint={selectedOrder.status === 'processing' || selectedOrder.status === 'ready' || selectedOrder.status === 'completed'}
+                height="340px"
+                title="3D Hardware Dispatch Station"
+              />
             </div>
 
             {/* Rejection Prompt Section */}

@@ -21,7 +21,31 @@ router.get('/orders', async (req, res) => {
 router.get('/orders/:id/file', async (req, res) => {
   const order = await db.getOrder(req.params.id);
   if (!order) return res.status(404).json({ error: 'Order not found' });
-  res.download(order.fileKey, order.fileName);
+  const path = require('path');
+  const fs = require('fs');
+  const filePath = path.isAbsolute(order.fileKey)
+    ? order.fileKey
+    : path.join(__dirname, '..', '..', 'uploads', order.fileKey);
+  if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found on server' });
+
+  if (req.query.download === 'true') {
+    return res.download(filePath, order.fileName);
+  }
+
+  const ext = path.extname(order.fileName || '').toLowerCase();
+  const mimeMap = {
+    '.pdf': 'application/pdf',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.txt': 'text/plain',
+  };
+  if (mimeMap[ext]) {
+    res.setHeader('Content-Type', mimeMap[ext]);
+  }
+  res.setHeader('Content-Disposition', `inline; filename="${(order.fileName || 'file').replace(/"/g, '')}"`);
+  res.sendFile(filePath);
 });
 
 router.patch('/orders/:id/status', async (req, res) => {
