@@ -124,7 +124,17 @@ export function AppLayout({ children }) {
   // If unauthenticated or on login/signup page, don't show full dashboard layout
   if (!user || isAuthPage) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#FBF8F1' }}>
+      <div
+        style={{
+          minHeight: '100vh',
+          height: isAuthPage ? '100vh' : 'auto',
+          maxHeight: isAuthPage ? '100vh' : 'none',
+          overflow: isAuthPage ? 'hidden' : 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: '#FBF8F1',
+        }}
+      >
         {location.pathname === '/about' && (
           <header
             style={{
@@ -199,8 +209,18 @@ export function AppLayout({ children }) {
             </div>
           </header>
         )}
-        <main style={{ flex: 1 }}>{children}</main>
-        <RetroFooter />
+        <main
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: isAuthPage ? 'hidden' : 'visible',
+            height: isAuthPage ? '100%' : 'auto',
+          }}
+        >
+          {children}
+        </main>
+        {!isAuthPage && <RetroFooter />}
       </div>
     );
   }
