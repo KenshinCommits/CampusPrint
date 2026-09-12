@@ -4,23 +4,17 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../api/client.js';
 import { 
   PixelHeroPrinter, 
-  PixelPrintShopStation, 
   PixelDocIcon, 
   PixelPackageIcon, 
   PixelChartIcon,
   PixelArt
 } from '../components/pixel/index.js';
-import { PixelShopIcon } from '../components/PixelArt.jsx';
 import { 
   Plus, 
-  FileText, 
   ArrowRight, 
-  Clock, 
   Check, 
   X, 
-  Cog, 
-  Minus,
-  Eye
+  Cog
 } from 'lucide-react';
 
 export function StudentDashboard() {
@@ -28,13 +22,6 @@ export function StudentDashboard() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Interactive Print Shop Widget State
-  const [copies, setCopies] = useState(2);
-  const [colorMode, setColorMode] = useState('bw'); // 'bw' | 'color'
-  const [sides, setSides] = useState('single'); // 'single' | 'double'
-  const [paperSize, setPaperSize] = useState('A4'); // 'A4' | 'A3'
-  const [binding, setBinding] = useState('staple'); // 'none' | 'staple' | 'spiral'
 
   useEffect(() => {
     api
@@ -102,400 +89,505 @@ export function StudentDashboard() {
   // Active current order (defaults to CP-1042 if none processing)
   const currentOrder = displayOrders.find((o) => ['processing', 'accepted', 'placed'].includes(o.status)) || sampleOrders[0];
 
-  // Calculate live pricing for Print Shop widget
-  const pageBaseRate = colorMode === 'color' ? 8 : 2;
-  const paperMultiplier = paperSize === 'A3' ? 2 : 1;
-  const sidesMultiplier = sides === 'double' ? 1.5 : 1;
-  const printCost = Math.round(copies * 4 * pageBaseRate * paperMultiplier * sidesMultiplier);
-  const bindingCost = binding === 'staple' ? 1 : binding === 'spiral' ? 15 : 0;
-  const totalCost = printCost + bindingCost;
-
-  function handlePlaceOrder() {
-    navigate('/new-order', {
-      state: {
-        presetCopies: copies,
-        presetColor: colorMode,
-        presetSides: sides,
-        presetPaper: paperSize,
-        presetBinding: binding,
-      }
-    });
-  }
-
   return (
-    <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start', maxWidth: '1440px', margin: '0 auto' }}>
-      {/* LEFT COLUMN: Main Dashboard Content (Hero, Stats, Current Order, Recent Orders) */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        
-        {/* 1. HERO BANNER: HEY, STUDENT. READY TO PRINT? */}
+    <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      
+      {/* ========================================================================= */}
+      {/* 1. HERO BANNER: HEY, STUDENT. READY TO PRINT?                            */}
+      {/* ========================================================================= */}
+      <div
+        style={{
+          backgroundColor: '#FFFFFF',
+          border: '3px solid #000814',
+          borderRadius: 0,
+          boxShadow: '4px 4px 0px 0px #000814',
+          padding: '28px 36px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          overflow: 'hidden',
+          flexWrap: 'wrap',
+          gap: '24px',
+        }}
+      >
+        <div style={{ maxWidth: '520px' }}>
+          <h1
+            style={{
+              fontFamily: "'Press Start 2P', monospace",
+              fontSize: 'clamp(1.2rem, 2.4vw, 1.65rem)',
+              lineHeight: 1.4,
+              letterSpacing: '0.02em',
+              color: '#000814',
+              margin: 0,
+            }}
+          >
+            HEY, {user?.name ? user.name.split(' ')[0].toUpperCase() : 'STUDENT'}.<br />
+            READY TO PRINT?
+          </h1>
+          
+          <p
+            style={{
+              margin: '14px 0 0',
+              fontSize: '0.95rem',
+              color: '#475569',
+              fontFamily: 'monospace',
+              lineHeight: 1.5,
+              fontWeight: 600,
+            }}
+          >
+            Skip the physical queue. Send your documents to the campus stationery shop from anywhere.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => navigate('/new-order')}
+            className="pixel-btn-arcade"
+            style={{
+              marginTop: '22px',
+              padding: '14px 24px',
+              fontSize: '11px',
+              gap: '10px',
+            }}
+          >
+            <Plus size={16} strokeWidth={3} />
+            <span>NEW PRINT ORDER</span>
+          </button>
+        </div>
+
+        {/* Right: Handcrafted Pixel Hero Printer Workstation Scene */}
+        <div 
+          style={{ 
+            flexShrink: 0, 
+            width: '360px', 
+            height: '180px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            imageRendering: 'pixelated',
+          }}
+        >
+          <PixelHeroPrinter width={360} height={180} />
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 2. THREE STAT METRIC CARDS (True 16-Bit Pixel Styling)                    */}
+      {/* ========================================================================= */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '20px',
+        }}
+      >
+        {/* Card 1: Active Orders (Pale Yellow) */}
+        <div
+          style={{
+            backgroundColor: '#FEF08A',
+            border: '3px solid #000814',
+            borderRadius: 0,
+            boxShadow: '4px 4px 0px 0px #000814',
+            padding: '20px 24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '18px',
+          }}
+        >
+          <div
+            style={{
+              width: '52px',
+              height: '52px',
+              borderRadius: 0,
+              border: '2px solid #000814',
+              backgroundColor: '#FFFFFF',
+              boxShadow: '2px 2px 0px 0px #000814',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              imageRendering: 'pixelated',
+            }}
+          >
+            <PixelDocIcon size={36} />
+          </div>
+          <div>
+            <div
+              style={{
+                fontFamily: "'Silkscreen', monospace",
+                fontSize: '0.76rem',
+                fontWeight: 700,
+                color: '#000814',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                marginBottom: '4px',
+              }}
+            >
+              ACTIVE ORDERS
+            </div>
+            <div
+              style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: '1.9rem',
+                fontWeight: 400,
+                color: '#000814',
+                lineHeight: 1.1,
+              }}
+            >
+              02
+            </div>
+            <div style={{ width: '28px', height: '4px', backgroundColor: '#000814', marginTop: '6px' }} />
+          </div>
+        </div>
+
+        {/* Card 2: Ready for Pickup (Sky Blue) */}
+        <div
+          style={{
+            backgroundColor: '#BAE6FD',
+            border: '3px solid #000814',
+            borderRadius: 0,
+            boxShadow: '4px 4px 0px 0px #000814',
+            padding: '20px 24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '18px',
+          }}
+        >
+          <div
+            style={{
+              width: '52px',
+              height: '52px',
+              borderRadius: 0,
+              border: '2px solid #000814',
+              backgroundColor: '#FFFFFF',
+              boxShadow: '2px 2px 0px 0px #000814',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              imageRendering: 'pixelated',
+            }}
+          >
+            <PixelPackageIcon size={36} />
+          </div>
+          <div>
+            <div
+              style={{
+                fontFamily: "'Silkscreen', monospace",
+                fontSize: '0.76rem',
+                fontWeight: 700,
+                color: '#000814',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                marginBottom: '4px',
+              }}
+            >
+              READY FOR PICKUP
+            </div>
+            <div
+              style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: '1.9rem',
+                fontWeight: 400,
+                color: '#000814',
+                lineHeight: 1.1,
+              }}
+            >
+              01
+            </div>
+            <div style={{ width: '28px', height: '4px', backgroundColor: '#000814', marginTop: '6px' }} />
+          </div>
+        </div>
+
+        {/* Card 3: Total Orders (Pure White) */}
         <div
           style={{
             backgroundColor: '#FFFFFF',
-            border: '2px solid #000814',
-            borderRadius: '12px',
-            boxShadow: '3px 3px 0px #000814',
-            padding: '24px 28px',
+            border: '3px solid #000814',
+            borderRadius: 0,
+            boxShadow: '4px 4px 0px 0px #000814',
+            padding: '20px 24px',
             display: 'flex',
-            justifyContent: 'space-between',
             alignItems: 'center',
-            overflow: 'hidden',
+            gap: '18px',
           }}
         >
-          <div style={{ maxWidth: '440px' }}>
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '2rem',
-                fontWeight: 900,
-                letterSpacing: '-0.02em',
-                lineHeight: 1.15,
-                color: '#000814',
-                margin: 0,
-              }}
-            >
-              HEY, STUDENT.<br />READY TO PRINT?
-            </h1>
-            <p
-              style={{
-                margin: '10px 0 0',
-                fontSize: '0.9rem',
-                color: '#475569',
-                fontWeight: 600,
-                lineHeight: 1.4,
-              }}
-            >
-              Skip the queue. Send your documents from anywhere on campus.
-            </p>
-
-            <button
-              type="button"
-              onClick={() => navigate('/new-order')}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginTop: '18px',
-                backgroundColor: '#FFC300',
-                color: '#000814',
-                border: '3px solid #000814',
-                borderRadius: '8px',
-                padding: '12px 22px',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 900,
-                fontSize: '0.85rem',
-                boxShadow: '3px 3px 0px #000814',
-                cursor: 'pointer',
-                transition: 'all 0.1s ease',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FFD60A'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FFC300'; }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = 'translate(2px, 2px)';
-                e.currentTarget.style.boxShadow = '1px 1px 0px #000814';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = '3px 3px 0px #000814';
-              }}
-            >
-              <Plus size={18} strokeWidth={3} />
-              <span>NEW PRINT ORDER</span>
-            </button>
+          <div
+            style={{
+              width: '52px',
+              height: '52px',
+              borderRadius: 0,
+              border: '2px solid #000814',
+              backgroundColor: '#F8F5ED',
+              boxShadow: '2px 2px 0px 0px #000814',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              imageRendering: 'pixelated',
+            }}
+          >
+            <PixelChartIcon size={36} />
           </div>
-
-          {/* Right: Handcrafted Pixel Hero Printer Workstation Scene */}
-          <div style={{ flexShrink: 0, width: '360px', height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <PixelHeroPrinter width={360} height={180} />
+          <div>
+            <div
+              style={{
+                fontFamily: "'Silkscreen', monospace",
+                fontSize: '0.76rem',
+                fontWeight: 700,
+                color: '#000814',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                marginBottom: '4px',
+              }}
+            >
+              TOTAL ORDERS
+            </div>
+            <div
+              style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: '1.9rem',
+                fontWeight: 400,
+                color: '#000814',
+                lineHeight: 1.1,
+              }}
+            >
+              08
+            </div>
+            <div style={{ width: '28px', height: '4px', backgroundColor: '#FFD60A', marginTop: '6px' }} />
           </div>
         </div>
+      </div>
 
-        {/* 2. THREE STAT METRIC CARDS */}
+      {/* ========================================================================= */}
+      {/* 3. CURRENT ORDER TRACKER CARD (Sharp Box, Dashed Ticket & Square Dots)     */}
+      {/* ========================================================================= */}
+      {currentOrder && (
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '16px',
+            backgroundColor: '#FFFFFF',
+            border: '3px solid #000814',
+            borderRadius: 0,
+            boxShadow: '4px 4px 0px 0px #000814',
+            padding: '24px 30px',
           }}
         >
-          {/* Card 1: Active Orders */}
           <div
             style={{
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #000814',
-              borderRadius: '10px',
-              boxShadow: '2px 2px 0px #000814',
-              padding: '16px 20px',
+              fontFamily: "'Silkscreen', monospace",
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              color: '#000814',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              marginBottom: '16px',
+            }}
+          >
+            CURRENT ORDER
+          </div>
+
+          <div
+            style={{
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
               gap: '16px',
             }}
           >
-            <div
-              style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '8px',
-                border: '1.5px solid #000814',
-                backgroundColor: '#F8F5ED',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
-            >
-              <PixelDocIcon size={32} />
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#475569', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                ACTIVE ORDERS
-              </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.8rem', fontWeight: 900, color: '#000814', lineHeight: 1.1 }}>
-                02
-              </div>
-              <div style={{ width: '22px', height: '3px', backgroundColor: '#FFD60A', borderRadius: '2px', marginTop: '4px' }} />
-            </div>
-          </div>
-
-          {/* Card 2: Ready for Pickup */}
-          <div
-            style={{
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #000814',
-              borderRadius: '10px',
-              boxShadow: '2px 2px 0px #000814',
-              padding: '16px 20px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-            }}
-          >
-            <div
-              style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '8px',
-                border: '1.5px solid #000814',
-                backgroundColor: '#FEF08A',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
-            >
-              <PixelPackageIcon size={32} />
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#475569', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                READY FOR PICKUP
-              </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.8rem', fontWeight: 900, color: '#000814', lineHeight: 1.1 }}>
-                01
-              </div>
-              <div style={{ width: '22px', height: '3px', backgroundColor: '#FFD60A', borderRadius: '2px', marginTop: '4px' }} />
-            </div>
-          </div>
-
-          {/* Card 3: Total Orders */}
-          <div
-            style={{
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #000814',
-              borderRadius: '10px',
-              boxShadow: '2px 2px 0px #000814',
-              padding: '16px 20px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-            }}
-          >
-            <div
-              style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '8px',
-                border: '1.5px solid #000814',
-                backgroundColor: '#BAE6FD',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
-            >
-              <PixelChartIcon size={32} />
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#475569', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                TOTAL ORDERS
-              </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.8rem', fontWeight: 900, color: '#000814', lineHeight: 1.1 }}>
-                08
-              </div>
-              <div style={{ width: '22px', height: '3px', backgroundColor: '#FFD60A', borderRadius: '2px', marginTop: '4px' }} />
-            </div>
-          </div>
-        </div>
-
-        {/* 3. CURRENT ORDER TRACKER CARD */}
-        {currentOrder && (
-          <div
-            style={{
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #000814',
-              borderRadius: '10px',
-              boxShadow: '2px 2px 0px #000814',
-              padding: '20px 24px',
-            }}
-          >
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 900, color: '#000814', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: '14px' }}>
-              CURRENT ORDER
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <PixelArt name="ticketToken" size={54} />
-                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 900, color: '#000814' }}>
-                  {currentOrder.token}
-                </span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#003566', fontSize: '0.88rem', fontWeight: 700 }}>
-                  <PixelArt name="pdfBadge" size={18} />
-                  <span>{currentOrder.fileName}</span>
-                </div>
-                {/* Status badge */}
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    backgroundColor: '#BAE6FD',
-                    border: '1.5px solid #003566',
-                    borderRadius: '6px',
-                    padding: '3px 10px',
-                    color: '#003566',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 900,
-                    fontSize: '0.72rem',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  <Cog size={13} className="animate-spin" />
-                  <span>PROCESSING</span>
-                </div>
-              </div>
-
-              {/* Ready time */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <PixelArt name="pixelClock" size={20} />
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 700 }}>Ready around</span>
-                  <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.95rem', color: '#000814' }}>
-                    {currentOrder.eta}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* 4-Step Progress Track Line */}
-            <div style={{ marginTop: '28px', position: 'relative', padding: '0 20px' }}>
-              {/* Connecting line */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+              {/* Dashed Ticket Token Badge */}
               <div
                 style={{
-                  position: 'absolute',
-                  top: '8px',
-                  left: '30px',
-                  right: '30px',
-                  height: '4px',
-                  backgroundColor: '#E2E8F0',
-                  zIndex: 1,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  border: '2px dashed #000814',
+                  backgroundColor: '#FEF08A',
+                  padding: '6px 14px',
+                  borderRadius: 0,
+                  boxShadow: '2px 2px 0px 0px #000814',
                 }}
               >
-                {/* Filled portion up to step 3 (Printing/Processing) */}
-                <div
+                <PixelArt name="ticketToken" size={24} />
+                <span
                   style={{
-                    width: '68%',
-                    height: '100%',
-                    backgroundColor: '#0284C7',
-                    borderRadius: '2px',
+                    fontFamily: "'Press Start 2P', monospace",
+                    fontSize: '1.15rem',
+                    color: '#000814',
                   }}
-                />
+                >
+                  {currentOrder.token}
+                </span>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
-                {[
-                  { label: 'ORDERED', active: true },
-                  { label: 'ACCEPTED', active: true },
-                  { label: 'PRINTING', active: true, pulse: true },
-                  { label: 'READY', active: false },
-                ].map((step, idx) => (
-                  <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <div
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '9999px',
-                        backgroundColor: step.active ? '#0284C7' : '#E2E8F0',
-                        border: '3px solid #FFFFFF',
-                        boxShadow: step.pulse ? '0 0 0 3px #BAE6FD' : 'none',
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: '0.68rem',
-                        fontWeight: 800,
-                        color: step.active ? '#000814' : '#94A3B8',
-                        letterSpacing: '0.04em',
-                      }}
-                    >
-                      {step.label}
-                    </span>
-                  </div>
-                ))}
+              {/* Document name */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  color: '#003566',
+                  fontSize: '0.92rem',
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                }}
+              >
+                <PixelArt name="pdfBadge" size={20} />
+                <span>{currentOrder.fileName}</span>
+              </div>
+
+              {/* Sharp Pixel Status Badge */}
+              <span
+                className="pixel-badge"
+                style={{
+                  backgroundColor: '#BAE6FD',
+                  color: '#003566',
+                }}
+              >
+                <Cog size={13} className="animate-spin" />
+                <span>PROCESSING</span>
+              </span>
+            </div>
+
+            {/* Ready ETA (VT323 Digital Font) */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <PixelArt name="pixelClock" size={24} />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.72rem', color: '#64748B', fontFamily: "'Silkscreen', monospace", fontWeight: 700 }}>
+                  Ready around
+                </span>
+                <span
+                  style={{
+                    fontFamily: "'VT323', monospace",
+                    fontSize: '1.85rem',
+                    color: '#000814',
+                    lineHeight: 1,
+                    letterSpacing: '0.04em',
+                  }}
+                >
+                  {currentOrder.eta}
+                </span>
               </div>
             </div>
           </div>
-        )}
 
-        {/* 4. RECENT ORDERS TABLE */}
-        <div
-          style={{
-            backgroundColor: '#FFFFFF',
-            border: '2px solid #000814',
-            borderRadius: '10px',
-            boxShadow: '2px 2px 0px #000814',
-            padding: '20px 24px',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', fontWeight: 900, color: '#000814', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-              RECENT ORDERS
-            </span>
-            <Link
-              to="/orders"
+          {/* 4-Step Progress Track with Square Pixel Blocks */}
+          <div style={{ marginTop: '32px', position: 'relative', padding: '0 24px' }}>
+            {/* Connecting Black Line */}
+            <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                fontFamily: 'var(--font-heading)',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                color: '#003566',
-                textDecoration: 'none',
+                position: 'absolute',
+                top: '6px',
+                left: '32px',
+                right: '32px',
+                height: '4px',
+                backgroundColor: '#CBD5E1',
+                border: '1px solid #000814',
+                zIndex: 1,
               }}
             >
-              <span>View all</span>
-              <ArrowRight size={14} />
-            </Link>
-          </div>
+              {/* Filled portion up to Step 3 */}
+              <div
+                style={{
+                  width: '68%',
+                  height: '100%',
+                  backgroundColor: '#0284C7',
+                  borderRadius: 0,
+                }}
+              />
+            </div>
 
+            <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
+              {[
+                { label: 'ORDERED', active: true },
+                { label: 'ACCEPTED', active: true },
+                { label: 'PRINTING', active: true, pulse: true },
+                { label: 'READY', active: false },
+              ].map((step, idx) => (
+                <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                  {/* Square 14x14px Pixel Block */}
+                  <div
+                    style={{
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: 0,
+                      backgroundColor: step.active ? (step.pulse ? '#FFD60A' : '#0284C7') : '#FFFFFF',
+                      border: '2px solid #000814',
+                      boxShadow: step.pulse ? '0 0 0 3px #000814' : 'none',
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "'Silkscreen', monospace",
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      color: step.active ? '#000814' : '#94A3B8',
+                      letterSpacing: '0.04em',
+                    }}
+                  >
+                    {step.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 4. RECENT ORDERS TABLE (Full Width, Sharp 16-Bit Retro Styling)           */}
+      {/* ========================================================================= */}
+      <div
+        style={{
+          backgroundColor: '#FFFFFF',
+          border: '3px solid #000814',
+          borderRadius: 0,
+          boxShadow: '4px 4px 0px 0px #000814',
+          padding: '24px 30px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <span
+            style={{
+              fontFamily: "'Silkscreen', monospace",
+              fontSize: '0.9rem',
+              fontWeight: 700,
+              color: '#000814',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+            }}
+          >
+            RECENT ORDERS
+          </span>
+
+          <Link
+            to="/orders"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontFamily: "'Silkscreen', monospace",
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              color: '#003566',
+              textDecoration: 'none',
+            }}
+          >
+            <span>View all</span>
+            <ArrowRight size={14} />
+          </Link>
+        </div>
+
+        <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
-              <tr style={{ borderBottom: '1.5px solid #E2E8F0' }}>
-                <th style={{ padding: '8px 10px', fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#64748B' }}>Token</th>
-                <th style={{ padding: '8px 10px', fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#64748B' }}>File</th>
-                <th style={{ padding: '8px 10px', fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#64748B' }}>Status</th>
-                <th style={{ padding: '8px 10px', fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#64748B' }}>Price</th>
-                <th style={{ padding: '8px 10px', fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#64748B' }}>Date</th>
-                <th style={{ padding: '8px 10px', fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#64748B', textAlign: 'right' }}>Action</th>
+              <tr style={{ backgroundColor: '#001D3D', borderBottom: '3px solid #000814' }}>
+                <th style={{ padding: '10px 14px', fontFamily: "'Silkscreen', monospace", fontSize: '0.74rem', fontWeight: 700, color: '#FFD60A' }}>Token</th>
+                <th style={{ padding: '10px 14px', fontFamily: "'Silkscreen', monospace", fontSize: '0.74rem', fontWeight: 700, color: '#FFFFFF' }}>File</th>
+                <th style={{ padding: '10px 14px', fontFamily: "'Silkscreen', monospace", fontSize: '0.74rem', fontWeight: 700, color: '#FFFFFF' }}>Status</th>
+                <th style={{ padding: '10px 14px', fontFamily: "'Silkscreen', monospace", fontSize: '0.74rem', fontWeight: 700, color: '#FFFFFF' }}>Price</th>
+                <th style={{ padding: '10px 14px', fontFamily: "'Silkscreen', monospace", fontSize: '0.74rem', fontWeight: 700, color: '#FFFFFF' }}>Date</th>
+                <th style={{ padding: '10px 14px', fontFamily: "'Silkscreen', monospace", fontSize: '0.74rem', fontWeight: 700, color: '#FFFFFF', textAlign: 'right' }}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -528,18 +620,25 @@ export function StudentDashboard() {
                 }
 
                 return (
-                  <tr key={`${o.id || o.token}-${idx}`} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                  <tr 
+                    key={`${o.id || o.token}-${idx}`} 
+                    style={{ 
+                      borderBottom: '2px solid #000814',
+                      backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#FAF8F1',
+                    }}
+                  >
                     {/* Token */}
-                    <td style={{ padding: '12px 10px' }}>
+                    <td style={{ padding: '14px 14px' }}>
                       <span
                         style={{
                           backgroundColor: '#FEF08A',
-                          border: '1.5px solid #000814',
-                          borderRadius: '4px',
-                          padding: '3px 8px',
+                          border: '2px solid #000814',
+                          borderRadius: 0,
+                          boxShadow: '1.5px 1.5px 0px 0px #000814',
+                          padding: '4px 8px',
                           fontFamily: 'monospace',
-                          fontWeight: 800,
-                          fontSize: '0.78rem',
+                          fontWeight: 700,
+                          fontSize: '0.82rem',
                           color: '#000814',
                         }}
                       >
@@ -548,72 +647,58 @@ export function StudentDashboard() {
                     </td>
 
                     {/* File */}
-                    <td style={{ padding: '12px 10px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#003566' }}>
+                    <td style={{ padding: '14px 14px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontFamily: 'monospace', fontWeight: 700, color: '#003566' }}>
                         <PixelArt name="pdfBadge" size={18} />
                         <span>{o.fileName}</span>
                       </div>
                     </td>
 
                     {/* Status */}
-                    <td style={{ padding: '12px 10px' }}>
-                      <div
+                    <td style={{ padding: '14px 14px' }}>
+                      <span
+                        className="pixel-badge"
                         style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '5px',
                           backgroundColor: statusBadgeBg,
                           color: statusBadgeText,
-                          borderRadius: '6px',
-                          padding: '3px 8px',
-                          fontFamily: 'var(--font-heading)',
-                          fontWeight: 900,
-                          fontSize: '0.68rem',
-                          letterSpacing: '0.03em',
                         }}
                       >
                         <StatusIcon size={12} strokeWidth={2.5} />
                         <span>{statusBadgeLabel}</span>
-                      </div>
+                      </span>
                     </td>
 
-                    {/* Price */}
-                    <td style={{ padding: '12px 10px', fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.85rem', color: '#000814' }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    {/* Price (VT323 Pixel Font) */}
+                    <td style={{ padding: '14px 14px', color: '#000814' }}>
+                      <span 
+                        style={{ 
+                          display: 'inline-flex', 
+                          alignItems: 'center', 
+                          gap: '4px',
+                          fontFamily: "'VT323', monospace",
+                          fontSize: '1.55rem',
+                          fontWeight: 700,
+                        }}
+                      >
                         <PixelArt name="rupeeCoin" size={16} />
-                        {o.price}
+                        ₹{o.price}
                       </span>
                     </td>
 
                     {/* Date */}
-                    <td style={{ padding: '12px 10px', fontSize: '0.78rem', color: '#64748B', fontWeight: 600 }}>
+                    <td style={{ padding: '14px 14px', fontSize: '0.82rem', fontFamily: 'monospace', color: '#64748B', fontWeight: 600 }}>
                       {o.date}
                     </td>
 
                     {/* Action button */}
-                    <td style={{ padding: '12px 10px', textAlign: 'right' }}>
+                    <td style={{ padding: '14px 14px', textAlign: 'right' }}>
                       <button
                         type="button"
                         onClick={() => navigate(`/order/${o.token || o.id}`)}
+                        className="pixel-btn-navy"
                         style={{
-                          backgroundColor: 'transparent',
-                          border: '1.5px solid #003566',
-                          borderRadius: '6px',
-                          padding: '4px 14px',
-                          color: '#003566',
-                          fontFamily: 'var(--font-heading)',
-                          fontWeight: 800,
-                          fontSize: '0.75rem',
-                          cursor: 'pointer',
-                          transition: 'all 0.1s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#003566';
-                          e.currentTarget.style.color = '#FFD60A';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                          e.currentTarget.style.color = '#003566';
+                          padding: '5px 12px',
+                          fontSize: '10px',
                         }}
                       >
                         View
@@ -625,328 +710,6 @@ export function StudentDashboard() {
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* RIGHT COLUMN: Interactive "PRINT SHOP" Widget matching Reference Mockup */}
-      <div
-        style={{
-          width: '340px',
-          flexShrink: 0,
-          backgroundColor: '#FFFFFF',
-          border: '2px solid #000814',
-          borderRadius: '12px',
-          boxShadow: '3px 3px 0px #000814',
-          padding: '20px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '18px',
-        }}
-      >
-        {/* Header */}
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <PixelShopIcon size={24} />
-            <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1rem', color: '#000814', letterSpacing: '0.04em' }}>
-              PRINT SHOP
-            </span>
-          </div>
-          <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, marginTop: '2px' }}>
-            Quick. Easy. Reliable.
-          </div>
-        </div>
-
-        {/* Pixel Art Printer with Paper Stacks Banner */}
-        <div style={{ border: '1.5px solid #000814', borderRadius: '8px', overflow: 'hidden' }}>
-          <PixelPrintShopStation width="100%" height={110} />
-        </div>
-
-        {/* PRINT SETTINGS Section */}
-        <div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 900, color: '#000814', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '12px' }}>
-            PRINT SETTINGS
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {/* Copies */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Copies</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <button
-                  type="button"
-                  onClick={() => setCopies((prev) => Math.max(1, prev - 1))}
-                  style={{
-                    width: '26px',
-                    height: '26px',
-                    backgroundColor: '#FFC300',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 900,
-                  }}
-                >
-                  <Minus size={13} strokeWidth={3} />
-                </button>
-                <span style={{ minWidth: '24px', textAlign: 'center', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.9rem', color: '#000814' }}>
-                  {copies}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setCopies((prev) => prev + 1)}
-                  style={{
-                    width: '26px',
-                    height: '26px',
-                    backgroundColor: '#FFC300',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 900,
-                  }}
-                >
-                  <Plus size={13} strokeWidth={3} />
-                </button>
-              </div>
-            </div>
-
-            {/* Color */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Color</span>
-              </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                <button
-                  type="button"
-                  onClick={() => setColorMode('bw')}
-                  style={{
-                    padding: '4px 12px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: colorMode === 'bw' ? '#001D3D' : '#FFFFFF',
-                    color: colorMode === 'bw' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  B&amp;W
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setColorMode('color')}
-                  style={{
-                    padding: '4px 12px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: colorMode === 'color' ? '#001D3D' : '#FFFFFF',
-                    color: colorMode === 'color' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  COLOR
-                </button>
-              </div>
-            </div>
-
-            {/* Sides */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Sides</span>
-              </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                <button
-                  type="button"
-                  onClick={() => setSides('single')}
-                  style={{
-                    padding: '4px 10px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: sides === 'single' ? '#001D3D' : '#FFFFFF',
-                    color: sides === 'single' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  SINGLE
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSides('double')}
-                  style={{
-                    padding: '4px 10px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: sides === 'double' ? '#001D3D' : '#FFFFFF',
-                    color: sides === 'double' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  DOUBLE
-                </button>
-              </div>
-            </div>
-
-            {/* Paper */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Paper</span>
-              </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                <button
-                  type="button"
-                  onClick={() => setPaperSize('A4')}
-                  style={{
-                    padding: '4px 14px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: paperSize === 'A4' ? '#001D3D' : '#FFFFFF',
-                    color: paperSize === 'A4' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  A4
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPaperSize('A3')}
-                  style={{
-                    padding: '4px 14px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: paperSize === 'A3' ? '#001D3D' : '#FFFFFF',
-                    color: paperSize === 'A3' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  A3
-                </button>
-              </div>
-            </div>
-
-            {/* Binding */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Binding</span>
-              </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                {['none', 'staple', 'spiral'].map((b) => (
-                  <button
-                    key={b}
-                    type="button"
-                    onClick={() => setBinding(b)}
-                    style={{
-                      padding: '4px 8px',
-                      border: '1.5px solid #000814',
-                      borderRadius: '4px',
-                      backgroundColor: binding === b ? '#001D3D' : '#FFFFFF',
-                      color: binding === b ? '#FFFFFF' : '#000814',
-                      fontFamily: 'var(--font-heading)',
-                      fontWeight: 800,
-                      fontSize: '0.68rem',
-                      textTransform: 'uppercase',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {b}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* PRICE SUMMARY Section */}
-        <div style={{ borderTop: '1.5px solid #E2E8F0', paddingTop: '14px' }}>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 900, color: '#000814', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '10px' }}>
-            PRICE SUMMARY
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.82rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: '#475569', fontWeight: 700 }}>
-              <span>PRINT COST</span>
-              <span style={{ color: '#000814', fontWeight: 800 }}>₹{printCost}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: '#475569', fontWeight: 700 }}>
-              <span>BINDING</span>
-              <span style={{ color: '#000814', fontWeight: 800 }}>₹{bindingCost}</span>
-            </div>
-
-            <div style={{ height: '1.5px', backgroundColor: '#000814', margin: '6px 0' }} />
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.95rem', color: '#000814' }}>
-                TOTAL
-              </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.6rem', color: '#000814' }}>
-                ₹{totalCost}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Action CTA Button: PLACE ORDER -> */}
-        <button
-          type="button"
-          onClick={handlePlaceOrder}
-          style={{
-            width: '100%',
-            backgroundColor: '#FFC300',
-            color: '#000814',
-            border: '3px solid #000814',
-            borderRadius: '8px',
-            padding: '14px',
-            fontFamily: 'var(--font-heading)',
-            fontWeight: 900,
-            fontSize: '0.88rem',
-            letterSpacing: '0.03em',
-            boxShadow: '3px 3px 0px #000814',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            transition: 'all 0.1s ease',
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FFD60A'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FFC300'; }}
-          onMouseDown={(e) => {
-            e.currentTarget.style.transform = 'translate(2px, 2px)';
-            e.currentTarget.style.boxShadow = '1px 1px 0px #000814';
-          }}
-          onMouseUp={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = '3px 3px 0px #000814';
-          }}
-        >
-          <span>PLACE ORDER</span>
-          <ArrowRight size={18} strokeWidth={3} />
-        </button>
       </div>
     </div>
   );
