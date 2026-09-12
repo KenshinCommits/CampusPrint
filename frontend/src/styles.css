@@ -2,7 +2,7 @@
    CAMPUSPRINT NEO-BRUTALIST PIXEL UI DESIGN SYSTEM
    ========================================================= */
 
-@import './index.css';
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800;900&display=swap');
 
 :root {
   /* Golden Twilight 5-Color System */
@@ -50,13 +50,12 @@
   --border-extra: 3px solid #000814;
   --border-dashed: 2px dashed #000814;
   
-  /* Globally Ban Rounded Corners (16-Bit Pixel UI) */
-  --radius-xs: 0px;
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
-  --radius-full: 0px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
   
   /* Hard Pixel Drop Shadows */
   --shadow-neo: 4px 4px 0px 0px #000814;
@@ -66,9 +65,8 @@
   
   --font-pixel: 'Press Start 2P', monospace;
   --font-silkscreen: 'Silkscreen', monospace;
-  --font-timer: 'VT323', monospace;
-  --font-heading: 'Silkscreen', monospace;
-  --font-body: monospace;
+  --font-heading: 'Space Grotesk', -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
 }
 
 * {

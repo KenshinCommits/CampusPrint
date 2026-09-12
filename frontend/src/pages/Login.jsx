@@ -81,17 +81,18 @@ export function Login() {
       >
         {/* Top Pixel Logo & Corner Sparkles */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
             <PixelLogo size={32} color="#FFC300" />
             <span
               style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '1rem',
-                letterSpacing: '0.02em',
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.35rem',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
                 color: '#FFFFFF',
               }}
             >
-              CAMPUS<span style={{ color: '#FFD60A' }}>PRINT</span>
+              CAMPUSPRINT
             </span>
           </div>
 
@@ -102,27 +103,27 @@ export function Login() {
         <div style={{ margin: '40px 0' }}>
           <h1
             style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: 'clamp(1.6rem, 3.6vw, 2.6rem)',
-              lineHeight: 1.35,
-              letterSpacing: '0.02em',
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(2.6rem, 5.5vw, 4.4rem)',
+              fontWeight: 900,
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
               color: '#FFFFFF',
-              marginBottom: '24px',
+              marginBottom: '22px',
             }}
           >
             PRINT.<br />
             PAY.<br />
-            <span style={{ color: '#FFD60A' }}>PICK UP.</span>
+            <span style={{ color: '#FFC300' }}>PICK UP.</span>
           </h1>
 
           <p
             style={{
               color: '#94A3B8',
-              fontSize: 'clamp(0.9rem, 1.3vw, 1.05rem)',
-              maxWidth: '420px',
-              lineHeight: 1.7,
-              fontFamily: 'monospace',
-              fontWeight: 500,
+              fontSize: 'clamp(1rem, 1.6vw, 1.2rem)',
+              maxWidth: '400px',
+              lineHeight: 1.6,
+              fontWeight: 600,
             }}
           >
             Upload your document.<br />
@@ -148,14 +149,11 @@ export function Login() {
           justifyContent: 'center',
         }}
       >
-        <div
+        <NeoCard
+          variant="default"
           style={{
-            maxWidth: '460px',
+            maxWidth: '440px',
             width: '100%',
-            backgroundColor: '#FFFFFF',
-            border: '4px solid #000814',
-            boxShadow: '6px 6px 0px 0px #000814',
-            borderRadius: 0,
             padding: '36px 32px',
           }}
         >
@@ -164,13 +162,12 @@ export function Login() {
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
-              backgroundColor: '#001D3D',
+              backgroundColor: '#FFFFFF',
               border: '2px solid #000814',
-              borderRadius: 0,
+              borderRadius: '12px',
               padding: '4px',
-              marginBottom: '26px',
+              marginBottom: '28px',
               boxShadow: '3px 3px 0px 0px #000814',
-              gap: '4px',
             }}
           >
             <button
@@ -179,16 +176,15 @@ export function Login() {
               style={{
                 padding: '10px',
                 border: roleSelection === 'student' ? '2px solid #000814' : '2px solid transparent',
-                borderRadius: 0,
-                fontFamily: "'Silkscreen', monospace",
-                fontWeight: 700,
-                fontSize: '0.82rem',
+                borderRadius: '8px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.88rem',
                 cursor: 'pointer',
                 backgroundColor: roleSelection === 'student' ? '#FFC300' : 'transparent',
-                color: roleSelection === 'student' ? '#000814' : '#FFFFFF',
+                color: '#000814',
                 boxShadow: roleSelection === 'student' ? '2px 2px 0px 0px #000814' : 'none',
-                transition: 'none',
-                textTransform: 'uppercase',
+                transition: 'all 0.1s ease',
               }}
             >
               Student
@@ -199,16 +195,15 @@ export function Login() {
               style={{
                 padding: '10px',
                 border: roleSelection === 'staff' ? '2px solid #000814' : '2px solid transparent',
-                borderRadius: 0,
-                fontFamily: "'Silkscreen', monospace",
-                fontWeight: 700,
-                fontSize: '0.82rem',
+                borderRadius: '8px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.88rem',
                 cursor: 'pointer',
                 backgroundColor: roleSelection === 'staff' ? '#FFC300' : 'transparent',
-                color: roleSelection === 'staff' ? '#000814' : '#FFFFFF',
+                color: '#000814',
                 boxShadow: roleSelection === 'staff' ? '2px 2px 0px 0px #000814' : 'none',
-                transition: 'none',
-                textTransform: 'uppercase',
+                transition: 'all 0.1s ease',
               }}
             >
               Staff
@@ -216,22 +211,21 @@ export function Login() {
           </div>
 
           {/* Heading */}
-          <div style={{ marginBottom: '22px' }}>
+          <div style={{ marginBottom: '24px' }}>
             <h2
               style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontWeight: 400,
-                fontSize: '1.25rem',
-                lineHeight: 1.4,
-                letterSpacing: '0.02em',
-                marginBottom: '8px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '1.8rem',
+                letterSpacing: '-0.02em',
+                marginBottom: '4px',
                 color: '#000814',
               }}
             >
-              WELCOME BACK!
+              Welcome Back!
             </h2>
-            <p style={{ color: '#4B5563', fontSize: '0.85rem', fontFamily: 'monospace', fontWeight: 500 }}>
-              Log in to access your campus print station
+            <p style={{ color: '#4B5563', fontSize: '0.9rem', fontWeight: 600 }}>
+              Log in to access your print station
             </p>
           </div>
 
@@ -240,14 +234,14 @@ export function Login() {
               style={{
                 backgroundColor: '#FECACA',
                 border: '2px solid #000814',
-                borderRadius: 0,
-                boxShadow: '3px 3px 0px 0px #000814',
+                borderRadius: '10px',
+                boxShadow: '2px 2px 0px 0px #000814',
                 padding: '10px 14px',
-                fontSize: '0.8rem',
-                fontWeight: 700,
+                fontSize: '0.85rem',
+                fontWeight: 800,
                 color: '#991B1B',
                 marginBottom: '18px',
-                fontFamily: 'monospace',
+                fontFamily: 'var(--font-heading)',
               }}
             >
               {error}
@@ -259,27 +253,27 @@ export function Login() {
             style={{
               backgroundColor: '#FFFDEB',
               border: '2px solid #000814',
-              borderRadius: 0,
+              borderRadius: '10px',
               padding: '12px',
-              marginBottom: '20px',
+              marginBottom: '18px',
               boxShadow: '3px 3px 0px 0px #000814',
             }}
           >
             <div
               style={{
-                fontFamily: "'Silkscreen', monospace",
-                fontWeight: 700,
-                fontSize: '0.74rem',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.8rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                marginBottom: '10px',
+                marginBottom: '8px',
                 textTransform: 'uppercase',
                 color: '#000814',
               }}
             >
               <Sparkles size={16} color="#FFC300" />
-              <span>Judges One-Click Logins:</span>
+              <span>⚡ Judges One-Click Demo Logins:</span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -289,8 +283,8 @@ export function Login() {
                 onClick={() => handleQuickLogin('student@campusprint.demo', 'student123', 'student')}
                 style={{
                   backgroundColor: '#BAE6FD',
-                  border: '2px solid #000814',
-                  borderRadius: 0,
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
                   boxShadow: '2px 2px 0px 0px #000814',
                   textAlign: 'left',
                   padding: '7px 8px',
@@ -298,11 +292,11 @@ export function Login() {
                   flexDirection: 'column',
                   gap: '2px',
                   cursor: 'pointer',
-                  fontFamily: "'Silkscreen', monospace",
+                  fontFamily: 'var(--font-heading)',
                 }}
               >
-                <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#000814' }}>Demo Student</div>
-                <div style={{ fontSize: '0.65rem', color: '#003566', fontFamily: 'monospace' }}>order in progress</div>
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>👨‍🎓 Demo Student</div>
+                <div style={{ fontSize: '0.65rem', color: '#003566', fontWeight: 600 }}>order in progress</div>
               </button>
 
               <button
@@ -311,8 +305,8 @@ export function Login() {
                 onClick={() => handleQuickLogin('staff@campusprint.demo', 'staff123', 'staff')}
                 style={{
                   backgroundColor: '#FFD60A',
-                  border: '2px solid #000814',
-                  borderRadius: 0,
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
                   boxShadow: '2px 2px 0px 0px #000814',
                   textAlign: 'left',
                   padding: '7px 8px',
@@ -320,11 +314,11 @@ export function Login() {
                   flexDirection: 'column',
                   gap: '2px',
                   cursor: 'pointer',
-                  fontFamily: "'Silkscreen', monospace",
+                  fontFamily: 'var(--font-heading)',
                 }}
               >
-                <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#000814' }}>Shop Staff</div>
-                <div style={{ fontSize: '0.65rem', color: '#001D3D', fontFamily: 'monospace' }}>queue &amp; manager</div>
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>👩‍💼 Shop Staff</div>
+                <div style={{ fontSize: '0.65rem', color: '#001D3D', fontWeight: 600 }}>queue & analytics</div>
               </button>
 
               <button
@@ -333,8 +327,8 @@ export function Login() {
                 onClick={() => handleQuickLogin('ananya@campusprint.demo', 'demo123', 'student')}
                 style={{
                   backgroundColor: '#86EFAC',
-                  border: '2px solid #000814',
-                  borderRadius: 0,
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
                   boxShadow: '2px 2px 0px 0px #000814',
                   textAlign: 'left',
                   padding: '7px 8px',
@@ -342,11 +336,11 @@ export function Login() {
                   flexDirection: 'column',
                   gap: '2px',
                   cursor: 'pointer',
-                  fontFamily: "'Silkscreen', monospace",
+                  fontFamily: 'var(--font-heading)',
                 }}
               >
-                <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#000814' }}>Ananya Iyer</div>
-                <div style={{ fontSize: '0.65rem', color: '#003566', fontFamily: 'monospace' }}>ready order (resume)</div>
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>📄 Ananya Iyer</div>
+                <div style={{ fontSize: '0.65rem', color: '#003566', fontWeight: 600 }}>ready order (resume)</div>
               </button>
 
               <button
@@ -355,8 +349,8 @@ export function Login() {
                 onClick={() => handleQuickLogin('karthik@campusprint.demo', 'demo123', 'student')}
                 style={{
                   backgroundColor: '#C7D2FE',
-                  border: '2px solid #000814',
-                  borderRadius: 0,
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
                   boxShadow: '2px 2px 0px 0px #000814',
                   textAlign: 'left',
                   padding: '7px 8px',
@@ -364,16 +358,16 @@ export function Login() {
                   flexDirection: 'column',
                   gap: '2px',
                   cursor: 'pointer',
-                  fontFamily: "'Silkscreen', monospace",
+                  fontFamily: 'var(--font-heading)',
                 }}
               >
-                <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#000814' }}>Karthik Rao</div>
-                <div style={{ fontSize: '0.65rem', color: '#001D3D', fontFamily: 'monospace' }}>capstone project</div>
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>📘 Karthik Rao</div>
+                <div style={{ fontSize: '0.65rem', color: '#001D3D', fontWeight: 600 }}>capstone project</div>
               </button>
             </div>
 
-            <div style={{ marginTop: '8px', fontSize: '0.68rem', color: '#6B7280', textAlign: 'center', fontFamily: 'monospace', fontWeight: 600 }}>
-              &gt; Select any demo user above to enter
+            <div style={{ marginTop: '7px', fontSize: '0.68rem', color: '#6B7280', textAlign: 'center', fontWeight: 700 }}>
+              👆 Click any role to log in instantly
             </div>
           </div>
 
@@ -386,15 +380,15 @@ export function Login() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  fontFamily: "'Silkscreen', monospace",
-                  fontWeight: 700,
-                  fontSize: '0.75rem',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.8rem',
                   textTransform: 'uppercase',
                   marginBottom: '6px',
                   color: '#000814',
                 }}
               >
-                <Mail size={14} />
+                <Mail size={15} />
                 <span>Email address</span>
               </label>
               <input
@@ -409,10 +403,10 @@ export function Login() {
                   height: '44px',
                   backgroundColor: '#FFFFFF',
                   border: '2px solid #000814',
-                  borderRadius: 0,
+                  borderRadius: '12px',
                   boxShadow: '3px 3px 0px 0px #000814',
                   padding: '0 14px',
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--font-body)',
                   fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none',
@@ -427,15 +421,15 @@ export function Login() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  fontFamily: "'Silkscreen', monospace",
-                  fontWeight: 700,
-                  fontSize: '0.75rem',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.8rem',
                   textTransform: 'uppercase',
                   marginBottom: '6px',
                   color: '#000814',
                 }}
               >
-                <Lock size={14} />
+                <Lock size={15} />
                 <span>Password</span>
               </label>
               <div style={{ position: 'relative' }}>
@@ -451,10 +445,10 @@ export function Login() {
                     height: '44px',
                     backgroundColor: '#FFFFFF',
                     border: '2px solid #000814',
-                    borderRadius: 0,
+                    borderRadius: '12px',
                     boxShadow: '3px 3px 0px 0px #000814',
                     padding: '0 42px 0 14px',
-                    fontFamily: 'monospace',
+                    fontFamily: 'var(--font-body)',
                     fontSize: '0.9rem',
                     fontWeight: 600,
                     outline: 'none',
@@ -481,29 +475,42 @@ export function Login() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.78rem', fontFamily: 'monospace' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontWeight: 600 }}>
                 <input type="checkbox" defaultChecked style={{ accentColor: '#000814' }} />
                 <span>Remember me</span>
               </label>
-              <a href="#forgot" style={{ color: '#000814', fontWeight: 700, textDecoration: 'underline' }}>
+              <a href="#forgot" style={{ color: '#000814', fontWeight: 800, textDecoration: 'underline' }}>
                 Forgot password?
               </a>
             </div>
 
-            {/* "LOG IN ->" 3D Beveled Arcade Yellow Button */}
+            {/* "LOG IN ->" yellow button */}
             <button
               type="submit"
               disabled={busy}
-              className="pixel-btn-arcade"
               style={{
                 width: '100%',
-                padding: '14px 18px',
-                fontSize: '11px',
+                backgroundColor: '#FFC300',
+                color: '#000814',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '1.05rem',
+                textTransform: 'uppercase',
+                padding: '14px',
+                borderRadius: '12px',
+                border: '2px solid #000814',
+                boxShadow: '4px 4px 0px 0px #000814',
+                cursor: busy ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'transform 0.08s ease, box-shadow 0.08s ease',
               }}
             >
               <span>{busy ? 'LOGGING IN…' : 'LOG IN ->'}</span>
-              <ArrowRight size={16} strokeWidth={3} />
+              <ArrowRight size={18} strokeWidth={3} />
             </button>
           </form>
 
@@ -513,17 +520,16 @@ export function Login() {
               paddingTop: '20px',
               borderTop: '2px dashed #000814',
               textAlign: 'center',
-              fontSize: '0.82rem',
-              fontFamily: 'monospace',
+              fontSize: '0.85rem',
               fontWeight: 600,
             }}
           >
             <span>Don't have an account? </span>
-            <Link to="/signup" style={{ color: '#000814', fontWeight: 800, textDecoration: 'underline' }}>
+            <Link to="/signup" style={{ color: '#000814', fontWeight: 900, textDecoration: 'underline' }}>
               Create Account &rarr;
             </Link>
           </div>
-        </div>
+        </NeoCard>
       </div>
     </div>
   );

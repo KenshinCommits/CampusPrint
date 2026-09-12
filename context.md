@@ -196,26 +196,4 @@ Implemented pure, crisp SVG React components with `shapeRendering="crispEdges"` 
   - Smooth-scrolling anchor to `#how-it-works`.
   - Authenticated session redirects for students (`/dashboard`) and staff (`/staff`).
 
----
-
-## 11. True 16-Bit Pixel UI Enforcement & De-Cluttering
-- **Global Google Pixel Fonts**:
-  - `Press Start 2P`: Headings, logo tokens, big titles (`HEY, STUDENT. READY TO PRINT?`, `WELCOME BACK!`, `CP-1042`).
-  - `Silkscreen`: Navigation items, metric titles, input labels, table headers, and badges.
-  - `VT323`: Digital clocks, estimated times (`2:40 PM`), and currency displays (`₹17`).
-- **Zero Rounded Corners (`rounded-none`)**:
-  - Stripped all `border-radius` across cards, buttons, inputs, pills, and containers.
-  - Global CSS tokens: `--radius-xs` through `--radius-full` locked to `0px`.
-  - Order progress dots converted into authentic square `14x14px` pixel blocks.
-- **3D Beveled Arcade Buttons (`frontend/src/index.css`)**:
-  - `.pixel-btn-arcade`: Raised 3D yellow button with light top/left inset edge (`#FFD60A`), dark bottom/right inset edge (`#C79500`), and hard `3px` black drop shadow. Pressing triggers a tactile 2px translation and inset shadow inversion.
-  - `.pixel-btn-navy`: 2-tone navy button with sharp 2px black border and shadow.
-  - `.pixel-badge`: Sharp rectangular pixel badge with 2px borders.
-- **Student Dashboard De-Cluttering (`frontend/src/pages/StudentDashboard.jsx`)**:
-  - Completely removed the duplicate right-column Print Settings widget. Main dashboard content (Hero, Metric Cards, Current Order, Recent Orders) now breathes cleanly across the canvas.
-  - Removed duplicate top-bar navigation tabs from `AppLayout.jsx` that were repeating the sidebar links.
-  - Formatted metric cards with high-contrast pastel backgrounds (`#FEF08A` yellow, `#BAE6FD` sky blue, `#FFFFFF` white) and `Press Start 2P` counters.
-  - Applied dashed ticket border around active order token `CP-1042`.
-
-
 

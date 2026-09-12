@@ -181,24 +181,24 @@ export function AppLayout({ children }) {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span
               style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '1rem',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '1.28rem',
                 letterSpacing: '0.04em',
                 color: '#FFFFFF',
-                lineHeight: 1.2,
+                lineHeight: 1.1,
               }}
             >
               CAMPUS<span style={{ color: '#FFD60A' }}>PRINT</span>
             </span>
             <span
               style={{
-                fontFamily: "'Silkscreen', monospace",
-                fontWeight: 700,
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
                 fontSize: '0.62rem',
                 letterSpacing: '0.12em',
-                color: '#FFD60A',
+                color: '#FFC300',
                 textTransform: 'uppercase',
-                marginTop: '2px',
               }}
             >
               PRINT. PAY. PICK UP.
@@ -206,9 +206,106 @@ export function AppLayout({ children }) {
           </div>
         </Link>
 
-        {/* Right Action Icons: Notifications, and User Profile (Duplicate top-bar nav links removed) */}
+        {/* Center / Right: Nav Tabs, Notifications, and User Profile */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          {/* Notifications Button with Square Badge */}
+          {/* Top Nav Tabs */}
+          {!isStaff ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {/* Dashboard Tab */}
+              <Link
+                to="/dashboard"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 14px',
+                  borderRadius: '6px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  textDecoration: 'none',
+                  backgroundColor: isDashboardActive ? '#003566' : 'transparent',
+                  border: isDashboardActive ? '2px solid #FFD60A' : '2px solid transparent',
+                  color: isDashboardActive ? '#FFD60A' : '#E2E8F0',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <LayoutDashboard size={15} color={isDashboardActive ? '#FFD60A' : '#CBD5E1'} strokeWidth={2.5} />
+                <span>Dashboard</span>
+              </Link>
+
+              {/* New Order Tab */}
+              <Link
+                to="/new-order"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 14px',
+                  borderRadius: '6px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  textDecoration: 'none',
+                  backgroundColor: isNewOrderActive ? '#003566' : 'transparent',
+                  border: isNewOrderActive ? '2px solid #FFD60A' : '2px solid transparent',
+                  color: isNewOrderActive ? '#FFD60A' : '#E2E8F0',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <PlusCircle size={15} color={isNewOrderActive ? '#FFD60A' : '#CBD5E1'} strokeWidth={2.5} />
+                <span>New Order</span>
+              </Link>
+
+              {/* My Orders Tab */}
+              <Link
+                to="/orders"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 14px',
+                  borderRadius: '6px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  textDecoration: 'none',
+                  backgroundColor: isMyOrdersActive ? '#003566' : 'transparent',
+                  border: isMyOrdersActive ? '2px solid #FFD60A' : '2px solid transparent',
+                  color: isMyOrdersActive ? '#FFD60A' : '#E2E8F0',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <FileText size={15} color={isMyOrdersActive ? '#FFD60A' : '#CBD5E1'} strokeWidth={2.5} />
+                <span>My Orders</span>
+              </Link>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Link
+                to="/staff"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 14px',
+                  borderRadius: '6px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  textDecoration: 'none',
+                  backgroundColor: isStaffActive ? '#003566' : 'transparent',
+                  border: isStaffActive ? '2px solid #FFD60A' : '2px solid transparent',
+                  color: isStaffActive ? '#FFD60A' : '#E2E8F0',
+                }}
+              >
+                <Layers size={15} color={isStaffActive ? '#FFD60A' : '#CBD5E1'} strokeWidth={2.5} />
+                <span>Shop Queue</span>
+              </Link>
+            </div>
+          )}
+
+          {/* Notifications Button with Red Badge */}
           <div ref={notifRef} style={{ position: 'relative' }}>
             <button
               type="button"
@@ -226,12 +323,12 @@ export function AppLayout({ children }) {
                 background: 'transparent',
                 border: 'none',
                 color: '#E2E8F0',
-                fontFamily: "'Silkscreen', monospace",
+                fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
                 fontSize: '0.82rem',
                 cursor: 'pointer',
                 padding: '6px 10px',
-                borderRadius: 0,
+                borderRadius: '6px',
                 position: 'relative',
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = '#FFD60A'; }}
@@ -249,13 +346,12 @@ export function AppLayout({ children }) {
                     padding: '0 3px',
                     backgroundColor: '#EF4444',
                     border: '1.5px solid #000814',
-                    borderRadius: 0,
+                    borderRadius: '9999px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: '0.62rem',
                     color: '#FFFFFF',
-                    fontFamily: 'monospace',
                     fontWeight: 900,
                   }}
                 >
@@ -275,8 +371,8 @@ export function AppLayout({ children }) {
                   width: '320px',
                   maxHeight: '400px',
                   backgroundColor: '#FFFFFF',
-                  border: '3px solid #000814',
-                  borderRadius: 0,
+                  border: '2px solid #000814',
+                  borderRadius: '10px',
                   boxShadow: '4px 4px 0px 0px #000814',
                   zIndex: 100,
                   display: 'flex',
@@ -297,19 +393,17 @@ export function AppLayout({ children }) {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Bell size={16} color="#FFD60A" />
-                    <span style={{ fontFamily: "'Silkscreen', monospace", fontWeight: 700, fontSize: '0.78rem', letterSpacing: '0.04em' }}>
+                    <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.82rem', letterSpacing: '0.04em' }}>
                       NOTIFICATIONS
                     </span>
                   </div>
                   <span
                     style={{
-                      fontSize: '0.68rem',
+                      fontSize: '0.7rem',
                       backgroundColor: '#003566',
                       color: '#FFD60A',
                       padding: '2px 8px',
-                      borderRadius: 0,
-                      border: '1px solid #000814',
-                      fontFamily: "'Silkscreen', monospace",
+                      borderRadius: '9999px',
                       fontWeight: 700,
                     }}
                   >
@@ -321,10 +415,10 @@ export function AppLayout({ children }) {
                   {notifications.length === 0 ? (
                     <div style={{ padding: '24px 16px', textAlign: 'center', color: '#6B7280' }}>
                       <div style={{ fontSize: '1.4rem', marginBottom: '6px' }}>🔔</div>
-                      <p style={{ fontFamily: "'Silkscreen', monospace", fontWeight: 700, fontSize: '0.82rem', color: '#000814' }}>
+                      <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '0.85rem', color: '#000814' }}>
                         All caught up!
                       </p>
-                      <p style={{ fontSize: '0.75rem', fontFamily: 'monospace', marginTop: '2px' }}>
+                      <p style={{ fontSize: '0.75rem', marginTop: '2px' }}>
                         Order updates &amp; hardware statuses will appear here.
                       </p>
                     </div>
@@ -334,8 +428,8 @@ export function AppLayout({ children }) {
                         key={n.id}
                         style={{
                           padding: '10px 12px',
-                          borderRadius: 0,
-                          border: '2px solid #000814',
+                          borderRadius: '6px',
+                          border: '1.5px solid #000814',
                           backgroundColor: '#FBF8F1',
                           marginBottom: '6px',
                           fontSize: '0.8rem',
@@ -345,8 +439,8 @@ export function AppLayout({ children }) {
                           gap: '4px',
                         }}
                       >
-                        <span style={{ fontFamily: 'monospace', fontWeight: 600, lineHeight: 1.4 }}>{n.text}</span>
-                        <span style={{ fontSize: '0.68rem', fontFamily: 'monospace', color: '#6B7280', alignSelf: 'flex-end' }}>
+                        <span style={{ fontWeight: 600, lineHeight: 1.4 }}>{n.text}</span>
+                        <span style={{ fontSize: '0.68rem', color: '#6B7280', alignSelf: 'flex-end' }}>
                           {formatRelativeTime(n.at)}
                         </span>
                       </div>
@@ -370,22 +464,21 @@ export function AppLayout({ children }) {
                 alignItems: 'center',
                 gap: '8px',
                 backgroundColor: '#001D3D',
-                border: '2px solid #000814',
-                borderRadius: 0,
-                boxShadow: '2px 2px 0px 0px #000814',
+                border: '1.5px solid #003566',
+                borderRadius: '9999px',
                 padding: '4px 12px 4px 6px',
                 color: '#FFFFFF',
-                fontFamily: "'Silkscreen', monospace",
+                fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
-                fontSize: '0.78rem',
+                fontSize: '0.82rem',
                 cursor: 'pointer',
-                transition: 'none',
+                transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#FFD60A'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#000814'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#003566'; }}
             >
-              {/* Square Pixel Avatar */}
-              <div style={{ width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, borderRadius: 0, overflow: 'hidden' }}>
+              {/* Circular Pixel Avatar */}
+              <div style={{ width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <PixelStudentAvatar size={28} />
               </div>
               <span>{user.name || 'Demo Student'}</span>
@@ -409,8 +502,8 @@ export function AppLayout({ children }) {
                   right: 0,
                   width: '260px',
                   backgroundColor: '#FFFFFF',
-                  border: '3px solid #000814',
-                  borderRadius: 0,
+                  border: '2px solid #000814',
+                  borderRadius: '10px',
                   boxShadow: '4px 4px 0px 0px #000814',
                   zIndex: 100,
                   display: 'flex',
@@ -432,39 +525,40 @@ export function AppLayout({ children }) {
                     style={{
                       width: '36px',
                       height: '36px',
-                      borderRadius: 0,
+                      borderRadius: '9999px',
                       backgroundColor: '#FFC300',
                       border: '2px solid #000814',
                       color: '#000814',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontFamily: "'Press Start 2P', monospace",
-                      fontSize: '0.75rem',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 900,
+                      fontSize: '0.85rem',
                       flexShrink: 0,
                     }}
                   >
                     {initials}
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                    <span style={{ fontFamily: "'Silkscreen', monospace", fontWeight: 700, fontSize: '0.8rem', color: '#000814', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                    <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.88rem', color: '#000814', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
                       {user.name || 'Demo Student'}
                     </span>
-                    <span style={{ fontSize: '0.7rem', fontFamily: 'monospace', color: '#6B7280', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#6B7280', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
                       {user.email}
                     </span>
                     <span
                       style={{
                         alignSelf: 'flex-start',
                         marginTop: '4px',
-                        fontSize: '0.62rem',
-                        fontFamily: "'Silkscreen', monospace",
-                        fontWeight: 700,
+                        fontSize: '0.65rem',
+                        fontFamily: 'var(--font-heading)',
+                        fontWeight: 800,
                         textTransform: 'uppercase',
                         backgroundColor: '#003566',
                         color: '#FFD60A',
-                        padding: '2px 6px',
-                        borderRadius: 0,
+                        padding: '1px 6px',
+                        borderRadius: '4px',
                         border: '1px solid #000814',
                       }}
                     >
@@ -486,20 +580,21 @@ export function AppLayout({ children }) {
                       alignItems: 'center',
                       gap: '10px',
                       padding: '8px 10px',
-                      borderRadius: 0,
+                      borderRadius: '6px',
                       border: 'none',
                       backgroundColor: 'transparent',
                       color: '#000814',
                       cursor: 'pointer',
-                      fontFamily: "'Silkscreen', monospace",
+                      fontFamily: 'var(--font-heading)',
                       fontWeight: 700,
-                      fontSize: '0.76rem',
+                      fontSize: '0.82rem',
                       textAlign: 'left',
+                      transition: 'background-color 0.15s ease',
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FEF08A'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                   >
-                    <User size={15} />
+                    <User size={16} />
                     <span>View Profile</span>
                   </button>
 
@@ -512,24 +607,25 @@ export function AppLayout({ children }) {
                       alignItems: 'center',
                       gap: '10px',
                       padding: '8px 10px',
-                      borderRadius: 0,
+                      borderRadius: '6px',
                       border: 'none',
                       backgroundColor: 'transparent',
                       color: '#003566',
                       cursor: 'pointer',
-                      fontFamily: "'Silkscreen', monospace",
+                      fontFamily: 'var(--font-heading)',
                       fontWeight: 700,
-                      fontSize: '0.76rem',
+                      fontSize: '0.82rem',
                       textAlign: 'left',
+                      transition: 'background-color 0.15s ease',
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#BAE6FD'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                   >
-                    <ArrowRightLeft size={15} />
-                    <span>Switch to {isStaff ? 'Student' : 'Staff'}</span>
+                    <ArrowRightLeft size={16} />
+                    <span>Switch to {isStaff ? 'Student' : 'Staff'} Demo</span>
                   </button>
 
-                  <div style={{ height: '2px', backgroundColor: '#000814', margin: '4px 0' }} />
+                  <div style={{ height: '1px', backgroundColor: '#E2E8F0', margin: '4px 0' }} />
 
                   <button
                     type="button"
@@ -540,20 +636,21 @@ export function AppLayout({ children }) {
                       alignItems: 'center',
                       gap: '10px',
                       padding: '8px 10px',
-                      borderRadius: 0,
+                      borderRadius: '6px',
                       border: 'none',
                       backgroundColor: 'transparent',
                       color: '#DC2626',
                       cursor: 'pointer',
-                      fontFamily: "'Silkscreen', monospace",
-                      fontWeight: 700,
-                      fontSize: '0.76rem',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 800,
+                      fontSize: '0.82rem',
                       textAlign: 'left',
+                      transition: 'background-color 0.15s ease',
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FECACA'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                   >
-                    <LogOut size={15} />
+                    <LogOut size={16} />
                     <span>Log Out</span>
                   </button>
                 </div>
@@ -586,24 +683,24 @@ export function AppLayout({ children }) {
         >
           {/* Top Menu Links */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {/* Dashboard Link - Active as Bright Yellow Beveled Tile */}
+            {/* Dashboard Link - Active as Bright Yellow Pill Button */}
             <Link
               to={isStaff ? '/staff' : '/dashboard'}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
-                padding: '10px 14px',
-                borderRadius: 0,
-                fontFamily: "'Silkscreen', monospace",
-                fontWeight: 700,
-                fontSize: '0.8rem',
+                padding: '10px 16px',
+                borderRadius: '8px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.88rem',
                 textDecoration: 'none',
                 color: isDashboardActive || (isStaff && isStaffActive) ? '#000814' : '#E2E8F0',
                 backgroundColor: isDashboardActive || (isStaff && isStaffActive) ? '#FFD60A' : 'transparent',
                 border: isDashboardActive || (isStaff && isStaffActive) ? '2px solid #000814' : '2px solid transparent',
                 boxShadow: isDashboardActive || (isStaff && isStaffActive) ? '2px 2px 0px #000814' : 'none',
-                transition: 'none',
+                transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => {
                 if (!isDashboardActive) {
@@ -630,17 +727,17 @@ export function AppLayout({ children }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
-                  padding: '10px 14px',
-                  borderRadius: 0,
-                  fontFamily: "'Silkscreen', monospace",
+                  padding: '10px 16px',
+                  borderRadius: '8px',
+                  fontFamily: 'var(--font-heading)',
                   fontWeight: 700,
-                  fontSize: '0.8rem',
+                  fontSize: '0.88rem',
                   textDecoration: 'none',
                   color: isNewOrderActive ? '#000814' : '#E2E8F0',
                   backgroundColor: isNewOrderActive ? '#FFD60A' : 'transparent',
                   border: isNewOrderActive ? '2px solid #000814' : '2px solid transparent',
                   boxShadow: isNewOrderActive ? '2px 2px 0px #000814' : 'none',
-                  transition: 'none',
+                  transition: 'all 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
                   if (!isNewOrderActive) {
@@ -668,17 +765,17 @@ export function AppLayout({ children }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
-                  padding: '10px 14px',
-                  borderRadius: 0,
-                  fontFamily: "'Silkscreen', monospace",
+                  padding: '10px 16px',
+                  borderRadius: '8px',
+                  fontFamily: 'var(--font-heading)',
                   fontWeight: 700,
-                  fontSize: '0.8rem',
+                  fontSize: '0.88rem',
                   textDecoration: 'none',
                   color: isMyOrdersActive ? '#000814' : '#E2E8F0',
                   backgroundColor: isMyOrdersActive ? '#FFD60A' : 'transparent',
                   border: isMyOrdersActive ? '2px solid #000814' : '2px solid transparent',
                   boxShadow: isMyOrdersActive ? '2px 2px 0px #000814' : 'none',
-                  transition: 'none',
+                  transition: 'all 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
                   if (!isMyOrdersActive) {
@@ -711,17 +808,18 @@ export function AppLayout({ children }) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
-                padding: '10px 14px',
-                borderRadius: 0,
-                fontFamily: "'Silkscreen', monospace",
+                padding: '10px 16px',
+                borderRadius: '8px',
+                fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
-                fontSize: '0.8rem',
+                fontSize: '0.88rem',
                 border: 'none',
                 backgroundColor: 'transparent',
                 color: '#E2E8F0',
                 cursor: 'pointer',
                 textAlign: 'left',
                 width: '100%',
+                transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = '#003566';
@@ -743,7 +841,7 @@ export function AppLayout({ children }) {
                       width: '8px',
                       height: '8px',
                       backgroundColor: '#EF4444',
-                      borderRadius: 0,
+                      borderRadius: '9999px',
                       border: '1.5px solid #000814',
                     }}
                   />
@@ -760,17 +858,18 @@ export function AppLayout({ children }) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
-                padding: '10px 14px',
-                borderRadius: 0,
-                fontFamily: "'Silkscreen', monospace",
+                padding: '10px 16px',
+                borderRadius: '8px',
+                fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
-                fontSize: '0.8rem',
+                fontSize: '0.88rem',
                 border: 'none',
                 backgroundColor: 'transparent',
                 color: '#E2E8F0',
                 cursor: 'pointer',
                 textAlign: 'left',
                 width: '100%',
+                transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = '#003566';
@@ -792,11 +891,10 @@ export function AppLayout({ children }) {
               style={{
                 width: '100%',
                 overflow: 'hidden',
-                borderRadius: 0,
-                border: '2px solid #000814',
+                borderRadius: '6px',
+                border: '1.5px solid #000814',
                 marginBottom: '14px',
                 boxShadow: '2px 2px 0px #000814',
-                imageRendering: 'pixelated',
               }}
             >
               <PixelCampusBuilding width={192} height={140} />
@@ -804,9 +902,9 @@ export function AppLayout({ children }) {
 
             <div
               style={{
-                fontFamily: "'Silkscreen', monospace",
-                fontSize: '0.74rem',
-                fontWeight: 700,
+                fontFamily: 'var(--font-heading)',
+                fontSize: '0.78rem',
+                fontWeight: 900,
                 letterSpacing: '0.04em',
                 lineHeight: 1.3,
                 color: '#E2E8F0',
@@ -822,7 +920,7 @@ export function AppLayout({ children }) {
                 width: '28px',
                 height: '3.5px',
                 backgroundColor: '#FFD60A',
-                borderRadius: 0,
+                borderRadius: '2px',
               }}
             />
           </div>
@@ -864,8 +962,8 @@ export function AppLayout({ children }) {
           <div
             style={{
               backgroundColor: '#FFFFFF',
-              border: '4px solid #000814',
-              borderRadius: 0,
+              border: '3px solid #000814',
+              borderRadius: '12px',
               boxShadow: '6px 6px 0px 0px #000814',
               width: '100%',
               maxWidth: '420px',
@@ -882,12 +980,12 @@ export function AppLayout({ children }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                borderBottom: '3px solid #000814',
+                borderBottom: '2px solid #000814',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <User size={18} color="#FFD60A" />
-                <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '0.8rem', letterSpacing: '0.04em' }}>
+                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.9rem', letterSpacing: '0.04em' }}>
                   STUDENT PROFILE
                 </span>
               </div>
@@ -910,25 +1008,25 @@ export function AppLayout({ children }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <PixelArt name="studentCard" size={90} style={{ filter: 'drop-shadow(3px 3px 0px #000814)' }} />
                 <div>
-                  <h3 style={{ margin: 0, fontFamily: "'Silkscreen', monospace", fontWeight: 700, fontSize: '0.95rem', color: '#000814' }}>
+                  <h3 style={{ margin: 0, fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.1rem', color: '#000814' }}>
                     {user.name || 'Demo Student'}
                   </h3>
-                  <p style={{ margin: '2px 0 0', fontSize: '0.78rem', fontFamily: 'monospace', color: '#64748B' }}>
+                  <p style={{ margin: '2px 0 0', fontSize: '0.8rem', color: '#64748B' }}>
                     {user.email}
                   </p>
                   <span
                     style={{
                       display: 'inline-block',
                       marginTop: '6px',
-                      fontSize: '0.65rem',
-                      fontFamily: "'Silkscreen', monospace",
-                      fontWeight: 700,
+                      fontSize: '0.68rem',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 800,
                       textTransform: 'uppercase',
                       backgroundColor: '#003566',
                       color: '#FFD60A',
                       padding: '2px 8px',
-                      borderRadius: 0,
-                      border: '1.5px solid #000814',
+                      borderRadius: '4px',
+                      border: '1px solid #000814',
                     }}
                   >
                     Role: {user.role}
@@ -936,11 +1034,11 @@ export function AppLayout({ children }) {
                 </div>
               </div>
 
-              <div style={{ backgroundColor: '#F8F5ED', border: '2px solid #000814', borderRadius: 0, padding: '12px' }}>
-                <div style={{ fontSize: '0.78rem', color: '#000814', fontFamily: "'Silkscreen', monospace", fontWeight: 700, marginBottom: '6px' }}>
+              <div style={{ backgroundColor: '#F8F5ED', border: '1.5px solid #000814', borderRadius: '8px', padding: '12px' }}>
+                <div style={{ fontSize: '0.78rem', color: '#000814', fontWeight: 700, marginBottom: '4px' }}>
                   Campus Account Details
                 </div>
-                <div style={{ fontSize: '0.78rem', fontFamily: 'monospace', color: '#475569', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div style={{ fontSize: '0.75rem', color: '#475569', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <div>College: Engineering &amp; Technology</div>
                   <div>Account Status: Active (Verified)</div>
                   <div>Default Paper: A4 Standard</div>
@@ -951,11 +1049,18 @@ export function AppLayout({ children }) {
                 <button
                   type="button"
                   onClick={handleSwitchRole}
-                  className="pixel-btn-navy"
                   style={{
                     flex: 1,
                     padding: '10px',
-                    fontSize: '0.75rem',
+                    borderRadius: '8px',
+                    border: '2px solid #000814',
+                    backgroundColor: '#003566',
+                    color: '#FFD60A',
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 800,
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    boxShadow: '2px 2px 0px #000814',
                   }}
                 >
                   Switch to {isStaff ? 'Student' : 'Staff'}
@@ -965,13 +1070,13 @@ export function AppLayout({ children }) {
                   onClick={handleLogout}
                   style={{
                     padding: '10px 16px',
-                    borderRadius: 0,
+                    borderRadius: '8px',
                     border: '2px solid #000814',
                     backgroundColor: '#FEE2E2',
                     color: '#DC2626',
-                    fontFamily: "'Silkscreen', monospace",
-                    fontWeight: 700,
-                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 800,
+                    fontSize: '0.78rem',
                     cursor: 'pointer',
                     boxShadow: '2px 2px 0px #000814',
                   }}
