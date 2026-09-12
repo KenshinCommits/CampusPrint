@@ -97,7 +97,7 @@ export function NewOrder() {
             fontFamily: 'var(--font-heading)',
             fontWeight: 800,
             fontSize: '0.85rem',
-            color: '#000000',
+            color: '#000814',
             marginBottom: '12px',
             textDecoration: 'none',
           }}
@@ -114,7 +114,7 @@ export function NewOrder() {
             letterSpacing: '-0.03em',
             margin: 0,
             textTransform: 'uppercase',
-            color: '#000000',
+            color: '#000814',
           }}
         >
           NEW PRINT ORDER
@@ -128,9 +128,9 @@ export function NewOrder() {
         <div
           style={{
             backgroundColor: '#FECACA',
-            border: '2px solid #000000',
+            border: '2px solid #000814',
             borderRadius: '12px',
-            boxShadow: '3px 3px 0px 0px #000000',
+            boxShadow: '3px 3px 0px 0px #000814',
             padding: '12px 16px',
             fontSize: '0.88rem',
             fontWeight: 800,
@@ -157,10 +157,10 @@ export function NewOrder() {
             {/* Dropzone Card: border-2 border-dashed border-black bg-white rounded-2xl */}
             <div
               style={{
-                border: '2px dashed #000000',
+                border: '2px dashed #000814',
                 borderRadius: '16px', // rounded-2xl
                 backgroundColor: dragActive ? '#FEF08A' : '#FFFFFF',
-                boxShadow: '4px 4px 0px 0px #000000',
+                boxShadow: '4px 4px 0px 0px #000814',
                 textAlign: 'center',
                 padding: '44px 24px',
                 cursor: 'pointer',
@@ -197,7 +197,7 @@ export function NewOrder() {
                     fontSize: '1.05rem',
                     letterSpacing: '0.03em',
                     textTransform: 'uppercase',
-                    color: '#000000',
+                    color: '#000814',
                   }}
                 >
                   DROP YOUR PDF HERE
@@ -227,19 +227,19 @@ export function NewOrder() {
                     marginTop: '12px',
                     width: '100%',
                     backgroundColor: '#BBF7D0',
-                    border: '2px solid #000000',
+                    border: '2px solid #000814',
                     borderRadius: '12px',
                     padding: '12px 16px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     gap: '12px',
-                    boxShadow: '3px 3px 0px 0px #000000',
+                    boxShadow: '3px 3px 0px 0px #000814',
                   }}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', textAlign: 'left', minWidth: 0 }}>
-                    <CheckCircle2 size={20} color="#000000" style={{ flexShrink: 0 }} />
+                    <CheckCircle2 size={20} color="#000814" style={{ flexShrink: 0 }} />
                     <div style={{ minWidth: 0 }}>
                       <div
                         style={{
@@ -249,7 +249,7 @@ export function NewOrder() {
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
-                          color: '#000000',
+                          color: '#000814',
                         }}
                       >
                         {file.name}
@@ -271,7 +271,7 @@ export function NewOrder() {
                       background: 'transparent',
                       border: 'none',
                       cursor: 'pointer',
-                      color: '#000000',
+                      color: '#000814',
                       padding: '4px',
                       display: 'flex',
                       alignItems: 'center',
@@ -310,13 +310,13 @@ export function NewOrder() {
                   <span style={{ fontWeight: 900, fontFamily: 'var(--font-heading)' }}>₹{bindingCost}</span>
                 </div>
 
-                <div style={{ borderTop: '2px dashed #000000', margin: '4px 0' }} />
+                <div style={{ borderTop: '2px dashed #000814', margin: '4px 0' }} />
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.15rem' }}>
                     Total
                   </span>
-                  <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.6rem', color: '#000000' }}>
+                  <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.6rem', color: '#000814' }}>
                     ₹{totalCost}
                   </span>
                 </div>
@@ -330,15 +330,15 @@ export function NewOrder() {
                   width: '100%',
                   marginTop: '20px',
                   backgroundColor: '#FFC300',
-                  color: '#000000',
+                  color: '#000814',
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 900,
                   fontSize: '1.1rem',
                   textTransform: 'uppercase',
                   padding: '14px',
                   borderRadius: '12px', // rounded-xl
-                  border: '2px solid #000000',
-                  boxShadow: '4px 4px 0px 0px #000000',
+                  border: '2px solid #000814',
+                  boxShadow: '4px 4px 0px 0px #000814',
                   cursor: submitting || !file ? 'not-allowed' : 'pointer',
                   opacity: submitting || !file ? 0.6 : 1,
                   display: 'flex',
@@ -363,9 +363,9 @@ export function NewOrder() {
                 fontSize: '0.9rem',
                 letterSpacing: '0.04em',
                 textTransform: 'uppercase',
-                borderBottom: '2px solid #000000',
+                borderBottom: '2px solid #000814',
                 paddingBottom: '12px',
-                color: '#000000',
+                color: '#000814',
               }}
             >
               PRINT SETTINGS
@@ -383,9 +383,9 @@ export function NewOrder() {
                     width: '38px',
                     height: '38px',
                     borderRadius: '8px',
-                    border: '2px solid #000000',
+                    border: '2px solid #000814',
                     backgroundColor: '#FFFFFF',
-                    boxShadow: '2px 2px 0px 0px #000000',
+                    boxShadow: '2px 2px 0px 0px #000814',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -413,9 +413,9 @@ export function NewOrder() {
                     width: '38px',
                     height: '38px',
                     borderRadius: '8px',
-                    border: '2px solid #000000',
+                    border: '2px solid #000814',
                     backgroundColor: '#FFFFFF',
-                    boxShadow: '2px 2px 0px 0px #000000',
+                    boxShadow: '2px 2px 0px 0px #000814',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -448,9 +448,9 @@ export function NewOrder() {
                       style={{
                         padding: '12px',
                         borderRadius: '12px',
-                        border: '2px solid #000000',
+                        border: '2px solid #000814',
                         backgroundColor: selected ? '#FFC300' : '#FFFFFF',
-                        boxShadow: selected ? '2px 2px 0px 0px #000000' : 'none',
+                        boxShadow: selected ? '2px 2px 0px 0px #000814' : 'none',
                         fontFamily: 'var(--font-heading)',
                         fontWeight: 900,
                         fontSize: '0.9rem',
@@ -485,9 +485,9 @@ export function NewOrder() {
                       style={{
                         padding: '12px',
                         borderRadius: '12px',
-                        border: '2px solid #000000',
+                        border: '2px solid #000814',
                         backgroundColor: selected ? '#FFC300' : '#FFFFFF',
-                        boxShadow: selected ? '2px 2px 0px 0px #000000' : 'none',
+                        boxShadow: selected ? '2px 2px 0px 0px #000814' : 'none',
                         fontFamily: 'var(--font-heading)',
                         fontWeight: 900,
                         fontSize: '0.9rem',
@@ -519,9 +519,9 @@ export function NewOrder() {
                       style={{
                         padding: '12px 6px',
                         borderRadius: '12px',
-                        border: '2px solid #000000',
+                        border: '2px solid #000814',
                         backgroundColor: selected ? '#FFC300' : '#FFFFFF',
-                        boxShadow: selected ? '2px 2px 0px 0px #000000' : 'none',
+                        boxShadow: selected ? '2px 2px 0px 0px #000814' : 'none',
                         fontFamily: 'var(--font-heading)',
                         fontWeight: 900,
                         fontSize: '0.9rem',
@@ -557,9 +557,9 @@ export function NewOrder() {
                       style={{
                         padding: '12px 6px',
                         borderRadius: '12px',
-                        border: '2px solid #000000',
+                        border: '2px solid #000814',
                         backgroundColor: selected ? '#FFC300' : '#FFFFFF',
-                        boxShadow: selected ? '2px 2px 0px 0px #000000' : 'none',
+                        boxShadow: selected ? '2px 2px 0px 0px #000814' : 'none',
                         fontFamily: 'var(--font-heading)',
                         fontWeight: 900,
                         fontSize: '0.9rem',
@@ -587,7 +587,7 @@ export function NewOrder() {
                 onChange={(e) => setNotes(e.target.value)}
                 style={{
                   width: '100%',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   borderRadius: '12px',
                   padding: '10px 14px',
                   fontFamily: 'var(--font-body)',
@@ -595,7 +595,7 @@ export function NewOrder() {
                   resize: 'none',
                   outline: 'none',
                   backgroundColor: '#FFFFFF',
-                  boxShadow: '2px 2px 0px 0px #000000',
+                  boxShadow: '2px 2px 0px 0px #000814',
                 }}
               />
             </div>

@@ -49,7 +49,7 @@ export function Signup() {
           justifyContent: 'space-between',
           position: 'relative',
           overflow: 'hidden',
-          borderRight: '2px solid #000000',
+          borderRight: '2px solid #000814',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -130,11 +130,11 @@ export function Signup() {
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
               backgroundColor: '#FFFFFF',
-              border: '2px solid #000000',
+              border: '2px solid #000814',
               borderRadius: '12px',
               padding: '4px',
               marginBottom: '28px',
-              boxShadow: '3px 3px 0px 0px #000000',
+              boxShadow: '3px 3px 0px 0px #000814',
             }}
           >
             <button
@@ -142,15 +142,15 @@ export function Signup() {
               onClick={() => setRole('student')}
               style={{
                 padding: '10px',
-                border: role === 'student' ? '2px solid #000000' : '2px solid transparent',
+                border: role === 'student' ? '2px solid #000814' : '2px solid transparent',
                 borderRadius: '8px',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 900,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
                 backgroundColor: role === 'student' ? '#FFC300' : 'transparent',
-                color: '#000000',
-                boxShadow: role === 'student' ? '2px 2px 0px 0px #000000' : 'none',
+                color: '#000814',
+                boxShadow: role === 'student' ? '2px 2px 0px 0px #000814' : 'none',
               }}
             >
               Student
@@ -160,15 +160,15 @@ export function Signup() {
               onClick={() => setRole('staff')}
               style={{
                 padding: '10px',
-                border: role === 'staff' ? '2px solid #000000' : '2px solid transparent',
+                border: role === 'staff' ? '2px solid #000814' : '2px solid transparent',
                 borderRadius: '8px',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 900,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
                 backgroundColor: role === 'staff' ? '#FFC300' : 'transparent',
-                color: '#000000',
-                boxShadow: role === 'staff' ? '2px 2px 0px 0px #000000' : 'none',
+                color: '#000814',
+                boxShadow: role === 'staff' ? '2px 2px 0px 0px #000814' : 'none',
               }}
             >
               Staff
@@ -183,7 +183,7 @@ export function Signup() {
                 fontSize: '1.8rem',
                 letterSpacing: '-0.02em',
                 marginBottom: '4px',
-                color: '#000000',
+                color: '#000814',
               }}
             >
               Create Account
@@ -197,9 +197,9 @@ export function Signup() {
             <div
               style={{
                 backgroundColor: '#FECACA',
-                border: '2px solid #000000',
+                border: '2px solid #000814',
                 borderRadius: '10px',
-                boxShadow: '2px 2px 0px 0px #000000',
+                boxShadow: '2px 2px 0px 0px #000814',
                 padding: '10px 14px',
                 fontSize: '0.85rem',
                 fontWeight: 800,
@@ -225,7 +225,7 @@ export function Signup() {
                   fontSize: '0.8rem',
                   textTransform: 'uppercase',
                   marginBottom: '6px',
-                  color: '#000000',
+                  color: '#000814',
                 }}
               >
                 <User size={15} />
@@ -242,9 +242,9 @@ export function Signup() {
                   width: '100%',
                   height: '44px',
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   borderRadius: '12px',
-                  boxShadow: '3px 3px 0px 0px #000000',
+                  boxShadow: '3px 3px 0px 0px #000814',
                   padding: '0 14px',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.9rem',
@@ -266,7 +266,7 @@ export function Signup() {
                   fontSize: '0.8rem',
                   textTransform: 'uppercase',
                   marginBottom: '6px',
-                  color: '#000000',
+                  color: '#000814',
                 }}
               >
                 <Mail size={15} />
@@ -283,9 +283,9 @@ export function Signup() {
                   width: '100%',
                   height: '44px',
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   borderRadius: '12px',
-                  boxShadow: '3px 3px 0px 0px #000000',
+                  boxShadow: '3px 3px 0px 0px #000814',
                   padding: '0 14px',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.9rem',
@@ -307,7 +307,7 @@ export function Signup() {
                   fontSize: '0.8rem',
                   textTransform: 'uppercase',
                   marginBottom: '6px',
-                  color: '#000000',
+                  color: '#000814',
                 }}
               >
                 <Lock size={15} />
@@ -324,9 +324,9 @@ export function Signup() {
                   width: '100%',
                   height: '44px',
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   borderRadius: '12px',
-                  boxShadow: '3px 3px 0px 0px #000000',
+                  boxShadow: '3px 3px 0px 0px #000814',
                   padding: '0 14px',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.9rem',
@@ -342,15 +342,15 @@ export function Signup() {
               style={{
                 width: '100%',
                 backgroundColor: '#FFC300',
-                color: '#000000',
+                color: '#000814',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 900,
                 fontSize: '1.05rem',
                 textTransform: 'uppercase',
                 padding: '14px',
                 borderRadius: '12px',
-                border: '2px solid #000000',
-                boxShadow: '4px 4px 0px 0px #000000',
+                border: '2px solid #000814',
+                boxShadow: '4px 4px 0px 0px #000814',
                 cursor: busy ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -368,14 +368,14 @@ export function Signup() {
             style={{
               marginTop: '24px',
               paddingTop: '20px',
-              borderTop: '2px dashed #000000',
+              borderTop: '2px dashed #000814',
               textAlign: 'center',
               fontSize: '0.85rem',
               fontWeight: 600,
             }}
           >
             <span>Already registered? </span>
-            <Link to="/login" style={{ color: '#000000', fontWeight: 900, textDecoration: 'underline' }}>
+            <Link to="/login" style={{ color: '#000814', fontWeight: 900, textDecoration: 'underline' }}>
               Log in &rarr;
             </Link>
           </div>

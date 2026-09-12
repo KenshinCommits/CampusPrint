@@ -60,7 +60,7 @@ export function Login() {
           justifyContent: 'space-between',
           position: 'relative',
           overflow: 'hidden',
-          borderRight: '2px solid #000000',
+          borderRight: '2px solid #000814',
         }}
       >
         {/* Top Pixel Logo & Corner Sparkles */}
@@ -147,11 +147,11 @@ export function Login() {
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
               backgroundColor: '#FFFFFF',
-              border: '2px solid #000000',
+              border: '2px solid #000814',
               borderRadius: '12px',
               padding: '4px',
               marginBottom: '28px',
-              boxShadow: '3px 3px 0px 0px #000000',
+              boxShadow: '3px 3px 0px 0px #000814',
             }}
           >
             <button
@@ -159,15 +159,15 @@ export function Login() {
               onClick={() => handleRoleToggle('student')}
               style={{
                 padding: '10px',
-                border: roleSelection === 'student' ? '2px solid #000000' : '2px solid transparent',
+                border: roleSelection === 'student' ? '2px solid #000814' : '2px solid transparent',
                 borderRadius: '8px',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 900,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
                 backgroundColor: roleSelection === 'student' ? '#FFC300' : 'transparent',
-                color: '#000000',
-                boxShadow: roleSelection === 'student' ? '2px 2px 0px 0px #000000' : 'none',
+                color: '#000814',
+                boxShadow: roleSelection === 'student' ? '2px 2px 0px 0px #000814' : 'none',
                 transition: 'all 0.1s ease',
               }}
             >
@@ -178,15 +178,15 @@ export function Login() {
               onClick={() => handleRoleToggle('staff')}
               style={{
                 padding: '10px',
-                border: roleSelection === 'staff' ? '2px solid #000000' : '2px solid transparent',
+                border: roleSelection === 'staff' ? '2px solid #000814' : '2px solid transparent',
                 borderRadius: '8px',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 900,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
                 backgroundColor: roleSelection === 'staff' ? '#FFC300' : 'transparent',
-                color: '#000000',
-                boxShadow: roleSelection === 'staff' ? '2px 2px 0px 0px #000000' : 'none',
+                color: '#000814',
+                boxShadow: roleSelection === 'staff' ? '2px 2px 0px 0px #000814' : 'none',
                 transition: 'all 0.1s ease',
               }}
             >
@@ -203,7 +203,7 @@ export function Login() {
                 fontSize: '1.8rem',
                 letterSpacing: '-0.02em',
                 marginBottom: '4px',
-                color: '#000000',
+                color: '#000814',
               }}
             >
               Welcome Back!
@@ -217,9 +217,9 @@ export function Login() {
             <div
               style={{
                 backgroundColor: '#FECACA',
-                border: '2px solid #000000',
+                border: '2px solid #000814',
                 borderRadius: '10px',
-                boxShadow: '2px 2px 0px 0px #000000',
+                boxShadow: '2px 2px 0px 0px #000814',
                 padding: '10px 14px',
                 fontSize: '0.85rem',
                 fontWeight: 800,
@@ -246,7 +246,7 @@ export function Login() {
                   fontSize: '0.8rem',
                   textTransform: 'uppercase',
                   marginBottom: '6px',
-                  color: '#000000',
+                  color: '#000814',
                 }}
               >
                 <Mail size={15} />
@@ -263,9 +263,9 @@ export function Login() {
                   width: '100%',
                   height: '44px',
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   borderRadius: '12px',
-                  boxShadow: '3px 3px 0px 0px #000000',
+                  boxShadow: '3px 3px 0px 0px #000814',
                   padding: '0 14px',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.9rem',
@@ -287,7 +287,7 @@ export function Login() {
                   fontSize: '0.8rem',
                   textTransform: 'uppercase',
                   marginBottom: '6px',
-                  color: '#000000',
+                  color: '#000814',
                 }}
               >
                 <Lock size={15} />
@@ -305,9 +305,9 @@ export function Login() {
                     width: '100%',
                     height: '44px',
                     backgroundColor: '#FFFFFF',
-                    border: '2px solid #000000',
+                    border: '2px solid #000814',
                     borderRadius: '12px',
-                    boxShadow: '3px 3px 0px 0px #000000',
+                    boxShadow: '3px 3px 0px 0px #000814',
                     padding: '0 42px 0 14px',
                     fontFamily: 'var(--font-body)',
                     fontSize: '0.9rem',
@@ -338,10 +338,10 @@ export function Login() {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontWeight: 600 }}>
-                <input type="checkbox" defaultChecked style={{ accentColor: '#000000' }} />
+                <input type="checkbox" defaultChecked style={{ accentColor: '#000814' }} />
                 <span>Remember me</span>
               </label>
-              <a href="#forgot" style={{ color: '#000000', fontWeight: 800, textDecoration: 'underline' }}>
+              <a href="#forgot" style={{ color: '#000814', fontWeight: 800, textDecoration: 'underline' }}>
                 Forgot password?
               </a>
             </div>
@@ -353,15 +353,15 @@ export function Login() {
               style={{
                 width: '100%',
                 backgroundColor: '#FFC300',
-                color: '#000000',
+                color: '#000814',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 900,
                 fontSize: '1.05rem',
                 textTransform: 'uppercase',
                 padding: '14px',
                 borderRadius: '12px',
-                border: '2px solid #000000',
-                boxShadow: '4px 4px 0px 0px #000000',
+                border: '2px solid #000814',
+                boxShadow: '4px 4px 0px 0px #000814',
                 cursor: busy ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -379,14 +379,14 @@ export function Login() {
             style={{
               marginTop: '24px',
               paddingTop: '20px',
-              borderTop: '2px dashed #000000',
+              borderTop: '2px dashed #000814',
               textAlign: 'center',
               fontSize: '0.85rem',
               fontWeight: 600,
             }}
           >
             <span>Don't have an account? </span>
-            <Link to="/signup" style={{ color: '#000000', fontWeight: 900, textDecoration: 'underline' }}>
+            <Link to="/signup" style={{ color: '#000814', fontWeight: 900, textDecoration: 'underline' }}>
               Create Account &rarr;
             </Link>
           </div>

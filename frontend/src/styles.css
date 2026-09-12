@@ -5,26 +5,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800;900&display=swap');
 
 :root {
-  /* Foundations & Color Palette */
-  --bg-cream: #F8F5ED;
+  /* Golden Twilight 5-Color System */
+  --twilight-deep: #000814;
+  --twilight-dark: #001D3D;
+  --twilight-blue: #003566;
+  --twilight-gold: #FFC300;
+  --twilight-bright: #FFD60A;
+  --canvas-cream: #FBF8F1;
+  --card-white: #FFFFFF;
+
+  /* Backward-compatible foundations */
+  --bg-cream: #FBF8F1;
   --bg-subtle: #EDE9DE;
   --surface-white: #FFFFFF;
-  --border-black: #000000;
+  --border-black: #000814;
   
-  /* Retro Dark Navy & Blue Secondary Surfaces */
   --navy-deep: #000814;
   --navy-surface: #001D3D;
   --blue-secondary: #003566;
-  --navy-border: #000000;
+  --navy-border: #000814;
   
-  /* Primary Arcade Yellow */
   --yellow-primary: #FFC300;
   --yellow-arcade: #FFD60A;
   --yellow-hover: #FFD60A;
   --yellow-light: #FEF08A;
   --yellow-subtle: #FFFDEB;
   
-  /* Pastel Stat Accents */
+  /* Status Accents */
   --blue-sky: #BAE6FD;
   --blue-pastel: #BAE6FD;
   --blue-processing: #C7D2FE;
@@ -34,14 +41,14 @@
   --red-pastel: #FEE2E2;
   --gray-completed: #E5E7EB;
   
-  --text-main: #000000;
+  --text-main: #000814;
   --text-muted: #4B5563;
   --text-subtle: #6B7280;
   
-  /* Neo-Brutalist Borders & Shadows */
-  --border-thick: 2px solid #000000;
-  --border-extra: 3px solid #000000;
-  --border-dashed: 2px dashed #000000;
+  /* Neo-Brutalist & Pixel Borders & Shadows */
+  --border-thick: 2px solid #000814;
+  --border-extra: 3px solid #000814;
+  --border-dashed: 2px dashed #000814;
   
   --radius-xs: 4px;
   --radius-sm: 6px;
@@ -51,11 +58,13 @@
   --radius-full: 9999px;
   
   /* Hard Pixel Drop Shadows */
-  --shadow-neo: 4px 4px 0px #000000;
-  --shadow-neo-sm: 3px 3px 0px #000000;
-  --shadow-neo-lg: 6px 6px 0px #000000;
-  --shadow-neo-active: 0px 0px 0px #000000;
+  --shadow-neo: 4px 4px 0px 0px #000814;
+  --shadow-neo-sm: 3px 3px 0px 0px #000814;
+  --shadow-neo-lg: 5px 5px 0px 0px #000814;
+  --shadow-neo-active: 0px 0px 0px 0px #000814;
   
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-silkscreen: 'Silkscreen', monospace;
   --font-heading: 'Space Grotesk', -apple-system, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
 }
@@ -328,7 +337,7 @@ body {
 }
 
 .neo-btn.dark {
-  background: #000000;
+  background: #000814;
   color: #FFFFFF;
 }
 
@@ -615,7 +624,7 @@ body {
 
 /* Pixel UI Utilities & Subtle Pattern */
 .pixel-pattern-bg {
-  background-image: radial-gradient(#000000 0.8px, transparent 0.8px);
+  background-image: radial-gradient(#000814 0.8px, transparent 0.8px);
   background-size: 16px 16px;
 }
 

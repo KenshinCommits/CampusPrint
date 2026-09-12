@@ -14,7 +14,7 @@ export function PixelPrinterGraphic({ size = 128, style = {}, className = '' }) 
       width={size}
       height={size}
       className={className}
-      style={{ filter: "drop-shadow(4px 4px 0px #000000)", ...style }}
+      style={{ filter: "drop-shadow(4px 4px 0px #000814)", ...style }}
     >
       {/* Shadow */}
       <rect x="28" y="103" width="72" height="6" fill="#000814"/>
@@ -83,7 +83,7 @@ export function PixelUploadDoc({ size = 128, style = {}, className = '' }) {
       width={size}
       height={size}
       className={className}
-      style={{ filter: "drop-shadow(4px 4px 0px #000000)", ...style }}
+      style={{ filter: "drop-shadow(4px 4px 0px #000814)", ...style }}
     >
       {/* BACK PAPER */}
       <rect x="30" y="24" width="56" height="70" fill="#000814"/>
@@ -147,7 +147,7 @@ export function PixelTicketGraphic({ size = 128, style = {}, className = '' }) {
       width={size}
       height={size}
       className={className}
-      style={{ filter: "drop-shadow(4px 4px 0px #000000)", ...style }}
+      style={{ filter: "drop-shadow(4px 4px 0px #000814)", ...style }}
     >
       {/* Ticket shadow */}
       <rect x="17" y="39" width="94" height="52" fill="#000814"/>
@@ -213,7 +213,7 @@ export function PixelSpeedWatch({ size = 128, style = {}, className = '' }) {
       width={size}
       height={size}
       className={className}
-      style={{ filter: "drop-shadow(4px 4px 0px #000000)", ...style }}
+      style={{ filter: "drop-shadow(4px 4px 0px #000814)", ...style }}
     >
       {/* SPEED LINES */}
       <rect x="10" y="39" width="26" height="5" fill="#38BDF8"/>
@@ -279,15 +279,15 @@ export const PixelDoc = PixelUploadDoc;
 export function PixelLogo({ size = 24, color = "#FFC300" }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="7" y="2" width="10" height="6" fill="#F8F5ED" stroke="#000000" strokeWidth="1.5" />
+      <rect x="7" y="2" width="10" height="6" fill="#F8F5ED" stroke="#000814" strokeWidth="1.5" />
       <rect x="9" y="4" width="6" height="1" fill="#003566" />
-      <rect x="3" y="7" width="18" height="11" rx="2" fill="#003566" stroke="#000000" strokeWidth="1.5" />
+      <rect x="3" y="7" width="18" height="11" rx="2" fill="#003566" stroke="#000814" strokeWidth="1.5" />
       <rect x="6" y="11" width="12" height="4" fill="#000814" />
-      <rect x="7" y="13" width="10" height="8" rx="1" fill={color} stroke="#000000" strokeWidth="1.5" />
+      <rect x="7" y="13" width="10" height="8" rx="1" fill={color} stroke="#000814" strokeWidth="1.5" />
       <rect x="9" y="16" width="6" height="1" fill="#000814" />
       <rect x="9" y="18" width="4" height="1" fill="#000814" />
-      <rect x="17.5" y="9" width="2" height="2" fill="#FFD60A" stroke="#000000" strokeWidth="0.5" />
-      <rect x="14.5" y="9" width="2" height="2" fill="#86EFAC" stroke="#000000" strokeWidth="0.5" />
+      <rect x="17.5" y="9" width="2" height="2" fill="#FFD60A" stroke="#000814" strokeWidth="0.5" />
+      <rect x="14.5" y="9" width="2" height="2" fill="#86EFAC" stroke="#000814" strokeWidth="0.5" />
     </svg>
   );
 }
@@ -295,14 +295,14 @@ export function PixelLogo({ size = 24, color = "#FFC300" }) {
 export function PixelSparkles({ color1 = "#FFC300", color2 = "#38BDF8" }) {
   return (
     <div style={{ position: "relative", width: "70px", height: "50px", pointerEvents: "none" }}>
-      <div style={{ position: "absolute", top: 4, left: 10, width: 8, height: 8, background: color1, boxShadow: "0 0 0 2px #000000" }} />
-      <div style={{ position: "absolute", top: 12, left: 2, width: 8, height: 8, background: color1, boxShadow: "0 0 0 2px #000000" }} />
-      <div style={{ position: "absolute", top: 12, left: 18, width: 8, height: 8, background: color1, boxShadow: "0 0 0 2px #000000" }} />
-      <div style={{ position: "absolute", top: 20, left: 10, width: 8, height: 8, background: color1, boxShadow: "0 0 0 2px #000000" }} />
-      <div style={{ position: "absolute", top: 26, left: 45, width: 6, height: 6, background: color2, boxShadow: "0 0 0 2px #000000" }} />
-      <div style={{ position: "absolute", top: 32, left: 39, width: 6, height: 6, background: color2, boxShadow: "0 0 0 2px #000000" }} />
-      <div style={{ position: "absolute", top: 32, left: 51, width: 6, height: 6, background: color2, boxShadow: "0 0 0 2px #000000" }} />
-      <div style={{ position: "absolute", top: 38, left: 45, width: 6, height: 6, background: color2, boxShadow: "0 0 0 2px #000000" }} />
+      <div style={{ position: "absolute", top: 4, left: 10, width: 8, height: 8, background: color1, boxShadow: "0 0 0 2px #000814" }} />
+      <div style={{ position: "absolute", top: 12, left: 2, width: 8, height: 8, background: color1, boxShadow: "0 0 0 2px #000814" }} />
+      <div style={{ position: "absolute", top: 12, left: 18, width: 8, height: 8, background: color1, boxShadow: "0 0 0 2px #000814" }} />
+      <div style={{ position: "absolute", top: 20, left: 10, width: 8, height: 8, background: color1, boxShadow: "0 0 0 2px #000814" }} />
+      <div style={{ position: "absolute", top: 26, left: 45, width: 6, height: 6, background: color2, boxShadow: "0 0 0 2px #000814" }} />
+      <div style={{ position: "absolute", top: 32, left: 39, width: 6, height: 6, background: color2, boxShadow: "0 0 0 2px #000814" }} />
+      <div style={{ position: "absolute", top: 32, left: 51, width: 6, height: 6, background: color2, boxShadow: "0 0 0 2px #000814" }} />
+      <div style={{ position: "absolute", top: 38, left: 45, width: 6, height: 6, background: color2, boxShadow: "0 0 0 2px #000814" }} />
     </div>
   );
 }
@@ -315,9 +315,9 @@ export function PixelStatusDot({ color = "#FFC300", size = 8 }) {
         width: `${size}px`,
         height: `${size}px`,
         backgroundColor: color,
-        border: '1.5px solid #000000',
+        border: '1.5px solid #000814',
         borderRadius: '1px',
-        boxShadow: '1px 1px 0px #000000',
+        boxShadow: '1px 1px 0px #000814',
         flexShrink: 0,
       }}
     />

@@ -16,17 +16,17 @@ export function NeoCard({
   const getVariantStyles = () => {
     switch (variant) {
       case 'cream':
-        return { backgroundColor: '#F8F5ED', color: '#000000' };
+        return { backgroundColor: '#F8F5ED', color: '#000814' };
       case 'yellow':
-        return { backgroundColor: '#FEF08A', color: '#000000' };
+        return { backgroundColor: '#FEF08A', color: '#000814' };
       case 'arcade-yellow':
-        return { backgroundColor: '#FFC300', color: '#000000' };
+        return { backgroundColor: '#FFC300', color: '#000814' };
       case 'sky':
-        return { backgroundColor: '#BAE6FD', color: '#000000' };
+        return { backgroundColor: '#BAE6FD', color: '#000814' };
       case 'mint':
-        return { backgroundColor: '#BBF7D0', color: '#000000' };
+        return { backgroundColor: '#BBF7D0', color: '#000814' };
       case 'lavender':
-        return { backgroundColor: '#C7D2FE', color: '#000000' };
+        return { backgroundColor: '#C7D2FE', color: '#000814' };
       case 'blue':
         return { backgroundColor: '#003566', color: '#FFFFFF' };
       case 'navy':
@@ -35,24 +35,24 @@ export function NeoCard({
         return {
           backgroundColor: '#FFFFFF',
           borderStyle: 'dashed',
-          color: '#000000',
+          color: '#000814',
         };
       case 'dashed-yellow':
         return {
           backgroundColor: '#FEF08A',
           borderStyle: 'dashed',
-          color: '#000000',
+          color: '#000814',
         };
       case 'default':
       default:
-        return { backgroundColor: '#FFFFFF', color: '#000000' };
+        return { backgroundColor: '#FFFFFF', color: '#000814' };
     }
   };
 
   const baseStyle = {
-    border: '2px solid #000000',
+    border: '2px solid #000814',
     borderRadius: '16px',
-    boxShadow: '4px 4px 0px 0px #000000',
+    boxShadow: '4px 4px 0px 0px #000814',
     transition: 'all 0.12s ease',
     ...getVariantStyles(),
     ...style,

@@ -538,7 +538,7 @@ export function OrderDetail() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
-              <div style={{ filter: 'drop-shadow(2px 2px 0px #000000)' }}>
+              <div style={{ filter: 'drop-shadow(2px 2px 0px #000814)' }}>
                 <PixelSpeedWatch size={48} />
               </div>
               <div

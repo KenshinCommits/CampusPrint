@@ -83,7 +83,7 @@ export function StaffDashboard() {
               letterSpacing: '-0.03em',
               margin: 0,
               textTransform: 'uppercase',
-              color: '#000000',
+              color: '#000814',
             }}
           >
             SHOP QUEUE
@@ -119,8 +119,8 @@ export function StaffDashboard() {
           style={{
             cursor: 'pointer',
             padding: '18px 20px',
-            border: statusFilter === 'placed' ? '3px solid #000000' : '2px solid #000000',
-            boxShadow: statusFilter === 'placed' ? '5px 5px 0px 0px #000000' : '3px 3px 0px 0px #000000',
+            border: statusFilter === 'placed' ? '3px solid #000814' : '2px solid #000814',
+            boxShadow: statusFilter === 'placed' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
           }}
           onClick={() => setStatusFilter(statusFilter === 'placed' ? '' : 'placed')}
         >
@@ -138,8 +138,8 @@ export function StaffDashboard() {
           style={{
             cursor: 'pointer',
             padding: '18px 20px',
-            border: statusFilter === 'accepted' ? '3px solid #000000' : '2px solid #000000',
-            boxShadow: statusFilter === 'accepted' ? '5px 5px 0px 0px #000000' : '3px 3px 0px 0px #000000',
+            border: statusFilter === 'accepted' ? '3px solid #000814' : '2px solid #000814',
+            boxShadow: statusFilter === 'accepted' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
           }}
           onClick={() => setStatusFilter(statusFilter === 'accepted' ? '' : 'accepted')}
         >
@@ -157,8 +157,8 @@ export function StaffDashboard() {
           style={{
             cursor: 'pointer',
             padding: '18px 20px',
-            border: statusFilter === 'processing' ? '3px solid #000000' : '2px solid #000000',
-            boxShadow: statusFilter === 'processing' ? '5px 5px 0px 0px #000000' : '3px 3px 0px 0px #000000',
+            border: statusFilter === 'processing' ? '3px solid #000814' : '2px solid #000814',
+            boxShadow: statusFilter === 'processing' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
           }}
           onClick={() => setStatusFilter(statusFilter === 'processing' ? '' : 'processing')}
         >
@@ -176,8 +176,8 @@ export function StaffDashboard() {
           style={{
             cursor: 'pointer',
             padding: '18px 20px',
-            border: statusFilter === 'ready' ? '3px solid #000000' : '2px solid #000000',
-            boxShadow: statusFilter === 'ready' ? '5px 5px 0px 0px #000000' : '3px 3px 0px 0px #000000',
+            border: statusFilter === 'ready' ? '3px solid #000814' : '2px solid #000814',
+            boxShadow: statusFilter === 'ready' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
           }}
           onClick={() => setStatusFilter(statusFilter === 'ready' ? '' : 'ready')}
         >
@@ -195,8 +195,8 @@ export function StaffDashboard() {
           style={{
             cursor: 'pointer',
             padding: '18px 20px',
-            border: statusFilter === '' ? '3px solid #000000' : '2px solid #000000',
-            boxShadow: statusFilter === '' ? '5px 5px 0px 0px #000000' : '3px 3px 0px 0px #000000',
+            border: statusFilter === '' ? '3px solid #000814' : '2px solid #000814',
+            boxShadow: statusFilter === '' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
           }}
           onClick={() => setStatusFilter('')}
         >
@@ -238,9 +238,9 @@ export function StaffDashboard() {
               width: '100%',
               height: '44px',
               backgroundColor: '#FFFFFF',
-              border: '2px solid #000000',
+              border: '2px solid #000814',
               borderRadius: '12px',
-              boxShadow: '3px 3px 0px 0px #000000',
+              boxShadow: '3px 3px 0px 0px #000814',
               paddingLeft: '42px',
               paddingRight: '14px',
               fontFamily: 'var(--font-body)',
@@ -259,9 +259,9 @@ export function StaffDashboard() {
               width: '100%',
               height: '44px',
               backgroundColor: '#FFFFFF',
-              border: '2px solid #000000',
+              border: '2px solid #000814',
               borderRadius: '12px',
-              boxShadow: '3px 3px 0px 0px #000000',
+              boxShadow: '3px 3px 0px 0px #000814',
               padding: '0 12px',
               fontFamily: 'var(--font-heading)',
               fontWeight: 800,
@@ -288,9 +288,9 @@ export function StaffDashboard() {
               width: '100%',
               height: '44px',
               backgroundColor: '#FFFFFF',
-              border: '2px solid #000000',
+              border: '2px solid #000814',
               borderRadius: '12px',
-              boxShadow: '3px 3px 0px 0px #000000',
+              boxShadow: '3px 3px 0px 0px #000814',
               padding: '0 12px',
               fontFamily: 'var(--font-heading)',
               fontWeight: 800,
@@ -319,7 +319,7 @@ export function StaffDashboard() {
         ) : displayOrders.length === 0 ? (
           <div style={{ padding: '60px 20px', textAlign: 'center', color: '#6B7280', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
             <PixelPrinterGraphic size={72} />
-            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#000000', fontSize: '1.1rem' }}>
+            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#000814', fontSize: '1.1rem' }}>
               All Clear! No Orders in Queue
             </div>
             <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>
@@ -336,7 +336,7 @@ export function StaffDashboard() {
               }}
             >
               <thead>
-                <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '2px solid #000000' }}>
+                <tr style={{ backgroundColor: '#001D3D', borderBottom: '2px solid #000814' }}>
                   {['TOKEN', 'STUDENT', 'FILE', 'PAGES', 'REQ', 'PAYMENT', 'STATUS', 'ETA', 'ACTION'].map((h, i) => (
                     <th
                       key={i}
@@ -345,8 +345,9 @@ export function StaffDashboard() {
                         fontFamily: 'var(--font-heading)',
                         fontWeight: 900,
                         fontSize: '0.78rem',
-                        letterSpacing: '0.04em',
-                        color: '#000000',
+                        letterSpacing: '0.06em',
+                        color: '#FFFFFF',
+                        textTransform: 'uppercase',
                       }}
                     >
                       {h}
@@ -389,13 +390,13 @@ export function StaffDashboard() {
                         <span
                           style={{
                             backgroundColor: isPaid ? '#BBF7D0' : '#FECACA',
-                            border: '1.5px solid #000000',
+                            border: '1.5px solid #000814',
                             borderRadius: '9999px',
                             padding: '2px 10px',
                             fontSize: '0.72rem',
                             fontFamily: 'var(--font-heading)',
                             fontWeight: 900,
-                            color: '#000000',
+                            color: '#000814',
                           }}
                         >
                           {isPaid ? 'PAID' : 'UNPAID'}
@@ -456,9 +457,9 @@ export function StaffDashboard() {
               maxHeight: '92vh',
               overflowY: 'auto',
               backgroundColor: '#FDFBF7',
-              border: '2px solid #000000',
+              border: '2px solid #000814',
               borderRadius: '20px',
-              boxShadow: '6px 6px 0px 0px #000000',
+              boxShadow: '6px 6px 0px 0px #000814',
               padding: '28px',
             }}
             onClick={(e) => e.stopPropagation()}
@@ -469,7 +470,7 @@ export function StaffDashboard() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                borderBottom: '2px solid #000000',
+                borderBottom: '2px solid #000814',
                 paddingBottom: '16px',
                 marginBottom: '20px',
               }}
@@ -480,7 +481,7 @@ export function StaffDashboard() {
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 900,
                     fontSize: '1.5rem',
-                    color: '#000000',
+                    color: '#000814',
                   }}
                 >
                   ORDER {selectedOrder.orderId}
@@ -495,9 +496,9 @@ export function StaffDashboard() {
                   width: '36px',
                   height: '36px',
                   borderRadius: '8px',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   backgroundColor: '#FFFFFF',
-                  boxShadow: '2px 2px 0px 0px #000000',
+                  boxShadow: '2px 2px 0px 0px #000814',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -536,15 +537,15 @@ export function StaffDashboard() {
                   style={{
                     width: '100%',
                     backgroundColor: '#FFC300',
-                    color: '#000000',
+                    color: '#000814',
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 900,
                     fontSize: '0.85rem',
                     textTransform: 'uppercase',
                     padding: '8px 14px',
                     borderRadius: '10px',
-                    border: '2px solid #000000',
-                    boxShadow: '2px 2px 0px 0px #000000',
+                    border: '2px solid #000814',
+                    boxShadow: '2px 2px 0px 0px #000814',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -630,15 +631,15 @@ export function StaffDashboard() {
                         style={{
                           width: '100%',
                           backgroundColor: '#FECACA',
-                          color: '#000000',
+                          color: '#000814',
                           fontFamily: 'var(--font-heading)',
                           fontWeight: 900,
                           fontSize: '0.8rem',
                           textTransform: 'uppercase',
                           padding: '8px 14px',
                           borderRadius: '10px',
-                          border: '2px solid #000000',
-                          boxShadow: '2px 2px 0px 0px #000000',
+                          border: '2px solid #000814',
+                          boxShadow: '2px 2px 0px 0px #000814',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
@@ -694,7 +695,7 @@ export function StaffDashboard() {
                     <div
                       style={{
                         backgroundColor: '#BBF7D0',
-                        border: '1.5px solid #000000',
+                        border: '1.5px solid #000814',
                         borderRadius: '10px',
                         padding: '10px',
                         textAlign: 'center',
@@ -757,7 +758,7 @@ export function StaffDashboard() {
               onChange={(e) => setRejectReason(e.target.value)}
               style={{
                 width: '100%',
-                border: '2px solid #000000',
+                border: '2px solid #000814',
                 borderRadius: '10px',
                 padding: '10px 12px',
                 fontFamily: 'var(--font-body)',
@@ -765,7 +766,7 @@ export function StaffDashboard() {
                 resize: 'none',
                 outline: 'none',
                 backgroundColor: '#FFFFFF',
-                boxShadow: '2px 2px 0px 0px #000000',
+                boxShadow: '2px 2px 0px 0px #000814',
               }}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '18px' }}>
@@ -775,9 +776,9 @@ export function StaffDashboard() {
                 style={{
                   padding: '8px 14px',
                   borderRadius: '10px',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   backgroundColor: '#FFFFFF',
-                  boxShadow: '2px 2px 0px 0px #000000',
+                  boxShadow: '2px 2px 0px 0px #000814',
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 900,
                   fontSize: '0.85rem',
@@ -792,9 +793,9 @@ export function StaffDashboard() {
                 style={{
                   padding: '8px 14px',
                   borderRadius: '10px',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   backgroundColor: '#FECACA',
-                  boxShadow: '2px 2px 0px 0px #000000',
+                  boxShadow: '2px 2px 0px 0px #000814',
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 900,
                   fontSize: '0.85rem',

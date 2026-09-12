@@ -22,7 +22,7 @@ export function StatusBadge({
         return {
           bg: '#BBF7D0', // Mint green
           dot: '#166534',
-          color: '#000000',
+          color: '#000814',
           defaultText: norm === 'paid' ? 'PAID' : norm === 'ready' ? 'READY' : 'COMPLETED',
         };
       case 'accepted':
@@ -30,7 +30,7 @@ export function StatusBadge({
         return {
           bg: '#BAE6FD', // Sky blue
           dot: '#003566', // Secondary blue
-          color: '#000000',
+          color: '#000814',
           defaultText: 'ACCEPTED',
         };
       case 'processing':
@@ -38,7 +38,7 @@ export function StatusBadge({
         return {
           bg: '#C7D2FE', // Lavender / Indigo
           dot: '#3730A3',
-          color: '#000000',
+          color: '#000814',
           defaultText: norm === 'printing' ? 'PRINTING' : 'PROCESSING',
         };
       case 'rejected':
@@ -47,7 +47,7 @@ export function StatusBadge({
         return {
           bg: '#FECACA', // Soft red / coral
           dot: '#991B1B',
-          color: '#000000',
+          color: '#000814',
           defaultText: norm.toUpperCase(),
         };
       case 'placed':
@@ -56,7 +56,7 @@ export function StatusBadge({
         return {
           bg: '#FEF08A', // Pale yellow
           dot: '#854D0E',
-          color: '#000000',
+          color: '#000814',
           defaultText: 'PLACED',
         };
     }
@@ -72,7 +72,7 @@ export function StatusBadge({
     gap: '6px',
     backgroundColor: config.bg,
     color: config.color,
-    border: '2px solid #000000',
+    border: '2px solid #000814',
     borderRadius: '9999px',
     padding: '3px 10px',
     fontSize: '0.72rem',
@@ -82,7 +82,7 @@ export function StatusBadge({
     letterSpacing: '0.04em',
     lineHeight: 1,
     whiteSpace: 'nowrap',
-    boxShadow: '1.5px 1.5px 0px 0px #000000',
+    boxShadow: '1.5px 1.5px 0px 0px #000814',
     ...style,
   };
 

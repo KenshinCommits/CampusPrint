@@ -74,7 +74,7 @@ function drawBrandedDocument(canvas, title = 'Student Document', orderId = 'CP-0
   // Metadata ribbon
   ctx.fillStyle = colorMode === 'color' ? '#EEF2FF' : '#F1F5F9';
   ctx.fillRect(80, 250, canvas.width - 160, 50);
-  ctx.strokeStyle = '#000000';
+  ctx.strokeStyle = '#000814';
   ctx.lineWidth = 2;
   ctx.strokeRect(80, 250, canvas.width - 160, 50);
 

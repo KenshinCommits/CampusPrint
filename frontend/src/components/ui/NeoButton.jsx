@@ -30,7 +30,7 @@ export function NeoButton({
       case 'white':
         return {
           backgroundColor: isHovered && !disabled ? '#F8F5ED' : '#FFFFFF',
-          color: '#000000',
+          color: '#000814',
         };
       case 'dark':
         return {
@@ -40,23 +40,23 @@ export function NeoButton({
       case 'mint':
         return {
           backgroundColor: isHovered && !disabled ? '#86EFAC' : '#BBF7D0',
-          color: '#000000',
+          color: '#000814',
         };
       case 'sky':
         return {
           backgroundColor: isHovered && !disabled ? '#93C5FD' : '#BAE6FD',
-          color: '#000000',
+          color: '#000814',
         };
       case 'ghost':
         return {
           backgroundColor: isHovered && !disabled ? '#FFFDEB' : 'transparent',
-          color: '#000000',
+          color: '#000814',
         };
       case 'primary':
       default:
         return {
           backgroundColor: isHovered && !disabled ? '#FFD60A' : '#FFC300',
-          color: '#000000',
+          color: '#000814',
         };
     }
   };
@@ -88,8 +88,8 @@ export function NeoButton({
   const currentShadow = disabled
     ? 'none'
     : isActive
-    ? '0px 0px 0px #000000'
-    : '3px 3px 0px 0px #000000';
+    ? '0px 0px 0px #000814'
+    : '3px 3px 0px 0px #000814';
 
   const currentTransform = disabled
     ? 'none'
@@ -98,7 +98,7 @@ export function NeoButton({
     : 'none';
 
   const baseStyle = {
-    border: '2px solid #000000',
+    border: '2px solid #000814',
     fontFamily: 'var(--font-heading, "Space Grotesk", sans-serif)',
     fontWeight: 900,
     textTransform: 'uppercase',

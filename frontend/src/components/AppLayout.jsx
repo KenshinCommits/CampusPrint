@@ -17,7 +17,7 @@ export function RetroFooter() {
     <footer
       style={{
         backgroundColor: '#000814',
-        borderTop: '2px solid #000000',
+        borderTop: '2px solid #000814',
         padding: '16px 28px',
         color: '#FFFFFF',
         display: 'flex',
@@ -112,12 +112,12 @@ export function AppLayout({ children }) {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#F8F5ED' }}>
       <div style={{ display: 'flex', flex: 1, minHeight: 'calc(100vh - 56px)' }}>
-        {/* Left Sidebar (Desktop: 240px wide, crisp 2px black right border) */}
+        {/* Left Sidebar (Desktop: 240px wide, Golden Twilight Dark Navy #001D3D) */}
         <aside
           style={{
             width: '240px',
-            backgroundColor: '#F8F5ED',
-            borderRight: '2px solid #000000',
+            backgroundColor: '#001D3D',
+            borderRight: '2px solid #000814',
             padding: '24px 16px',
             position: 'sticky',
             top: 0,
@@ -127,10 +127,11 @@ export function AppLayout({ children }) {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
+            color: '#FFFFFF',
           }}
         >
           <div>
-            {/* Logo Block: yellow printer icon + bold black text */}
+            {/* Branding Header: yellow pixel printer icon + bold uppercase white text */}
             <Link
               to={isStaff ? '/staff' : '/dashboard'}
               style={{
@@ -140,18 +141,19 @@ export function AppLayout({ children }) {
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 900,
                 fontSize: '1.25rem',
-                letterSpacing: '-0.02em',
-                color: '#000000',
+                letterSpacing: '0.04em',
+                color: '#FFFFFF',
                 textDecoration: 'none',
                 padding: '6px 8px',
                 marginBottom: '28px',
               }}
             >
-              <PixelLogo size={28} color="#FFC300" />
+              <PixelLogo size={28} color="#FFD60A" />
               <span>CAMPUSPRINT</span>
+              <span style={{ color: '#FFD60A', fontSize: '1.4rem', lineHeight: 0 }}>.</span>
             </Link>
 
-            {/* Menu Items: rounded pill buttons */}
+            {/* Menu Navigation Links */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {navItems.map((item, idx) => {
                 const active = isItemActive(item.to, item.label);
@@ -166,18 +168,36 @@ export function AppLayout({ children }) {
                       gap: '12px',
                       padding: '12px 16px',
                       borderRadius: '12px',
-                      border: '2px solid #000000',
+                      border: active ? '2px solid #000814' : '2px solid transparent',
                       fontFamily: 'var(--font-heading)',
-                      fontWeight: 900,
-                      fontSize: '0.88rem',
+                      fontWeight: active ? 900 : 700,
+                      fontSize: '0.9rem',
                       textDecoration: 'none',
-                      color: active ? '#000000' : '#001D3D',
-                      backgroundColor: active ? '#FFC300' : '#FFFFFF',
-                      boxShadow: active ? '3px 3px 0px 0px #000000' : '2px 2px 0px 0px #000000',
-                      transition: 'all 0.1s ease',
+                      color: active ? '#000814' : '#FFFFFF',
+                      backgroundColor: active ? '#FFD60A' : 'transparent',
+                      boxShadow: active ? '3px 3px 0px 0px #000814' : 'none',
+                      transition: 'all 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.backgroundColor = '#003566';
+                        e.currentTarget.style.color = '#FFD60A';
+                        e.currentTarget.style.borderColor = '#000814';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = '#FFFFFF';
+                        e.currentTarget.style.borderColor = 'transparent';
+                      }
                     }}
                   >
-                    <IconComponent size={18} color={active ? '#000000' : '#003566'} strokeWidth={active ? 2.5 : 2} />
+                    <IconComponent
+                      size={18}
+                      color={active ? '#000814' : '#FFFFFF'}
+                      strokeWidth={active ? 2.5 : 2}
+                    />
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -185,29 +205,30 @@ export function AppLayout({ children }) {
             </div>
           </div>
 
-          {/* User Profile Badge at Bottom: rounded-full border-2 border-black */}
+          {/* Bottom User Capsule: bg-[#000814] border-2 border-[#003566] p-3 rounded-2xl */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '12px',
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #000000',
+              backgroundColor: '#000814',
+              border: '2px solid #003566',
               borderRadius: '16px',
-              boxShadow: '3px 3px 0px 0px #000000',
+              boxShadow: '3px 3px 0px 0px #000814',
               marginTop: 'auto',
+              color: '#FFFFFF',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div
                 style={{
-                  width: '38px',
-                  height: '38px',
+                  width: '36px',
+                  height: '36px',
                   borderRadius: '9999px',
-                  border: '2px solid #000000',
-                  backgroundColor: isStaff ? '#003566' : '#BAE6FD',
-                  color: isStaff ? '#FFFFFF' : '#000000',
+                  border: '2px solid #000814',
+                  backgroundColor: '#FFC300',
+                  color: '#000814',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -219,7 +240,7 @@ export function AppLayout({ children }) {
                 {initials}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#000000' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#FFFFFF' }}>
                   {user.name || user.email?.split('@')[0]}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -227,7 +248,7 @@ export function AppLayout({ children }) {
                   <span
                     style={{
                       fontSize: '0.7rem',
-                      color: '#4B5563',
+                      color: '#94A3B8',
                       textTransform: 'capitalize',
                       fontWeight: 700,
                     }}
@@ -246,12 +267,15 @@ export function AppLayout({ children }) {
                 background: 'transparent',
                 border: 'none',
                 cursor: 'pointer',
-                color: '#000000',
+                color: '#FFD60A',
                 padding: '6px',
                 display: 'flex',
                 alignItems: 'center',
                 borderRadius: '6px',
+                transition: 'color 0.15s ease',
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#FFFFFF'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#FFD60A'; }}
             >
               <LogOut size={16} />
             </button>
@@ -264,8 +288,8 @@ export function AppLayout({ children }) {
           <header
             style={{
               height: '64px',
-              backgroundColor: '#F8F5ED',
-              borderBottom: '2px solid #000000',
+              backgroundColor: '#FBF8F1',
+              borderBottom: '2px solid #000814',
               padding: '0 28px',
               display: 'flex',
               alignItems: 'center',
@@ -277,16 +301,16 @@ export function AppLayout({ children }) {
           >
             {/* Left: Breadcrumb / Title */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 900, color: '#003566', letterSpacing: '0.04em' }}>
+              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 900, color: '#001D3D', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                 CAMPUSPRINT
               </span>
-              <ChevronRight size={14} style={{ color: '#000000' }} strokeWidth={2.5} />
+              <ChevronRight size={14} style={{ color: '#000814' }} strokeWidth={2.5} />
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontSize: '0.9rem',
                   fontWeight: 900,
-                  color: '#000000',
+                  color: '#000814',
                   letterSpacing: '0.02em',
                 }}
               >
@@ -296,17 +320,17 @@ export function AppLayout({ children }) {
 
             {/* Right: Quick Notification Bell + User Profile Chip */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              {/* Notification Bell Button */}
+              {/* Notification Bell Button: rounded-full */}
               <button
                 type="button"
                 aria-label="Notifications"
                 style={{
                   width: '38px',
                   height: '38px',
-                  borderRadius: '10px',
-                  border: '2px solid #000000',
+                  borderRadius: '9999px',
+                  border: '2px solid #000814',
                   backgroundColor: '#FFFFFF',
-                  boxShadow: '2px 2px 0px 0px #000000',
+                  boxShadow: '2px 2px 0px 0px #000814',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -314,7 +338,7 @@ export function AppLayout({ children }) {
                   position: 'relative',
                 }}
               >
-                <Bell size={18} color="#000000" />
+                <Bell size={18} color="#000814" />
                 <span
                   style={{
                     position: 'absolute',
@@ -323,7 +347,8 @@ export function AppLayout({ children }) {
                     width: '8px',
                     height: '8px',
                     backgroundColor: '#EF4444',
-                    border: '1.5px solid #000000',
+                    border: '1.5px solid #000814',
+                    borderRadius: '50%',
                   }}
                 />
               </button>
@@ -335,13 +360,14 @@ export function AppLayout({ children }) {
                   alignItems: 'center',
                   gap: '8px',
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   borderRadius: '9999px',
                   padding: '4px 12px 4px 6px',
-                  boxShadow: '2px 2px 0px 0px #000000',
+                  boxShadow: '2px 2px 0px 0px #000814',
                   fontSize: '0.75rem',
                   fontWeight: 900,
                   fontFamily: 'var(--font-heading)',
+                  color: '#000814',
                 }}
               >
                 <div
@@ -349,25 +375,33 @@ export function AppLayout({ children }) {
                     width: '24px',
                     height: '24px',
                     borderRadius: '9999px',
-                    border: '1.5px solid #000000',
-                    backgroundColor: isStaff ? '#003566' : '#BAE6FD',
-                    color: isStaff ? '#FFFFFF' : '#000000',
+                    backgroundColor: '#FFC300',
+                    border: '1.5px solid #000814',
+                    color: '#000814',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '0.7rem',
+                    fontSize: '0.65rem',
                     fontWeight: 900,
                   }}
                 >
                   {initials}
                 </div>
-                <span>{user.name ? user.name.split(' ')[0] : 'User'}</span>
+                <span>{user.name?.split(' ')[0] || 'User'}</span>
               </div>
             </div>
           </header>
 
-          {/* Route Content Container */}
-          <main style={{ flex: 1, padding: '32px 36px', maxWidth: '1440px', width: '100%', margin: '0 auto' }}>
+          {/* Page Content Container */}
+          <main
+            style={{
+              flex: 1,
+              padding: 'clamp(20px, 3.5vw, 36px) clamp(20px, 4vw, 40px)',
+              maxWidth: '1440px',
+              width: '100%',
+              margin: '0 auto',
+            }}
+          >
             {children}
           </main>
         </div>

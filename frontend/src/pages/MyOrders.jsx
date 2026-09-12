@@ -66,7 +66,7 @@ export function MyOrders() {
               letterSpacing: '-0.03em',
               margin: 0,
               textTransform: 'uppercase',
-              color: '#000000',
+              color: '#000814',
             }}
           >
             MY ORDERS
@@ -101,9 +101,9 @@ export function MyOrders() {
                 width: '100%',
                 height: '44px',
                 backgroundColor: '#FFFFFF',
-                border: '2px solid #000000',
+                border: '2px solid #000814',
                 borderRadius: '12px',
-                boxShadow: '3px 3px 0px 0px #000000',
+                boxShadow: '3px 3px 0px 0px #000814',
                 paddingLeft: '42px',
                 paddingRight: '14px',
                 fontFamily: 'var(--font-body)',
@@ -121,9 +121,9 @@ export function MyOrders() {
               height: '44px',
               width: '44px',
               borderRadius: '12px',
-              border: '2px solid #000000',
+              border: '2px solid #000814',
               backgroundColor: '#FFFFFF',
-              boxShadow: '3px 3px 0px 0px #000000',
+              boxShadow: '3px 3px 0px 0px #000814',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -148,7 +148,7 @@ export function MyOrders() {
         ) : filteredOrders.length === 0 ? (
           <div style={{ padding: '60px 20px', textAlign: 'center', color: '#6B7280', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
             <PixelTicketGraphic size={72} />
-            <h3 style={{ fontFamily: 'var(--font-heading)', color: '#000000', margin: '8px 0 2px', fontWeight: 900, fontSize: '1.2rem' }}>
+            <h3 style={{ fontFamily: 'var(--font-heading)', color: '#000814', margin: '8px 0 2px', fontWeight: 900, fontSize: '1.2rem' }}>
               No orders found
             </h3>
             <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>You don't have any matching print orders.</p>
@@ -170,7 +170,7 @@ export function MyOrders() {
                 }}
               >
                 <thead>
-                  <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '2px solid #000000' }}>
+                  <tr style={{ backgroundColor: '#001D3D', borderBottom: '2px solid #000814' }}>
                     {['TOKEN', 'FILE', 'DATE', 'STATUS', 'PAYMENT', 'TOTAL', 'ACTION'].map((h, i) => (
                       <th
                         key={i}
@@ -179,8 +179,9 @@ export function MyOrders() {
                           fontFamily: 'var(--font-heading)',
                           fontWeight: 900,
                           fontSize: '0.8rem',
-                          letterSpacing: '0.04em',
-                          color: '#000000',
+                          letterSpacing: '0.06em',
+                          color: '#FFFFFF',
+                          textTransform: 'uppercase',
                         }}
                       >
                         {h}
@@ -218,13 +219,13 @@ export function MyOrders() {
                           <span
                             style={{
                               backgroundColor: isPaid ? '#BBF7D0' : '#FECACA',
-                              border: '1.5px solid #000000',
+                              border: '1.5px solid #000814',
                               borderRadius: '9999px',
                               padding: '2px 10px',
                               fontSize: '0.72rem',
                               fontFamily: 'var(--font-heading)',
                               fontWeight: 900,
-                              color: '#000000',
+                              color: '#000814',
                               letterSpacing: '0.02em',
                             }}
                           >
@@ -259,7 +260,7 @@ export function MyOrders() {
                 alignItems: 'center',
                 justifyContent: 'flex-end',
                 padding: '14px 20px',
-                borderTop: '2px solid #000000',
+                borderTop: '2px solid #000814',
                 gap: '8px',
                 backgroundColor: '#FFFFFF',
               }}
@@ -272,7 +273,7 @@ export function MyOrders() {
                   width: '36px',
                   height: '36px',
                   borderRadius: '8px',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   backgroundColor: '#FFFFFF',
                   cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
                   opacity: currentPage === 1 ? 0.4 : 1,
@@ -281,7 +282,7 @@ export function MyOrders() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '2px 2px 0px 0px #000000',
+                  boxShadow: '2px 2px 0px 0px #000814',
                 }}
               >
                 &lt;
@@ -296,7 +297,7 @@ export function MyOrders() {
                     width: '36px',
                     height: '36px',
                     borderRadius: '8px',
-                    border: '2px solid #000000',
+                    border: '2px solid #000814',
                     backgroundColor: currentPage === page ? '#FFC300' : '#FFFFFF',
                     cursor: 'pointer',
                     fontWeight: 900,
@@ -305,7 +306,7 @@ export function MyOrders() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '2px 2px 0px 0px #000000',
+                    boxShadow: '2px 2px 0px 0px #000814',
                   }}
                 >
                   {page}
@@ -320,7 +321,7 @@ export function MyOrders() {
                   width: '36px',
                   height: '36px',
                   borderRadius: '8px',
-                  border: '2px solid #000000',
+                  border: '2px solid #000814',
                   backgroundColor: '#FFFFFF',
                   cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
                   opacity: currentPage === totalPages ? 0.4 : 1,
@@ -329,7 +330,7 @@ export function MyOrders() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '2px 2px 0px 0px #000000',
+                  boxShadow: '2px 2px 0px 0px #000814',
                 }}
               >
                 &gt;

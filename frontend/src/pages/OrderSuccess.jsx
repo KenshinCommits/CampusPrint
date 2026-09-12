@@ -31,7 +31,7 @@ export function OrderSuccess() {
         minHeight: 'calc(100vh - 120px)',
         backgroundColor: '#001D3D',
         borderRadius: '24px',
-        border: '2px solid #000000',
+        border: '2px solid #000814',
         padding: 'clamp(36px, 6vw, 64px) 20px',
         display: 'flex',
         flexDirection: 'column',
@@ -39,7 +39,7 @@ export function OrderSuccess() {
         justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden',
-        boxShadow: '6px 6px 0px 0px #000000',
+        boxShadow: '6px 6px 0px 0px #000814',
       }}
     >
       {/* Corner Pixel Sparkles */}
@@ -67,20 +67,20 @@ export function OrderSuccess() {
           <div
             style={{
               backgroundColor: '#BBF7D0',
-              border: '2px solid #000000',
+              border: '2px solid #000814',
               borderRadius: '9999px',
               padding: '6px 16px',
-              boxShadow: '2px 2px 0px 0px #000000',
+              boxShadow: '2px 2px 0px 0px #000814',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
               fontFamily: 'var(--font-heading)',
               fontWeight: 900,
               fontSize: '0.8rem',
-              color: '#000000',
+              color: '#000814',
             }}
           >
-            <CheckCircle2 size={16} color="#000000" strokeWidth={3} />
+            <CheckCircle2 size={16} color="#000814" strokeWidth={3} />
             <span>SUBMISSION SUCCESSFUL</span>
           </div>
 
@@ -107,15 +107,15 @@ export function OrderSuccess() {
             style={{
               width: '100%',
               backgroundColor: '#FEF08A',
-              border: '2px dashed #000000',
+              border: '2px dashed #000814',
               borderRadius: '16px',
-              padding: '16px 20px',
+              padding: '24px',
               textAlign: 'center',
-              boxShadow: '4px 4px 0px 0px #000000',
+              boxShadow: '4px 4px 0px 0px #000814',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '4px',
+              gap: '6px',
             }}
           >
             <div
@@ -124,7 +124,7 @@ export function OrderSuccess() {
                 fontSize: 'clamp(2.4rem, 5vw, 3.2rem)',
                 fontWeight: 900,
                 letterSpacing: '-0.01em',
-                color: '#000000',
+                color: '#000814',
                 lineHeight: 1,
               }}
             >
@@ -136,9 +136,9 @@ export function OrderSuccess() {
                 fontWeight: 900,
                 fontSize: '0.85rem',
                 letterSpacing: '0.1em',
-                color: '#000000',
+                color: '#000814',
                 backgroundColor: '#FFC300',
-                border: '1.5px solid #000000',
+                border: '1.5px solid #000814',
                 borderRadius: '6px',
                 padding: '2px 10px',
               }}
@@ -173,7 +173,7 @@ export function OrderSuccess() {
                 style={{
                   fontWeight: 800,
                   fontSize: '0.9rem',
-                  color: '#000000',
+                  color: '#000814',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -188,7 +188,7 @@ export function OrderSuccess() {
               <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#6B7280', textTransform: 'uppercase' }}>
                 Print Details
               </span>
-              <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#000000' }}>
+              <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#000814' }}>
                 {order?.pages || 1}p · {order?.options?.colorMode === 'color' ? 'Color' : 'B&W'} · {order?.options?.sided || 'Double'}
               </span>
             </div>
@@ -198,7 +198,7 @@ export function OrderSuccess() {
               <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#6B7280', textTransform: 'uppercase' }}>
                 Total Cost
               </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.2rem', color: '#000000' }}>
+              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.2rem', color: '#000814' }}>
                 ₹{order?.cost?.total || 14}
               </span>
             </div>
@@ -223,15 +223,15 @@ export function OrderSuccess() {
           style={{
             width: '100%',
             backgroundColor: '#FFC300',
-            color: '#000000',
+            color: '#000814',
             fontFamily: 'var(--font-heading)',
             fontWeight: 900,
             fontSize: '1.1rem',
             textTransform: 'uppercase',
             padding: '14px',
             borderRadius: '12px',
-            border: '2px solid #000000',
-            boxShadow: '4px 4px 0px 0px #000000',
+            border: '2px solid #000814',
+            boxShadow: '4px 4px 0px 0px #000814',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
