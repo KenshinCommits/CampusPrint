@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { PixelLogo, PixelPrinter, PixelPrinterGraphic, PixelSparkles } from '../components/PixelArt.jsx';
 import { NeoCard, NeoButton } from '../components/ui/index.js';
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from 'lucide-react';
 
 export function Login() {
   const { login } = useAuth();
