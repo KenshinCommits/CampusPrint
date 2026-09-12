@@ -64,7 +64,7 @@ staffRouter.patch('/orders/:id/status', async (req, res) => {
   res.json({ order: updated });
 });
 
-// GET /api/staff/stats - quick counts for the dashboard header
+// GET /api/staff/stats - quick counts and analytics for the dashboard
 staffRouter.get('/stats', async (req, res) => {
   const orders = await db.orders.findAll({});
   const counts = orders.reduce((acc, o) => {
@@ -72,6 +72,25 @@ staffRouter.get('/stats', async (req, res) => {
     return acc;
   }, {});
   const today = new Date().toISOString().slice(0, 10);
-  const todayCount = orders.filter((o) => o.createdAt.slice(0, 10) === today).length;
-  res.json({ total: orders.length, today: todayCount, byStatus: counts });
+  const todayOrders = orders.filter((o) => o.createdAt && o.createdAt.slice(0, 10) === today);
+  const totalRevenue = orders.reduce((sum, o) => sum + (o.cost?.total || 0), 0);
+  const todayRevenue = todayOrders.reduce((sum, o) => sum + (o.cost?.total || 0), 0);
+  const totalPages = orders.reduce((sum, o) => sum + (o.pages || 0), 0);
+  const totalColorPages = orders.reduce((sum, o) => sum + (o.options?.colorMode === 'color' ? (o.pages || 0) : 0), 0);
+
+  res.json({
+    total: orders.length,
+    totalOrders: orders.length,
+    today: todayOrders.length,
+    todayTotal: todayOrders.length,
+    byStatus: counts,
+    counts,
+    revenue: {
+      total: totalRevenue,
+      today: todayRevenue,
+    },
+    totalPages,
+    totalColorPages,
+    totalBwPages: totalPages - totalColorPages,
+  });
 });

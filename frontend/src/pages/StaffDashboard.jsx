@@ -1,11 +1,33 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { Search, Download, Check, X, RefreshCw, Clock, ArrowRight, Eye, FileText, AlertTriangle } from 'lucide-react';
+import {
+  Search,
+  Download,
+  Check,
+  X,
+  RefreshCw,
+  Clock,
+  ArrowRight,
+  Eye,
+  FileText,
+  AlertTriangle,
+  BarChart3,
+  TrendingUp,
+  IndianRupee,
+  Printer,
+  Layers,
+  PieChart,
+  CheckCircle2,
+} from 'lucide-react';
 import { PrinterDemo } from '../components/PrinterDemo.jsx';
 
 export function StaffDashboard() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'queue';
+
   const [orders, setOrders] = useState([]);
-  const [stats, setStats] = useState({ counts: {}, todayTotal: 0, totalOrders: 0 });
+  const [stats, setStats] = useState({ counts: {}, todayTotal: 0, totalOrders: 0, revenue: { total: 0, today: 0 } });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -20,14 +42,25 @@ export function StaffDashboard() {
 
   function loadQueue() {
     api
-      .staffOrders({ status: statusFilter, q: searchQuery })
+      .staffOrders({ q: searchQuery })
       .then((data) => setOrders(data.orders || []))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
 
     api
       .staffStats()
-      .then((data) => setStats(data))
+      .then((data) => {
+        const counts = data.counts || data.byStatus || {};
+        setStats({
+          ...data,
+          counts,
+          byStatus: counts,
+          todayTotal: data.todayTotal ?? data.today ?? 0,
+          totalOrders: data.totalOrders ?? data.total ?? 0,
+          revenue: data.revenue || { total: 0, today: 0 },
+          totalPages: data.totalPages || 0,
+        });
+      })
       .catch(() => {});
   }
 
@@ -35,7 +68,7 @@ export function StaffDashboard() {
     loadQueue();
     const interval = setInterval(loadQueue, 10000);
     return () => clearInterval(interval);
-  }, [statusFilter, searchQuery]);
+  }, [searchQuery]);
 
   async function handleStatusChange(orderId, nextStatus, reason) {
     setUpdating(true);
@@ -54,8 +87,29 @@ export function StaffDashboard() {
     }
   }
 
-  // Filter orders client-side for payment status if selected
+  // Derive counts from API stats with complete fallback to orders list
+  const orderCounts = orders.reduce((acc, o) => {
+    acc[o.status] = (acc[o.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  const countPlaced = (stats.counts?.placed ?? stats.byStatus?.placed) ?? (orderCounts.placed || 0);
+  const countAccepted = (stats.counts?.accepted ?? stats.byStatus?.accepted) ?? (orderCounts.accepted || 0);
+  const countProcessing = (stats.counts?.processing ?? stats.byStatus?.processing) ?? (orderCounts.processing || 0);
+  const countReady = (stats.counts?.ready ?? stats.byStatus?.ready) ?? (orderCounts.ready || 0);
+  const countCompleted = (stats.counts?.completed ?? stats.byStatus?.completed) ?? (orderCounts.completed || 0);
+  const countRejected = (stats.counts?.rejected ?? stats.byStatus?.rejected) ?? (orderCounts.rejected || 0);
+  const countToday = stats.todayTotal || stats.today || stats.totalOrders || stats.total || orders.length;
+
+  const totalRevenue = stats.revenue?.total || orders.reduce((acc, o) => acc + (o.cost?.total || 0), 0);
+  const todayRevenue = stats.revenue?.today || orders.reduce((acc, o) => acc + (o.cost?.total || 0), 0);
+  const totalPages = stats.totalPages || orders.reduce((acc, o) => acc + (o.pages || 0), 0);
+  const colorPages = stats.totalColorPages || orders.reduce((acc, o) => acc + (o.options?.colorMode === 'color' ? (o.pages || 0) : 0), 0);
+  const bwPages = Math.max(0, totalPages - colorPages);
+
+  // Filter orders client-side
   const displayOrders = orders.filter((o) => {
+    if (statusFilter && o.status !== statusFilter) return false;
     if (paymentFilter && o.paymentStatus !== paymentFilter) return false;
     return true;
   });
@@ -72,10 +126,14 @@ export function StaffDashboard() {
               letterSpacing: '-0.02em',
             }}
           >
-            SHOP QUEUE
+            {activeTab === 'stats' ? 'SHOP STATISTICS' : activeTab === 'orders' ? 'ALL ORDERS' : 'SHOP QUEUE'}
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            Live orders awaiting processing and dispatch
+            {activeTab === 'stats'
+              ? 'Real-time financial analytics, volume distribution & shop metrics'
+              : activeTab === 'orders'
+              ? 'Complete searchable transaction logs and historical orders'
+              : 'Live orders awaiting processing and dispatch'}
           </p>
         </div>
 
@@ -91,101 +149,316 @@ export function StaffDashboard() {
         </button>
       </div>
 
-      {/* Top 5 Metric Cards (Matching Mockup Slide 6) */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-          gap: '14px',
-        }}
-      >
-        <div
-          className="neo-card"
+      {/* Navigation Sub-Tabs */}
+      <div style={{ display: 'flex', gap: '10px', borderBottom: '2px solid #000', paddingBottom: '12px', flexWrap: 'wrap' }}>
+        <button
+          type="button"
+          className="neo-btn sm"
+          onClick={() => setSearchParams({ tab: 'queue' })}
           style={{
-            background: '#FEF08A',
-            padding: '16px',
-            cursor: 'pointer',
-            border: statusFilter === 'placed' ? '3px solid #000' : '2px solid #000',
+            background: activeTab === 'queue' ? 'var(--yellow-primary)' : '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}
-          onClick={() => setStatusFilter(statusFilter === 'placed' ? '' : 'placed')}
         >
-          <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-            NEW ORDERS
-          </div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
-            {stats.counts?.placed || 0}
-          </div>
-        </div>
+          <Clock size={15} />
+          <span style={{ fontWeight: 800 }}>Shop Queue</span>
+          <span style={{ fontSize: '0.75rem', background: '#000', color: '#fff', padding: '1px 7px', borderRadius: '10px', fontWeight: 800 }}>
+            {countPlaced + countAccepted + countProcessing + countReady}
+          </span>
+        </button>
 
-        <div
-          className="neo-card"
+        <button
+          type="button"
+          className="neo-btn sm"
+          onClick={() => setSearchParams({ tab: 'orders' })}
           style={{
-            background: '#BFDBFE',
-            padding: '16px',
-            cursor: 'pointer',
-            border: statusFilter === 'accepted' ? '3px solid #000' : '2px solid #000',
+            background: activeTab === 'orders' ? 'var(--yellow-primary)' : '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}
-          onClick={() => setStatusFilter(statusFilter === 'accepted' ? '' : 'accepted')}
         >
-          <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-            ACCEPTED
-          </div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
-            {stats.counts?.accepted || 0}
-          </div>
-        </div>
+          <Layers size={15} />
+          <span style={{ fontWeight: 800 }}>All Orders</span>
+          <span style={{ fontSize: '0.75rem', background: '#000', color: '#fff', padding: '1px 7px', borderRadius: '10px', fontWeight: 800 }}>
+            {orders.length}
+          </span>
+        </button>
 
-        <div
-          className="neo-card"
+        <button
+          type="button"
+          className="neo-btn sm"
+          onClick={() => setSearchParams({ tab: 'stats' })}
           style={{
-            background: '#93C5FD',
-            padding: '16px',
-            cursor: 'pointer',
-            border: statusFilter === 'processing' ? '3px solid #000' : '2px solid #000',
-          }}
-          onClick={() => setStatusFilter(statusFilter === 'processing' ? '' : 'processing')}
-        >
-          <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-            PROCESSING
-          </div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
-            {stats.counts?.processing || 0}
-          </div>
-        </div>
-
-        <div
-          className="neo-card"
-          style={{
-            background: '#86EFAC',
-            padding: '16px',
-            cursor: 'pointer',
-            border: statusFilter === 'ready' ? '3px solid #000' : '2px solid #000',
-          }}
-          onClick={() => setStatusFilter(statusFilter === 'ready' ? '' : 'ready')}
-        >
-          <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-            READY
-          </div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
-            {stats.counts?.ready || 0}
-          </div>
-        </div>
-
-        <div
-          className="neo-card"
-          style={{
-            background: '#FFFDF9',
-            padding: '16px',
+            background: activeTab === 'stats' ? 'var(--yellow-primary)' : '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}
         >
-          <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text-muted)' }}>
-            TODAY'S ORDERS
-          </div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
-            {stats.todayTotal || stats.totalOrders || 0}
-          </div>
-        </div>
+          <BarChart3 size={15} />
+          <span style={{ fontWeight: 800 }}>Statistics & Analytics</span>
+        </button>
       </div>
+
+      {activeTab === 'stats' ? (
+        /* Dedicated Statistics & Analytics Dashboard */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* Key Financial & Volume Metrics */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '16px',
+            }}
+          >
+            <div className="neo-card" style={{ background: '#FEF08A', padding: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>TOTAL REVENUE</span>
+                <IndianRupee size={18} />
+              </div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px' }}>
+                ₹{totalRevenue}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: '#78350F', marginTop: '4px', fontWeight: 700 }}>
+                Today: ₹{todayRevenue}
+              </div>
+            </div>
+
+            <div className="neo-card" style={{ background: '#BFDBFE', padding: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>TOTAL PAGES PRINTED</span>
+                <Printer size={18} />
+              </div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px' }}>
+                {totalPages}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: '#1E3A8A', marginTop: '4px', fontWeight: 700 }}>
+                {bwPages} B&W · {colorPages} Color
+              </div>
+            </div>
+
+            <div className="neo-card" style={{ background: '#86EFAC', padding: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>TOTAL ORDERS</span>
+                <Layers size={18} />
+              </div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px' }}>
+                {orders.length}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: '#14532D', marginTop: '4px', fontWeight: 700 }}>
+                {countReady + countCompleted} Completed / Ready
+              </div>
+            </div>
+
+            <div className="neo-card" style={{ background: '#FBCFE8', padding: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>AVG. PAGES / ORDER</span>
+                <TrendingUp size={18} />
+              </div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px' }}>
+                {orders.length ? Math.round(totalPages / orders.length) : 0}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: '#831843', marginTop: '4px', fontWeight: 700 }}>
+                Avg cost: ₹{orders.length ? Math.round(totalRevenue / orders.length) : 0}
+              </div>
+            </div>
+          </div>
+
+          {/* Distribution Sections */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+            {/* Status Distribution */}
+            <div className="neo-card" style={{ padding: '20px', background: '#fff' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                <PieChart size={18} />
+                <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem' }}>Order Status Breakdown</h3>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {[
+                  { label: 'New / Placed', count: countPlaced, color: '#FEF08A' },
+                  { label: 'Accepted', count: countAccepted, color: '#BFDBFE' },
+                  { label: 'In Processing', count: countProcessing, color: '#93C5FD' },
+                  { label: 'Ready for Pickup', count: countReady, color: '#86EFAC' },
+                  { label: 'Completed', count: countCompleted, color: '#CBD5E1' },
+                  { label: 'Rejected', count: countRejected, color: '#FECACA' },
+                ].map((item) => {
+                  const pct = orders.length ? Math.round((item.count / orders.length) * 100) : 0;
+                  return (
+                    <div key={item.label}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 700, marginBottom: '4px' }}>
+                        <span>{item.label}</span>
+                        <span>{item.count} ({pct}%)</span>
+                      </div>
+                      <div style={{ width: '100%', height: '12px', background: '#F1F5F9', borderRadius: '4px', border: '1px solid #000', overflow: 'hidden' }}>
+                        <div style={{ width: `${pct}%`, height: '100%', background: item.color }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Print Preferences Breakdown */}
+            <div className="neo-card" style={{ padding: '20px', background: '#fff' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                <BarChart3 size={18} />
+                <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem' }}>Print Preferences</h3>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 700, marginBottom: '4px' }}>
+                    <span>Color Mode</span>
+                    <span>{Math.round((bwPages / (totalPages || 1)) * 100)}% B&W</span>
+                  </div>
+                  <div style={{ display: 'flex', height: '12px', border: '1px solid #000', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ width: `${Math.round((bwPages / (totalPages || 1)) * 100)}%`, background: '#334155' }} title="B&W" />
+                    <div style={{ flex: 1, background: '#F59E0B' }} title="Color" />
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                    <span>B&W: {bwPages} pages</span>
+                    <span>Color: {colorPages} pages</span>
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 700, marginBottom: '4px' }}>
+                    <span>Payment Method</span>
+                    <span>
+                      {Math.round((orders.filter((o) => o.paymentMethod === 'online').length / (orders.length || 1)) * 100)}% Online
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', height: '12px', border: '1px solid #000', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div
+                      style={{
+                        width: `${Math.round((orders.filter((o) => o.paymentMethod === 'online').length / (orders.length || 1)) * 100)}%`,
+                        background: '#10B981',
+                      }}
+                    />
+                    <div style={{ flex: 1, background: '#FBBF24' }} />
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                    <span>Online UPI/Card: {orders.filter((o) => o.paymentMethod === 'online').length}</span>
+                    <span>Counter Cash: {orders.filter((o) => o.paymentMethod !== 'online').length}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '8px' }}>Binding Distribution</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                    {['none', 'spiral', 'staple', 'hardcover'].map((b) => {
+                      const bCount = orders.filter((o) => (o.options?.binding || 'none') === b).length;
+                      return (
+                        <div key={b} style={{ border: '1px solid #000', padding: '6px 10px', borderRadius: '4px', background: '#F8FAFC' }}>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>{b}</div>
+                          <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1rem' }}>{bCount} orders</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Top 5 Metric Cards (Queue / Orders Tabs) */
+        <>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+              gap: '14px',
+            }}
+          >
+            <div
+              className="neo-card"
+              style={{
+                background: '#FEF08A',
+                padding: '16px',
+                cursor: 'pointer',
+                border: statusFilter === 'placed' ? '3px solid #000' : '2px solid #000',
+              }}
+              onClick={() => setStatusFilter(statusFilter === 'placed' ? '' : 'placed')}
+            >
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+                NEW ORDERS
+              </div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+                {countPlaced}
+              </div>
+            </div>
+
+            <div
+              className="neo-card"
+              style={{
+                background: '#BFDBFE',
+                padding: '16px',
+                cursor: 'pointer',
+                border: statusFilter === 'accepted' ? '3px solid #000' : '2px solid #000',
+              }}
+              onClick={() => setStatusFilter(statusFilter === 'accepted' ? '' : 'accepted')}
+            >
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+                ACCEPTED
+              </div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+                {countAccepted}
+              </div>
+            </div>
+
+            <div
+              className="neo-card"
+              style={{
+                background: '#93C5FD',
+                padding: '16px',
+                cursor: 'pointer',
+                border: statusFilter === 'processing' ? '3px solid #000' : '2px solid #000',
+              }}
+              onClick={() => setStatusFilter(statusFilter === 'processing' ? '' : 'processing')}
+            >
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+                PROCESSING
+              </div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+                {countProcessing}
+              </div>
+            </div>
+
+            <div
+              className="neo-card"
+              style={{
+                background: '#86EFAC',
+                padding: '16px',
+                cursor: 'pointer',
+                border: statusFilter === 'ready' ? '3px solid #000' : '2px solid #000',
+              }}
+              onClick={() => setStatusFilter(statusFilter === 'ready' ? '' : 'ready')}
+            >
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+                READY
+              </div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+                {countReady}
+              </div>
+            </div>
+
+            <div
+              className="neo-card"
+              style={{
+                background: '#FFFDF9',
+                padding: '16px',
+              }}
+            >
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text-muted)' }}>
+                TODAY'S ORDERS
+              </div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+                {countToday}
+              </div>
+            </div>
+          </div>
 
       {/* Filter Bar */}
       <div
@@ -334,6 +607,8 @@ export function StaffDashboard() {
           </tbody>
         </table>
       </div>
+    </>
+  )}
 
       {/* Selected Order Manage Modal / Detail Panel (Matching Slide 7) */}
       {selectedOrder && (

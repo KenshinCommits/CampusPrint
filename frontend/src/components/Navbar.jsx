@@ -57,13 +57,22 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/staff" className={`nav-link ${location.pathname === '/staff' ? 'active' : ''}`}>
+                <Link
+                  to="/staff?tab=queue"
+                  className={`nav-link ${location.pathname === '/staff' && (new URLSearchParams(location.search).get('tab') || 'queue') === 'queue' ? 'active' : ''}`}
+                >
                   Queue
                 </Link>
-                <Link to="/staff" className="nav-link">
+                <Link
+                  to="/staff?tab=orders"
+                  className={`nav-link ${location.pathname === '/staff' && new URLSearchParams(location.search).get('tab') === 'orders' ? 'active' : ''}`}
+                >
                   Orders
                 </Link>
-                <Link to="/staff" className="nav-link">
+                <Link
+                  to="/staff?tab=stats"
+                  className={`nav-link ${location.pathname === '/staff' && new URLSearchParams(location.search).get('tab') === 'stats' ? 'active' : ''}`}
+                >
                   Statistics
                 </Link>
               </>
