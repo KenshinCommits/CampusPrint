@@ -1,0 +1,26 @@
+{
+  "name": "campusprint-cdk",
+  "version": "1.0.0",
+  "description": "AWS CDK infrastructure for CampusPrint",
+  "main": "app.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "deploy": "cdk deploy",
+    "synth": "cdk synth",
+    "diff": "cdk diff",
+    "destroy": "cdk destroy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "~5.3.3"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.131.1",
+    "constructs": "^10.3.0",
+    "source-map-support": "^0.5.21"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "family": "campusprint-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "taskRoleArn": "arn:aws:iam::666036096455:role/campusprint-task-role",
+  "executionRoleArn": "arn:aws:iam::666036096455:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "666036096455.dkr.ecr.ap-south-1.amazonaws.com/campusprint-backend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 4000,
+          "hostPort": 4000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DB_DRIVER",
+          "value": "dynamodb"
+        },
+        {
+          "name": "AWS_REGION",
+          "value": "ap-south-1"
+        },
+        {
+          "name": "USERS_TABLE",
+          "value": "campusprint-users"
+        },
+        {
+          "name": "ORDERS_TABLE",
+          "value": "campusprint-orders"
+        },
+        {
+          "name": "PORT",
+          "value": "4000"
+        },
+        {
+          "name": "JWT_SECRET",
+          "value": "campusprint-demo-secret-2026"
+        },
+        {
+          "name": "CORS_ORIGIN",
+          "value": "*"
+        },
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/campusprint-backend",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "backend"
+        }
+      }
+    }
+  ]
+}

@@ -25,11 +25,27 @@ export function Login() {
   }
 
   async function onSubmit(e) {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setError('');
     setBusy(true);
     try {
       const user = await login(email, password);
+      navigate(user.role === 'staff' ? '/staff' : '/dashboard');
+    } catch (err) {
+      setError(err.message || 'Invalid email or password');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleQuickLogin(targetEmail, targetPassword, role) {
+    setEmail(targetEmail);
+    setPassword(targetPassword);
+    setRoleSelection(role);
+    setError('');
+    setBusy(true);
+    try {
+      const user = await login(targetEmail, targetPassword);
       navigate(user.role === 'staff' ? '/staff' : '/dashboard');
     } catch (err) {
       setError(err.message || 'Invalid email or password');
@@ -198,6 +214,113 @@ export function Login() {
               {error}
             </div>
           )}
+
+          {/* Quick Demo Accounts for Judges & Evaluators */}
+          <div
+            style={{
+              background: '#FEF9C3',
+              border: '2.5px solid #000',
+              borderRadius: '8px',
+              padding: '12px',
+              marginBottom: '18px',
+              boxShadow: '3px 3px 0px #000',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.82rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                marginBottom: '8px',
+                textTransform: 'uppercase',
+                color: '#854D0E',
+              }}
+            >
+              <Sparkles size={16} />
+              <span>⚡ Judges One-Click Demo Logins:</span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <button
+                type="button"
+                className="neo-btn sm"
+                disabled={busy}
+                onClick={() => handleQuickLogin('student@campusprint.demo', 'student123', 'student')}
+                style={{
+                  background: '#DBEAFE',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.78rem' }}>👨‍🎓 Demo Student</div>
+                <div style={{ fontSize: '0.68rem', color: '#475569' }}>order in progress</div>
+              </button>
+
+              <button
+                type="button"
+                className="neo-btn sm"
+                disabled={busy}
+                onClick={() => handleQuickLogin('staff@campusprint.demo', 'staff123', 'staff')}
+                style={{
+                  background: '#FDE047',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.78rem' }}>👩‍💼 Shop Staff</div>
+                <div style={{ fontSize: '0.68rem', color: '#475569' }}>queue & analytics</div>
+              </button>
+
+              <button
+                type="button"
+                className="neo-btn sm"
+                disabled={busy}
+                onClick={() => handleQuickLogin('ananya@campusprint.demo', 'demo123', 'student')}
+                style={{
+                  background: '#DCFCE7',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.78rem' }}>📄 Ananya Iyer</div>
+                <div style={{ fontSize: '0.68rem', color: '#475569' }}>ready order (resume)</div>
+              </button>
+
+              <button
+                type="button"
+                className="neo-btn sm"
+                disabled={busy}
+                onClick={() => handleQuickLogin('karthik@campusprint.demo', 'demo123', 'student')}
+                style={{
+                  background: '#F3E8FF',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.78rem' }}>📘 Karthik Rao</div>
+                <div style={{ fontSize: '0.68rem', color: '#475569' }}>capstone project</div>
+              </button>
+            </div>
+
+            <div style={{ marginTop: '7px', fontSize: '0.7rem', color: '#713F12', textAlign: 'center', fontWeight: 600 }}>
+              👆 Click any role to log in instantly
+            </div>
+          </div>
 
           <form onSubmit={onSubmit}>
             <div className="neo-input-group">
