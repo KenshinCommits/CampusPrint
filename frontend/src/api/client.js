@@ -1,10 +1,9 @@
 // Always use relative '/api' in production so requests resolve to the current host
 // (ALB or HTTPS tunnel) without hardcoding task IPs or triggering CORS / SSL errors.
 const isLocalDev = typeof window !== 'undefined' &&
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
-  (window.location.port === '5173' || window.location.port === '3000');
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-export const baseURL = isLocalDev ? 'http://localhost:4000/api' : '/api';
+export const baseURL = import.meta.env.VITE_API_URL || (isLocalDev ? 'http://localhost:4000/api' : '/api');
 
 export function getToken() {
   return localStorage.getItem('cp_token') || localStorage.getItem('token');
@@ -21,7 +20,8 @@ export function clearToken() {
 }
 
 async function request(endpoint, { method = 'GET', body, isMultipart = false } = {}) {
-  const url = endpoint.startsWith('http') ? endpoint : `${baseURL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = endpoint.startsWith('http') ? endpoint : `${baseURL}${cleanEndpoint}`;
   const headers = {};
 
   const token = getToken();

@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Navbar } from './components/Navbar.jsx';
+import { AppLayout } from './components/AppLayout.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 import { Login } from './pages/Login.jsx';
 import { Signup } from './pages/Signup.jsx';
@@ -37,103 +37,108 @@ function Home() {
 
 export default function App() {
   return (
-    <div className="app">
-      <Navbar />
-      <main className="content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/about" element={<About />} />
+    <AppLayout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/about" element={<About />} />
 
-          {/* Student Dashboard */}
-          <Route
-            path="/dashboard"
-            element={
-              <Protected role="student">
-                <StudentDashboard />
-              </Protected>
-            }
-          />
+        {/* Student Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            <Protected role="student">
+              <StudentDashboard />
+            </Protected>
+          }
+        />
 
-          {/* New Order Creator */}
-          <Route
-            path="/order"
-            element={
-              <Protected role="student">
-                <NewOrder />
-              </Protected>
-            }
-          />
-          <Route
-            path="/new-order"
-            element={
-              <Protected role="student">
-                <NewOrder />
-              </Protected>
-            }
-          />
+        {/* New Order Creator */}
+        <Route
+          path="/order"
+          element={
+            <Protected role="student">
+              <NewOrder />
+            </Protected>
+          }
+        />
+        <Route
+          path="/new-order"
+          element={
+            <Protected role="student">
+              <NewOrder />
+            </Protected>
+          }
+        />
 
-          {/* Order Success Screen */}
-          <Route
-            path="/order/:id/success"
-            element={
-              <Protected>
-                <OrderSuccess />
-              </Protected>
-            }
-          />
+        {/* Order Success / Placed Screen */}
+        <Route
+          path="/order/:id/success"
+          element={
+            <Protected>
+              <OrderSuccess />
+            </Protected>
+          }
+        />
+        <Route
+          path="/order-placed"
+          element={
+            <Protected>
+              <OrderSuccess />
+            </Protected>
+          }
+        />
 
-          {/* Order Live Status / Details */}
-          <Route
-            path="/order/:id"
-            element={
-              <Protected>
-                <OrderDetail />
-              </Protected>
-            }
-          />
-          <Route
-            path="/orders/:id"
-            element={
-              <Protected>
-                <OrderDetail />
-              </Protected>
-            }
-          />
+        {/* Order Live Status / Details */}
+        <Route
+          path="/order/:id"
+          element={
+            <Protected>
+              <OrderDetail />
+            </Protected>
+          }
+        />
+        <Route
+          path="/orders/:id"
+          element={
+            <Protected>
+              <OrderDetail />
+            </Protected>
+          }
+        />
 
-          {/* My Orders List */}
-          <Route
-            path="/orders"
-            element={
-              <Protected role="student">
-                <MyOrders />
-              </Protected>
-            }
-          />
-          <Route
-            path="/my-orders"
-            element={
-              <Protected role="student">
-                <MyOrders />
-              </Protected>
-            }
-          />
+        {/* My Orders List */}
+        <Route
+          path="/orders"
+          element={
+            <Protected role="student">
+              <MyOrders />
+            </Protected>
+          }
+        />
+        <Route
+          path="/my-orders"
+          element={
+            <Protected role="student">
+              <MyOrders />
+            </Protected>
+          }
+        />
 
-          {/* Staff Shop Queue */}
-          <Route
-            path="/staff"
-            element={
-              <Protected role="staff">
-                <StaffDashboard />
-              </Protected>
-            }
-          />
+        {/* Staff Shop Queue */}
+        <Route
+          path="/staff"
+          element={
+            <Protected role="staff">
+              <StaffDashboard />
+            </Protected>
+          }
+        />
 
-          {/* Catch-all */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </main>
-    </div>
+        {/* Catch-all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AppLayout>
   );
 }

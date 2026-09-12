@@ -29,10 +29,10 @@ try {
 
 // Calibration constants for bottom-front output tray & slit
 const TRAY_SLANT = -0.597; // Downward tray pitch angle (~ -34.2°)
-const PAPER_WIDTH = 0.38;
-const PAPER_HEIGHT = 0.537; // Standard A4 1:1.414 aspect ratio
-const SLOT_START_POS = { x: 0, y: -0.115, z: 0.36 }; // Inside dispenser slit
-const TRAY_END_POS = { x: 0, y: -0.47, z: 0.90 }; // Settled flush on front tray
+const PAPER_WIDTH = 0.65;
+const PAPER_HEIGHT = 0.92; // Standard A4 1:1.414 aspect ratio (~0.65 * 1.414)
+const SLOT_START_POS = { x: 0, y: -0.11, z: 0.36 }; // Inside dispenser slit
+const TRAY_END_POS = { x: 0, y: -0.43, z: 0.84 }; // Settled flush on front tray
 
 /**
  * Draw Page 1 (Front) branded document fallback
@@ -74,7 +74,7 @@ function drawBrandedDocument(canvas, title = 'Student Document', orderId = 'CP-0
   // Metadata ribbon
   ctx.fillStyle = colorMode === 'color' ? '#EEF2FF' : '#F1F5F9';
   ctx.fillRect(80, 250, canvas.width - 160, 50);
-  ctx.strokeStyle = '#000000';
+  ctx.strokeStyle = '#000814';
   ctx.lineWidth = 2;
   ctx.strokeRect(80, 250, canvas.width - 160, 50);
 

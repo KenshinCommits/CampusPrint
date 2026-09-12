@@ -1,145 +1,562 @@
-import { Link } from 'react-router-dom';
-import { Printer, Upload, ShieldCheck, CheckCircle2, ArrowRight } from 'lucide-react';
-import { LoginCard } from '../components/LoginCard.jsx';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
+import { PixelLogo, PixelPrinter, PixelPrinterGraphic, PixelSparkles } from '../components/PixelArt.jsx';
+import { NeoCard, NeoButton } from '../components/ui/index.js';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from 'lucide-react';
 
 export function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const [roleSelection, setRoleSelection] = useState('student');
+  const [email, setEmail] = useState('student@campusprint.demo');
+  const [password, setPassword] = useState('student123');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  function handleRoleToggle(role) {
+    setRoleSelection(role);
+    if (role === 'student') {
+      setEmail('student@campusprint.demo');
+      setPassword('student123');
+    } else {
+      setEmail('staff@campusprint.demo');
+      setPassword('staff123');
+    }
+  }
+
+  async function onSubmit(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    setError('');
+    setBusy(true);
+    try {
+      const user = await login(email, password);
+      navigate(user.role === 'staff' ? '/staff' : '/dashboard');
+    } catch (err) {
+      setError(err.message || 'Invalid email or password');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleQuickLogin(targetEmail, targetPassword, role) {
+    setEmail(targetEmail);
+    setPassword(targetPassword);
+    setRoleSelection(role);
+    setError('');
+    setBusy(true);
+    try {
+      const user = await login(targetEmail, targetPassword);
+      navigate(user.role === 'staff' ? '/staff' : '/dashboard');
+    } catch (err) {
+      setError(err.message || 'Invalid email or password');
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
-    <div className="auth-split-grid">
-      {/* Left Column: Hero Showcase */}
-      <div className="auth-hero">
-        <h1 className="auth-hero-title">
-          PRINT WITHOUT<br />THE QUEUE.
-        </h1>
-        <p className="auth-hero-desc">
-          Upload your document. Choose your print options. Pay. Pick it up when it's ready.
-        </p>
+    <div
+      style={{
+        minHeight: 'calc(100vh - 56px)',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+        backgroundColor: '#FBF8F1',
+      }}
+    >
+      {/* Left Column: Deep retro navy (#001D3D and #000814) Hero Showcase */}
+      <div
+        style={{
+          background: 'linear-gradient(180deg, #001D3D 0%, #000814 100%)',
+          padding: 'clamp(32px, 6vw, 64px)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          position: 'relative',
+          overflow: 'hidden',
+          borderRight: '2px solid #000814',
+        }}
+      >
+        {/* Top Pixel Logo & Corner Sparkles */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+            <PixelLogo size={32} color="#FFC300" />
+            <span
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.35rem',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                color: '#FFFFFF',
+              }}
+            >
+              CAMPUSPRINT
+            </span>
+          </div>
 
-        <div>
-          <Link
-            to="/about"
-            className="neo-btn primary"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
+          <PixelSparkles color1="#FFC300" color2="#38BDF8" />
+        </div>
+
+        {/* Hero Big Typography & Tagline */}
+        <div style={{ margin: '40px 0' }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(2.6rem, 5.5vw, 4.4rem)',
+              fontWeight: 900,
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
+              color: '#FFFFFF',
+              marginBottom: '22px',
+            }}
           >
-            <span>GET STARTED</span>
-            <ArrowRight size={18} strokeWidth={2.5} />
-          </Link>
-        </div>
+            PRINT.<br />
+            PAY.<br />
+            <span style={{ color: '#FFC300' }}>PICK UP.</span>
+          </h1>
 
-        {/* Neo-brutalist Printer Illustration */}
-        <div
-          style={{
-            position: 'relative',
-            background: '#FCE77D',
-            border: '3px solid #000',
-            borderRadius: '12px',
-            padding: '28px',
-            boxShadow: '4px 4px 0px #000',
-            maxWidth: '460px',
-            margin: '10px 0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div
+          <p
+            style={{
+              color: '#94A3B8',
+              fontSize: 'clamp(1rem, 1.6vw, 1.2rem)',
+              maxWidth: '400px',
+              lineHeight: 1.6,
+              fontWeight: 600,
+            }}
+          >
+            Upload your document.<br />
+            Choose your print options.<br />
+            Pay in seconds.<br />
+            Pick it up from the shop.
+          </p>
+
+          <div style={{ marginTop: '24px' }}>
+            <Link
+              to="/about"
               style={{
-                width: '64px',
-                height: '64px',
-                background: '#3B82F6',
-                border: '2.5px solid #000',
-                borderRadius: '8px',
-                boxShadow: '2px 2px 0px #000',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-              }}
-            >
-              <Printer size={36} strokeWidth={2.2} />
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem' }}>
-                PRINT DISPATCH READY
-              </div>
-              <div style={{ fontSize: '0.85rem', color: '#333' }}>
-                Tokens instantly synced to shop floor
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div
-              style={{
-                background: '#fff',
-                border: '2px solid #000',
-                borderRadius: '4px',
-                padding: '3px 8px',
+                gap: '8px',
+                backgroundColor: '#FFC300',
+                color: '#000814',
                 fontFamily: 'var(--font-heading)',
-                fontWeight: 800,
-                fontSize: '0.75rem',
-                boxShadow: '1.5px 1.5px 0px #000',
-                transform: 'rotate(-3deg)',
+                fontWeight: 900,
+                fontSize: '0.88rem',
+                textTransform: 'uppercase',
+                padding: '10px 18px',
+                borderRadius: '10px',
+                border: '2px solid #000814',
+                boxShadow: '3px 3px 0px 0px #000814',
+                textDecoration: 'none',
               }}
             >
-              CP-1041 📄
-            </div>
-            <div
-              style={{
-                background: '#86EFAC',
-                border: '2px solid #000',
-                borderRadius: '4px',
-                padding: '3px 8px',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 800,
-                fontSize: '0.75rem',
-                boxShadow: '1.5px 1.5px 0px #000',
-                transform: 'rotate(2deg)',
-              }}
-            >
-              CP-1042 ✓
-            </div>
+              <span>EXPLORE &amp; ABOUT</span>
+              <ArrowRight size={16} strokeWidth={3} />
+            </Link>
           </div>
         </div>
 
-        {/* 3 Features Row */}
-        <div className="hero-features">
-          <div className="hero-feature-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#2563EB' }}>
-              <Upload size={18} strokeWidth={2.5} />
-              <span className="hero-feature-title">QUICK UPLOAD</span>
-            </div>
-            <p className="hero-feature-desc">
-              Upload your file and set your preferences in seconds.
-            </p>
-          </div>
-
-          <div className="hero-feature-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#059669' }}>
-              <ShieldCheck size={18} strokeWidth={2.5} />
-              <span className="hero-feature-title">SECURE PAYMENT</span>
-            </div>
-            <p className="hero-feature-desc">
-              Pay online or at the counter. It's up to you.
-            </p>
-          </div>
-
-          <div className="hero-feature-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D97706' }}>
-              <CheckCircle2 size={18} strokeWidth={2.5} />
-              <span className="hero-feature-title">PICK UP & GO</span>
-            </div>
-            <p className="hero-feature-desc">
-              Get your unique token and collect your print job.
-            </p>
-          </div>
+        {/* Pixel Art Printer Illustration */}
+        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
+          <PixelPrinterGraphic size={240} />
         </div>
       </div>
 
-      {/* Right Column: Auth Card */}
-      <div>
-        <LoginCard />
+      {/* Right Column: Warm Cream Login Card Area */}
+      <div
+        style={{
+          backgroundColor: '#FBF8F1',
+          padding: 'clamp(32px, 5vw, 64px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <NeoCard
+          variant="default"
+          style={{
+            maxWidth: '440px',
+            width: '100%',
+            padding: '36px 32px',
+          }}
+        >
+          {/* Role Toggle Selector: [Student] | [Staff] */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #000814',
+              borderRadius: '12px',
+              padding: '4px',
+              marginBottom: '28px',
+              boxShadow: '3px 3px 0px 0px #000814',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => handleRoleToggle('student')}
+              style={{
+                padding: '10px',
+                border: roleSelection === 'student' ? '2px solid #000814' : '2px solid transparent',
+                borderRadius: '8px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                backgroundColor: roleSelection === 'student' ? '#FFC300' : 'transparent',
+                color: '#000814',
+                boxShadow: roleSelection === 'student' ? '2px 2px 0px 0px #000814' : 'none',
+                transition: 'all 0.1s ease',
+              }}
+            >
+              Student
+            </button>
+            <button
+              type="button"
+              onClick={() => handleRoleToggle('staff')}
+              style={{
+                padding: '10px',
+                border: roleSelection === 'staff' ? '2px solid #000814' : '2px solid transparent',
+                borderRadius: '8px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                backgroundColor: roleSelection === 'staff' ? '#FFC300' : 'transparent',
+                color: '#000814',
+                boxShadow: roleSelection === 'staff' ? '2px 2px 0px 0px #000814' : 'none',
+                transition: 'all 0.1s ease',
+              }}
+            >
+              Staff
+            </button>
+          </div>
+
+          {/* Heading */}
+          <div style={{ marginBottom: '24px' }}>
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '1.8rem',
+                letterSpacing: '-0.02em',
+                marginBottom: '4px',
+                color: '#000814',
+              }}
+            >
+              Welcome Back!
+            </h2>
+            <p style={{ color: '#4B5563', fontSize: '0.9rem', fontWeight: 600 }}>
+              Log in to access your print station
+            </p>
+          </div>
+
+          {error && (
+            <div
+              style={{
+                backgroundColor: '#FECACA',
+                border: '2px solid #DC2626',
+                borderRadius: '10px',
+                padding: '12px 14px',
+                marginBottom: '20px',
+                color: '#991B1B',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                boxShadow: '2px 2px 0px 0px #DC2626',
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          {/* Quick Login Bar for Judges & Evaluators */}
+          <div
+            style={{
+              backgroundColor: '#FEF9C3',
+              border: '2px solid #000814',
+              borderRadius: '12px',
+              padding: '12px',
+              marginBottom: '20px',
+              boxShadow: '3px 3px 0px 0px #000814',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.75rem',
+                textTransform: 'uppercase',
+                color: '#854D0E',
+                marginBottom: '8px',
+              }}
+            >
+              <Sparkles size={14} color="#854D0E" />
+              <span>Judges One-Click Quick Logins:</span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => handleQuickLogin('staff@campusprint.demo', 'staff123', 'staff')}
+                style={{
+                  backgroundColor: '#FFD60A',
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>🖨️ Staff Operator</div>
+                <div style={{ fontSize: '0.65rem', color: '#003566', fontWeight: 600 }}>live queue &amp; 3D sim</div>
+              </button>
+
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => handleQuickLogin('student@campusprint.demo', 'student123', 'student')}
+                style={{
+                  backgroundColor: '#BAE6FD',
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>🎓 Judge Student</div>
+                <div style={{ fontSize: '0.65rem', color: '#003566', fontWeight: 600 }}>dashboard &amp; orders</div>
+              </button>
+
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => handleQuickLogin('ananya@campusprint.demo', 'demo123', 'student')}
+                style={{
+                  backgroundColor: '#86EFAC',
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>📄 Ananya Iyer</div>
+                <div style={{ fontSize: '0.65rem', color: '#003566', fontWeight: 600 }}>ready order (resume)</div>
+              </button>
+
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => handleQuickLogin('karthik@campusprint.demo', 'demo123', 'student')}
+                style={{
+                  backgroundColor: '#C7D2FE',
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>📘 Karthik Rao</div>
+                <div style={{ fontSize: '0.65rem', color: '#001D3D', fontWeight: 600 }}>capstone project</div>
+              </button>
+            </div>
+
+            <div style={{ marginTop: '7px', fontSize: '0.68rem', color: '#6B7280', textAlign: 'center', fontWeight: 700 }}>
+              👆 Click any role to log in instantly
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            <div>
+              <label
+                htmlFor="auth-email"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.8rem',
+                  textTransform: 'uppercase',
+                  marginBottom: '6px',
+                  color: '#000814',
+                }}
+              >
+                <Mail size={15} />
+                <span>Email address</span>
+              </label>
+              <input
+                id="auth-email"
+                type="email"
+                required
+                placeholder="name@campus.edu"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  backgroundColor: '#FFFFFF',
+                  border: '2px solid #000814',
+                  borderRadius: '12px',
+                  boxShadow: '3px 3px 0px 0px #000814',
+                  padding: '0 14px',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  outline: 'none',
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="auth-password"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.8rem',
+                  textTransform: 'uppercase',
+                  marginBottom: '6px',
+                  color: '#000814',
+                }}
+              >
+                <Lock size={15} />
+                <span>Password</span>
+              </label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  id="auth-password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{
+                    width: '100%',
+                    height: '44px',
+                    backgroundColor: '#FFFFFF',
+                    border: '2px solid #000814',
+                    borderRadius: '12px',
+                    boxShadow: '3px 3px 0px 0px #000814',
+                    padding: '0 42px 0 14px',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.9rem',
+                    fontWeight: 600,
+                    outline: 'none',
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#6B7280',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontWeight: 600 }}>
+                <input type="checkbox" defaultChecked style={{ accentColor: '#000814' }} />
+                <span>Remember me</span>
+              </label>
+              <a href="#forgot" style={{ color: '#000814', fontWeight: 800, textDecoration: 'underline' }}>
+                Forgot password?
+              </a>
+            </div>
+
+            {/* "LOG IN ->" yellow button */}
+            <button
+              type="submit"
+              disabled={busy}
+              style={{
+                width: '100%',
+                backgroundColor: '#FFC300',
+                color: '#000814',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '1.05rem',
+                textTransform: 'uppercase',
+                padding: '14px',
+                borderRadius: '12px',
+                border: '2px solid #000814',
+                boxShadow: '4px 4px 0px 0px #000814',
+                cursor: busy ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'transform 0.08s ease, box-shadow 0.08s ease',
+              }}
+            >
+              <span>{busy ? 'LOGGING IN…' : 'LOG IN ->'}</span>
+              <ArrowRight size={18} strokeWidth={3} />
+            </button>
+          </form>
+
+          <div
+            style={{
+              marginTop: '24px',
+              paddingTop: '20px',
+              borderTop: '2px dashed #000814',
+              textAlign: 'center',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+            }}
+          >
+            <span>Don't have an account? </span>
+            <Link to="/signup" style={{ color: '#000814', fontWeight: 900, textDecoration: 'underline' }}>
+              Create Account &rarr;
+            </Link>
+          </div>
+        </NeoCard>
       </div>
     </div>
   );
 }
+
+export default Login;

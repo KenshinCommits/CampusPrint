@@ -4,6 +4,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { db } from '../db/index.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
+import { sendOrderReadyEmail } from '../utils/mailer.js';
 
 export const staffRouter = Router();
 
@@ -61,6 +62,30 @@ staffRouter.patch('/orders/:id/status', async (req, res) => {
   if (estimatedReadyAt) patch.estimatedReadyAt = estimatedReadyAt;
 
   const updated = await db.orders.update(order.orderId, patch);
+
+  // Trigger email notification via Resend when order is READY FOR PICKUP or COMPLETED
+  if (status === 'ready' || status === 'completed') {
+    (async () => {
+      try {
+        let recipientEmail = order.userId;
+        if (!recipientEmail || recipientEmail.endsWith('.demo') || recipientEmail.endsWith('.local') || recipientEmail.endsWith('.test')) {
+          recipientEmail = 'rithwikthummana826@gmail.com';
+        }
+
+        await sendOrderReadyEmail({
+          toEmail: recipientEmail,
+          studentName: order.userName || 'Student',
+          orderToken: order.orderId || req.params.id,
+          fileName: order.fileName || 'document.pdf',
+          totalCost: order.cost?.total || order.cost || '17',
+          pickupTime: estimatedReadyAt || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        });
+      } catch (err) {
+        console.error('[Resend] Non-blocking email dispatch error:', err);
+      }
+    })();
+  }
+
   res.json({ order: updated });
 });
 

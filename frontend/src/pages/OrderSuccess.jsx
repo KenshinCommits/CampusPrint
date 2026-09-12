@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { CheckCircle2, ArrowRight, Printer, Sparkles, RefreshCw, FileText } from 'lucide-react';
+import { PixelTicketGraphic, PixelSpeedWatch, PixelSparkles } from '../components/PixelArt.jsx';
+import { NeoCard, NeoButton } from '../components/ui/index.js';
+import { CheckCircle2, ArrowRight, FileText, Clock, CreditCard, Sparkles } from 'lucide-react';
 
 export function OrderSuccess() {
   const { id } = useParams();
@@ -9,7 +11,6 @@ export function OrderSuccess() {
   const navigate = useNavigate();
   const [order, setOrder] = useState(location.state?.order || null);
   const [loading, setLoading] = useState(!order);
-  const [paying, setPaying] = useState(false);
 
   useEffect(() => {
     if (!order && id) {
@@ -21,201 +22,230 @@ export function OrderSuccess() {
     }
   }, [id, order]);
 
-  async function handleSimulatedPayment() {
-    if (!order) return;
-    setPaying(true);
-    try {
-      const res = await api.payOrder(order.orderId);
-      setOrder(res.order);
-    } catch (err) {
-      alert(err.message || 'Payment simulation failed');
-    } finally {
-      setPaying(false);
-    }
-  }
-
-  if (loading) {
-    return <div style={{ textAlign: 'center', padding: '60px' }}>Loading order details…</div>;
-  }
-
-  const token = order?.orderId || id || 'CP-1001';
-  const isPaid = order?.paymentStatus === 'paid';
+  const token = order?.orderId || id || 'CP-1042';
+  const tokenNum = token.replace(/\D/g, '') ? `#${parseInt(token.replace(/\D/g, ''), 10) % 100}` : '#42';
 
   return (
-    <div style={{ maxWidth: '820px', margin: '30px auto' }}>
-      <div className="neo-card" style={{ padding: '36px 30px' }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1.1fr 0.9fr',
-            gap: '36px',
-            alignItems: 'center',
-          }}
-          className="success-grid"
-        >
-          {/* Left Column: Big Celebratory Badge + Token */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '20px' }}>
-            {/* Green Checkmark Circle */}
-            <div
-              style={{
-                width: '74px',
-                height: '74px',
-                background: '#86EFAC',
-                border: '3px solid #000',
-                borderRadius: '50%',
-                boxShadow: '3px 3px 0px #000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <CheckCircle2 size={44} strokeWidth={2.5} color="#000" />
-            </div>
+    <div
+      style={{
+        minHeight: 'calc(100vh - 120px)',
+        backgroundColor: '#001D3D',
+        borderRadius: '24px',
+        border: '2px solid #000814',
+        padding: 'clamp(36px, 6vw, 64px) 20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '6px 6px 0px 0px #000814',
+      }}
+    >
+      {/* Corner Pixel Sparkles */}
+      <div style={{ position: 'absolute', top: '24px', left: '24px' }}>
+        <PixelSparkles color1="#FFC300" color2="#38BDF8" />
+      </div>
+      <div style={{ position: 'absolute', top: '24px', right: '24px' }}>
+        <PixelSparkles color1="#38BDF8" color2="#FFC300" />
+      </div>
 
-            <div>
-              <h1
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.8rem',
-                  fontWeight: 900,
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                {isPaid ? 'PAYMENT SUCCESSFUL!' : 'ORDER PLACED!'}
-              </h1>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginTop: '6px' }}>
-                {isPaid
-                  ? 'Your order has been paid and added to the queue.'
-                  : 'Your print order is queued. Pay at counter or right now.'}
-              </p>
-            </div>
-
-            {/* Neo-brutalist Yellow Ticket */}
-            <div
-              style={{
-                background: '#FFD028',
-                border: '3px solid #000',
-                borderRadius: '10px',
-                boxShadow: '4px 4px 0px #000',
-                padding: '18px 36px',
-                position: 'relative',
-                width: '100%',
-                maxWidth: '300px',
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '2.4rem',
-                  fontWeight: 900,
-                  letterSpacing: '0.04em',
-                }}
-              >
-                {token}
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '0.78rem',
-                  fontWeight: 800,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  marginTop: '2px',
-                }}
-              >
-                YOUR PRINT TOKEN
-              </div>
-            </div>
-
-            {!isPaid && (
-              <button
-                type="button"
-                className="neo-btn success sm"
-                onClick={handleSimulatedPayment}
-                disabled={paying}
-              >
-                <Sparkles size={16} />
-                <span>{paying ? 'Processing…' : `Pay ₹${order?.cost?.total || 0} Online Now`}</span>
-              </button>
-            )}
-          </div>
-
-          {/* Right Column: Order Summary Receipt */}
+      <div
+        style={{
+          maxWidth: '520px',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          gap: '24px',
+          zIndex: 2,
+        }}
+      >
+        {/* Header: Success checkmark badge and "ORDER PLACED!" heading */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
           <div
             style={{
-              background: '#FFFDF9',
-              border: '2px solid #000',
-              borderRadius: '8px',
-              boxShadow: '2px 2px 0px #000',
+              backgroundColor: '#BBF7D0',
+              border: '2px solid #000814',
+              borderRadius: '9999px',
+              padding: '6px 16px',
+              boxShadow: '2px 2px 0px 0px #000814',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 900,
+              fontSize: '0.8rem',
+              color: '#000814',
+            }}
+          >
+            <CheckCircle2 size={16} color="#000814" strokeWidth={3} />
+            <span>SUBMISSION SUCCESSFUL</span>
+          </div>
+
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(2.2rem, 4.5vw, 2.8rem)',
+              fontWeight: 900,
+              letterSpacing: '-0.02em',
+              color: '#FFFFFF',
+              margin: 0,
+              textTransform: 'uppercase',
+            }}
+          >
+            ORDER PLACED!
+          </h1>
+        </div>
+
+        {/* Authentic Handcrafted Pixel Ticket Graphic with Token Banner */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%' }}>
+          <PixelTicketGraphic size={130} />
+
+          <div
+            style={{
+              width: '100%',
+              backgroundColor: '#FEF08A',
+              border: '2px dashed #000814',
+              borderRadius: '16px',
               padding: '24px',
+              textAlign: 'center',
+              boxShadow: '4px 4px 0px 0px #000814',
               display: 'flex',
               flexDirection: 'column',
-              gap: '14px',
+              alignItems: 'center',
+              gap: '6px',
             }}
           >
             <div
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '0.85rem',
+                fontSize: 'clamp(2.4rem, 5vw, 3.2rem)',
                 fontWeight: 900,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                color: 'var(--text-muted)',
+                letterSpacing: '-0.01em',
+                color: '#000814',
+                lineHeight: 1,
               }}
             >
-              ORDER SUMMARY
+              {token}
             </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-              <span>
-                {order?.pages || 1} pages × {order?.options?.copies || 1} copies
-              </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
-                ₹{order?.cost?.printCost || 0}
-              </span>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-              <span style={{ textTransform: 'capitalize' }}>
-                Binding ({order?.options?.binding || 'None'})
-              </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
-                ₹{order?.cost?.bindingCost || 0}
-              </span>
-            </div>
-
-            <div style={{ borderTop: '2px dashed #000', margin: '4px 0' }} />
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', fontWeight: 900 }}>
-                Total
-              </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 900 }}>
-                ₹{order?.cost?.total || 0}
-              </span>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                Payment Status
-              </span>
-              <span className={`neo-badge ${isPaid ? 'paid' : 'unpaid'}`}>
-                {isPaid ? 'PAID' : 'PENDING'}
-              </span>
-            </div>
-
-            <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <Link to={`/order/${token}`} className="neo-btn primary full-width">
-                <span>TRACK ORDER</span>
-                <ArrowRight size={18} strokeWidth={2.5} />
-              </Link>
-              <Link to="/order" className="neo-btn full-width" style={{ textAlign: 'center' }}>
-                + Place Another Order
-              </Link>
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.85rem',
+                letterSpacing: '0.1em',
+                color: '#000814',
+                backgroundColor: '#FFC300',
+                border: '1.5px solid #000814',
+                borderRadius: '6px',
+                padding: '2px 10px',
+              }}
+            >
+              PRINT {tokenNum}
             </div>
           </div>
         </div>
+
+        {/* Spec details: 2-column grid showing File name, Print Details, Total cost, and Estimated Ready Time */}
+        <NeoCard
+          variant="default"
+          style={{
+            width: '100%',
+            padding: '20px 24px',
+            textAlign: 'left',
+          }}
+        >
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '16px',
+            }}
+          >
+            {/* 1. File Name */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#6B7280', textTransform: 'uppercase' }}>
+                File Name
+              </span>
+              <span
+                style={{
+                  fontWeight: 800,
+                  fontSize: '0.9rem',
+                  color: '#000814',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {order?.fileName || 'document.pdf'}
+              </span>
+            </div>
+
+            {/* 2. Print Details */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#6B7280', textTransform: 'uppercase' }}>
+                Print Details
+              </span>
+              <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#000814' }}>
+                {order?.pages || 1}p · {order?.options?.colorMode === 'color' ? 'Color' : 'B&W'} · {order?.options?.sided || 'Double'}
+              </span>
+            </div>
+
+            {/* 3. Total Cost */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#6B7280', textTransform: 'uppercase' }}>
+                Total Cost
+              </span>
+              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.2rem', color: '#000814' }}>
+                ₹{order?.cost?.total || 14}
+              </span>
+            </div>
+
+            {/* 4. Estimated Ready Time */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#6B7280', textTransform: 'uppercase' }}>
+                Estimated Ready Time
+              </span>
+              <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#0D9488', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <PixelSpeedWatch size={20} />
+                <span>~10-15 minutes</span>
+              </span>
+            </div>
+          </div>
+        </NeoCard>
+
+        {/* Bottom Button: "TRACK ORDER ->" with yellow fill and hard black shadow */}
+        <button
+          type="button"
+          onClick={() => navigate(`/order/${token}`)}
+          style={{
+            width: '100%',
+            backgroundColor: '#FFC300',
+            color: '#000814',
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 900,
+            fontSize: '1.1rem',
+            textTransform: 'uppercase',
+            padding: '14px',
+            borderRadius: '12px',
+            border: '2px solid #000814',
+            boxShadow: '4px 4px 0px 0px #000814',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            transition: 'transform 0.08s ease, box-shadow 0.08s ease',
+          }}
+        >
+          <span>TRACK ORDER &rarr;</span>
+          <ArrowRight size={20} strokeWidth={3} />
+        </button>
       </div>
     </div>
   );
 }
+
+export default OrderSuccess;

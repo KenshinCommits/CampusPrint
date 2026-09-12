@@ -1,18 +1,2 @@
-const LABELS = {
-  placed: 'New',
-  accepted: 'Accepted',
-  processing: 'Processing',
-  ready: 'Ready',
-  completed: 'Completed',
-  rejected: 'Rejected',
-  cancelled: 'Cancelled',
-};
-
-export function StatusBadge({ status }) {
-  return (
-    <span className={`badge badge-${status}`}>
-      <span className="dot" />
-      {LABELS[status] || status}
-    </span>
-  );
-}
+export { StatusBadge } from './ui/StatusBadge.jsx';
+export { StatusBadge as default } from './ui/StatusBadge.jsx';

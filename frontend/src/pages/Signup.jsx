@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import { ArrowRight, User, Mail, Lock, ShieldAlert } from 'lucide-react';
+import { PixelLogo, PixelPrinter, PixelPrinterGraphic, PixelSparkles } from '../components/PixelArt.jsx';
+import { NeoCard, NeoButton } from '../components/ui/index.js';
+import { User, Mail, Lock, ArrowRight } from 'lucide-react';
 
 export function Signup() {
   const { signup } = useAuth();
@@ -29,131 +31,358 @@ export function Signup() {
   }
 
   return (
-    <div style={{ maxWidth: '480px', margin: '40px auto' }}>
-      <div className="neo-card">
-        <div style={{ marginBottom: '20px' }}>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.8rem', fontWeight: 900 }}>
-            Create Account
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            Join CampusPrint to bypass the print shop line
-          </p>
+    <div
+      style={{
+        minHeight: 'calc(100vh - 56px)',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+        backgroundColor: '#FBF8F1',
+      }}
+    >
+      {/* Left Column: Retro Dark Navy Hero Showcase */}
+      <div
+        style={{
+          background: 'linear-gradient(180deg, #001D3D 0%, #000814 100%)',
+          padding: 'clamp(32px, 6vw, 64px)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          position: 'relative',
+          overflow: 'hidden',
+          borderRight: '2px solid #000814',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+            <PixelLogo size={32} color="#FFC300" />
+            <span
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.35rem',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                color: '#FFFFFF',
+              }}
+            >
+              CAMPUSPRINT
+            </span>
+          </div>
+
+          <PixelSparkles color1="#FFC300" color2="#38BDF8" />
         </div>
 
-        {error && (
-          <div
+        <div style={{ margin: '40px 0' }}>
+          <h1
             style={{
-              background: '#FEE2E2',
-              border: '2px solid #EF4444',
-              color: '#991B1B',
-              borderRadius: '6px',
-              padding: '10px 14px',
-              marginBottom: '16px',
-              fontSize: '0.88rem',
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(2.6rem, 5.5vw, 4.4rem)',
+              fontWeight: 900,
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
+              color: '#FFFFFF',
+              marginBottom: '22px',
+            }}
+          >
+            SKIP THE LINE.<br />
+            PRINT FROM<br />
+            <span style={{ color: '#FFC300' }}>ANYWHERE.</span>
+          </h1>
+
+          <p
+            style={{
+              color: '#94A3B8',
+              fontSize: 'clamp(1rem, 1.6vw, 1.2rem)',
+              maxWidth: '400px',
+              lineHeight: 1.6,
               fontWeight: 600,
             }}
           >
-            {error}
-          </div>
-        )}
+            Create an account to upload documents, customize print specs, and track pickup orders in real time.
+          </p>
+        </div>
 
-        <form onSubmit={onSubmit}>
-          <div className="neo-input-group">
-            <label className="neo-label">
-              <User size={15} />
-              <span>Full Name</span>
-            </label>
-            <input
-              type="text"
-              className="neo-input"
-              placeholder="e.g. Rahul Kumar"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
+        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
+          <PixelPrinterGraphic size={240} />
+        </div>
+      </div>
 
-          <div className="neo-input-group">
-            <label className="neo-label">
-              <Mail size={15} />
-              <span>Email Address</span>
-            </label>
-            <input
-              type="email"
-              className="neo-input"
-              placeholder="e.g. rahul@college.edu"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="neo-input-group">
-            <label className="neo-label">
-              <Lock size={15} />
-              <span>Password</span>
-            </label>
-            <input
-              type="password"
-              className="neo-input"
-              placeholder="Minimum 6 characters"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="neo-input-group">
-            <label className="neo-label">
-              <span>Account Type</span>
-            </label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                type="button"
-                className={`neo-btn sm ${role === 'student' ? 'primary' : ''}`}
-                style={{ flex: 1 }}
-                onClick={() => setRole('student')}
-              >
-                Student
-              </button>
-              <button
-                type="button"
-                className={`neo-btn sm ${role === 'staff' ? 'primary' : ''}`}
-                style={{ flex: 1 }}
-                onClick={() => setRole('staff')}
-              >
-                Staff
-              </button>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="neo-btn primary full-width"
-            disabled={busy}
-            style={{ marginTop: '12px', padding: '12px' }}
-          >
-            <span>{busy ? 'CREATING ACCOUNT…' : 'SIGN UP ->'}</span>
-          </button>
-        </form>
-
-        <div
+      {/* Right Column: Warm Cream Signup Card Area */}
+      <div
+        style={{
+          backgroundColor: '#FBF8F1',
+          padding: 'clamp(32px, 5vw, 64px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <NeoCard
+          variant="default"
           style={{
-            marginTop: '16px',
-            textAlign: 'center',
-            fontSize: '0.88rem',
-            color: 'var(--text-muted)',
+            maxWidth: '440px',
+            width: '100%',
+            padding: '36px 32px',
           }}
         >
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            style={{ color: '#000', fontWeight: 800, textDecoration: 'underline' }}
+          {/* Role Toggle Selector */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #000814',
+              borderRadius: '12px',
+              padding: '4px',
+              marginBottom: '28px',
+              boxShadow: '3px 3px 0px 0px #000814',
+            }}
           >
-            Log in
-          </Link>
-        </div>
+            <button
+              type="button"
+              onClick={() => setRole('student')}
+              style={{
+                padding: '10px',
+                border: role === 'student' ? '2px solid #000814' : '2px solid transparent',
+                borderRadius: '8px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                backgroundColor: role === 'student' ? '#FFC300' : 'transparent',
+                color: '#000814',
+                boxShadow: role === 'student' ? '2px 2px 0px 0px #000814' : 'none',
+              }}
+            >
+              Student
+            </button>
+            <button
+              type="button"
+              onClick={() => setRole('staff')}
+              style={{
+                padding: '10px',
+                border: role === 'staff' ? '2px solid #000814' : '2px solid transparent',
+                borderRadius: '8px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                backgroundColor: role === 'staff' ? '#FFC300' : 'transparent',
+                color: '#000814',
+                boxShadow: role === 'staff' ? '2px 2px 0px 0px #000814' : 'none',
+              }}
+            >
+              Staff
+            </button>
+          </div>
+
+          <div style={{ marginBottom: '24px' }}>
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '1.8rem',
+                letterSpacing: '-0.02em',
+                marginBottom: '4px',
+                color: '#000814',
+              }}
+            >
+              Create Account
+            </h2>
+            <p style={{ color: '#4B5563', fontSize: '0.9rem', fontWeight: 600 }}>
+              Join CampusPrint in 10 seconds
+            </p>
+          </div>
+
+          {error && (
+            <div
+              style={{
+                backgroundColor: '#FECACA',
+                border: '2px solid #000814',
+                borderRadius: '10px',
+                boxShadow: '2px 2px 0px 0px #000814',
+                padding: '10px 14px',
+                fontSize: '0.85rem',
+                fontWeight: 800,
+                color: '#991B1B',
+                marginBottom: '18px',
+                fontFamily: 'var(--font-heading)',
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            <div>
+              <label
+                htmlFor="signup-name"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.8rem',
+                  textTransform: 'uppercase',
+                  marginBottom: '6px',
+                  color: '#000814',
+                }}
+              >
+                <User size={15} />
+                <span>Full Name</span>
+              </label>
+              <input
+                id="signup-name"
+                type="text"
+                required
+                placeholder="Alex Morgan"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  backgroundColor: '#FFFFFF',
+                  border: '2px solid #000814',
+                  borderRadius: '12px',
+                  boxShadow: '3px 3px 0px 0px #000814',
+                  padding: '0 14px',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  outline: 'none',
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="signup-email"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.8rem',
+                  textTransform: 'uppercase',
+                  marginBottom: '6px',
+                  color: '#000814',
+                }}
+              >
+                <Mail size={15} />
+                <span>Email address</span>
+              </label>
+              <input
+                id="signup-email"
+                type="email"
+                required
+                placeholder="name@campus.edu"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  backgroundColor: '#FFFFFF',
+                  border: '2px solid #000814',
+                  borderRadius: '12px',
+                  boxShadow: '3px 3px 0px 0px #000814',
+                  padding: '0 14px',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  outline: 'none',
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="signup-password"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.8rem',
+                  textTransform: 'uppercase',
+                  marginBottom: '6px',
+                  color: '#000814',
+                }}
+              >
+                <Lock size={15} />
+                <span>Password</span>
+              </label>
+              <input
+                id="signup-password"
+                type="password"
+                required
+                placeholder="At least 6 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  backgroundColor: '#FFFFFF',
+                  border: '2px solid #000814',
+                  borderRadius: '12px',
+                  boxShadow: '3px 3px 0px 0px #000814',
+                  padding: '0 14px',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  outline: 'none',
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={busy}
+              style={{
+                width: '100%',
+                backgroundColor: '#FFC300',
+                color: '#000814',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '1.05rem',
+                textTransform: 'uppercase',
+                padding: '14px',
+                borderRadius: '12px',
+                border: '2px solid #000814',
+                boxShadow: '4px 4px 0px 0px #000814',
+                cursor: busy ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'transform 0.08s ease, box-shadow 0.08s ease',
+              }}
+            >
+              <span>{busy ? 'CREATING ACCOUNT…' : 'CREATE ACCOUNT ->'}</span>
+              <ArrowRight size={18} strokeWidth={3} />
+            </button>
+          </form>
+
+          <div
+            style={{
+              marginTop: '24px',
+              paddingTop: '20px',
+              borderTop: '2px dashed #000814',
+              textAlign: 'center',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+            }}
+          >
+            <span>Already registered? </span>
+            <Link to="/login" style={{ color: '#000814', fontWeight: 900, textDecoration: 'underline' }}>
+              Log in &rarr;
+            </Link>
+          </div>
+        </NeoCard>
       </div>
     </div>
   );
 }
+
+export default Signup;

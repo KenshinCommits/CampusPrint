@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { Upload, FileText, X, ArrowRight, Minus, Plus, AlertCircle } from 'lucide-react';
+import { PixelUploadDoc } from '../components/PixelArt.jsx';
+import { NeoCard, NeoButton } from '../components/ui/index.js';
+import { ArrowLeft, Trash2, CheckCircle2, ArrowRight, Minus, Plus } from 'lucide-react';
 
 export function NewOrder() {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ export function NewOrder() {
   const [colorMode, setColorMode] = useState('bw');
   const [sided, setSided] = useState('double');
   const [paperSize, setPaperSize] = useState('A4');
-  const [binding, setBinding] = useState('staple');
+  const [binding, setBinding] = useState('none');
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('counter');
 
@@ -47,7 +49,7 @@ export function NewOrder() {
         setPages(Number(countMatch[1]));
         return;
       }
-      
+
       const fullBuffer = await selectedFile.arrayBuffer();
       const fullText = new TextDecoder('latin1').decode(fullBuffer);
       const pageMatches = fullText.match(/\/Type\s*\/Page\b/g);
@@ -56,9 +58,10 @@ export function NewOrder() {
         return;
       }
     } catch {
-      // fallback
+      // fallback to estimation
     }
-    setPages(1);
+    const estPages = Math.max(1, Math.min(50, Math.round(selectedFile.size / 65000)));
+    setPages(estPages || 1);
   }
 
   function handleDrop(e) {
@@ -91,456 +94,566 @@ export function NewOrder() {
       formData.append('notes', notes);
       formData.append('paymentMethod', paymentMethod);
 
-      const res = await api.placeOrder(formData);
-      navigate(`/order/${res.order.orderId}/success`, { state: { order: res.order } });
+      const res = await api.createOrder(formData);
+      navigate(`/order/${res.order.orderId}/success`);
     } catch (err) {
-      setError(err.message || 'Failed to place order.');
+      setError(err.message || 'Failed to submit order');
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <div>
-      <h1
-        style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
-          fontWeight: 900,
-          marginBottom: '24px',
-          letterSpacing: '-0.02em',
-        }}
-      >
-        LET'S GET IT PRINTED.
-      </h1>
+    <div style={{ maxWidth: '1080px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      {/* Top Header / Breadcrumb Bar */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Link
+            to="/dashboard"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              borderRadius: '8px',
+              border: '2px solid #000814',
+              backgroundColor: '#FFFFFF',
+              boxShadow: '2px 2px 0px 0px #000814',
+              color: '#000814',
+              textDecoration: 'none',
+            }}
+          >
+            <ArrowLeft size={18} strokeWidth={2.5} />
+          </Link>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1.6rem',
+              fontWeight: 900,
+              letterSpacing: '-0.02em',
+              color: '#000814',
+              margin: 0,
+            }}
+          >
+            NEW PRINT ORDER
+          </h1>
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <NeoButton
+            variant="default"
+            size="sm"
+            onClick={() => {
+              setFile(null);
+              setPages(0);
+              if (fileInputRef.current) fileInputRef.current.value = '';
+              setCopies(1);
+              setColorMode('bw');
+              setSided('double');
+              setPaperSize('A4');
+              setBinding('none');
+              setNotes('');
+            }}
+          >
+            Reset Options
+          </NeoButton>
+        </div>
+      </div>
 
       {error && (
         <div
           style={{
-            background: '#FEE2E2',
-            border: '2px solid #EF4444',
-            color: '#991B1B',
-            borderRadius: '8px',
+            backgroundColor: '#FECACA',
+            border: '2px solid #DC2626',
+            borderRadius: '10px',
             padding: '12px 16px',
-            marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
+            color: '#991B1B',
             fontWeight: 700,
+            fontSize: '0.9rem',
+            boxShadow: '3px 3px 0px 0px #DC2626',
           }}
         >
-          <AlertCircle size={18} />
-          <span>{error}</span>
+          {error}
         </div>
       )}
 
-      <div
+      {/* Main 2-Column Responsive Form */}
+      <form
+        onSubmit={handleSubmit}
         style={{
           display: 'grid',
-          gridTemplateColumns: '1.2fr 0.8fr',
-          gap: '28px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+          gap: '24px',
           alignItems: 'start',
         }}
-        className="order-grid"
       >
-        {/* Left Column: Steps 1 & 2 */}
+        {/* Left Column: DROPZONE + FILE DETAILS + PRICE SUMMARY */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Step 1: Upload Document */}
-          <div className="neo-card">
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginBottom: '16px',
-              }}
-            >
-              <span
+          {/* Dropzone Container */}
+          <div
+            style={{
+              backgroundColor: dragActive ? '#FEF9C3' : '#FFFFFF',
+              border: dragActive ? '2.5px dashed #000814' : '2px dashed #000814',
+              borderRadius: '16px',
+              padding: '40px 24px',
+              textAlign: 'center',
+              boxShadow: '4px 4px 0px 0px #000814',
+              cursor: 'pointer',
+              transition: 'background-color 0.15s ease',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '16px',
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setDragActive(true);
+            }}
+            onDragLeave={() => setDragActive(false)}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,application/pdf"
+              style={{ display: 'none' }}
+              onChange={(e) => handleFileSelect(e.target.files?.[0])}
+            />
+
+            {/* Centered Handcrafted Dual Documents with Blue Upload Arrow & Sparkles */}
+            <PixelUploadDoc size={110} />
+
+            <div>
+              <div
                 style={{
-                  background: '#000',
-                  color: '#fff',
-                  width: '26px',
-                  height: '26px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 900,
-                  fontSize: '0.85rem',
+                  fontSize: '1.05rem',
+                  letterSpacing: '0.03em',
+                  textTransform: 'uppercase',
+                  color: '#000814',
                 }}
               >
-                1
-              </span>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 800 }}>
-                Upload Document
-              </h2>
+                DROP YOUR PDF HERE
+              </div>
+              <div style={{ color: '#6B7280', fontSize: '0.85rem', marginTop: '4px', fontWeight: 600 }}>
+                or
+              </div>
             </div>
 
-            {!file ? (
-              <div
-                className={`dropzone ${dragActive ? 'drag-active' : ''}`}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setDragActive(true);
-                }}
-                onDragLeave={() => setDragActive(false)}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Upload size={36} strokeWidth={2.2} />
-                <div className="dropzone-title">DROP YOUR PDF HERE</div>
-                <div className="dropzone-desc">or</div>
-                <button
-                  type="button"
-                  className="neo-btn sm primary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    fileInputRef.current?.click();
-                  }}
-                >
-                  BROWSE FILES
-                </button>
-                <div className="dropzone-desc" style={{ marginTop: '4px' }}>
-                  PDF only · Maximum 25 MB
-                </div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".pdf,application/pdf"
-                  style={{ display: 'none' }}
-                  onChange={(e) => handleFileSelect(e.target.files?.[0])}
-                />
-              </div>
-            ) : (
+            {/* Primary button: "Choose a file" */}
+            <NeoButton
+              type="button"
+              variant="primary"
+              size="md"
+              onClick={(e) => {
+                e.stopPropagation();
+                fileInputRef.current?.click();
+              }}
+            >
+              Choose a file
+            </NeoButton>
+
+            {/* Uploaded File Pill Banner Below */}
+            {file && (
               <div
                 style={{
-                  border: '2px solid #000',
-                  borderRadius: '8px',
-                  padding: '14px 18px',
-                  background: '#FFFDF9',
-                  boxShadow: '2px 2px 0px #000',
+                  marginTop: '12px',
+                  width: '100%',
+                  backgroundColor: '#BBF7D0',
+                  border: '2px solid #000814',
+                  borderRadius: '12px',
+                  padding: '12px 16px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   gap: '12px',
+                  boxShadow: '3px 3px 0px 0px #000814',
                 }}
+                onClick={(e) => e.stopPropagation()}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div
-                    style={{
-                      background: '#FEE2E2',
-                      border: '1.5px solid #000',
-                      borderRadius: '6px',
-                      padding: '8px',
-                      color: '#DC2626',
-                    }}
-                  >
-                    <FileText size={24} strokeWidth={2.5} />
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.95rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', textAlign: 'left', minWidth: 0 }}>
+                  <CheckCircle2 size={20} color="#000814" style={{ flexShrink: 0 }} />
+                  <div style={{ minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontWeight: 900,
+                        fontSize: '0.88rem',
+                        fontFamily: 'var(--font-heading)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        color: '#000814',
+                      }}
+                    >
                       {file.name}
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                      {(file.size / (1024 * 1024)).toFixed(2)} MB · {pages} pages
+                    <div style={{ fontSize: '0.75rem', color: '#1F2937', fontWeight: 700 }}>
+                      {(file.size / (1024 * 1024)).toFixed(1)} MB · {pages} {pages === 1 ? 'page' : 'pages'}
                     </div>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-                    Pages:
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="1000"
-                    value={pages}
-                    onChange={(e) => setPages(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                    style={{
-                      width: '60px',
-                      padding: '4px 8px',
-                      border: '2px solid #000',
-                      borderRadius: '4px',
-                      fontFamily: 'var(--font-heading)',
-                      fontWeight: 700,
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFile(null);
-                      setPages(0);
-                      if (fileInputRef.current) fileInputRef.current.value = '';
-                    }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '4px',
-                    }}
-                    title="Remove file"
-                  >
-                    <X size={18} />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFile(null);
+                    setPages(0);
+                    if (fileInputRef.current) fileInputRef.current.value = '';
+                  }}
+                  title="Remove file"
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#000814',
+                    padding: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Trash2 size={18} />
+                </button>
               </div>
             )}
           </div>
 
-          {/* Step 2: Print Options */}
-          <div className="neo-card">
+          {/* Price Summary Card */}
+          <NeoCard variant="default" style={{ padding: '24px' }}>
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.85rem',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
+                color: '#6B7280',
                 marginBottom: '16px',
               }}
             >
-              <span
-                style={{
-                  background: '#000',
-                  color: '#fff',
-                  width: '26px',
-                  height: '26px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 900,
-                  fontSize: '0.85rem',
-                }}
-              >
-                2
-              </span>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 800 }}>
-                Print Options
-              </h2>
+              PRICE SUMMARY
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              {/* Copies */}
-              <div>
-                <label className="neo-label">Copies</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <button
-                    type="button"
-                    className="neo-btn sm"
-                    onClick={() => setCopies(Math.max(1, copies - 1))}
-                  >
-                    <Minus size={14} />
-                  </button>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: '1.2rem',
-                      fontWeight: 800,
-                      minWidth: '36px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {copies}
-                  </span>
-                  <button
-                    type="button"
-                    className="neo-btn sm"
-                    onClick={() => setCopies(copies + 1)}
-                  >
-                    <Plus size={14} />
-                  </button>
-                </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.92rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#4B5563', fontWeight: 600 }}>Pages</span>
+                <span style={{ fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+                  {file && pages > 0 ? `${pages} ${pages === 1 ? 'page' : 'pages'}` : '—'}
+                </span>
               </div>
 
-              {/* Color Mode */}
-              <div>
-                <label className="neo-label">Color Mode</label>
-                <div className="option-group">
-                  <button
-                    type="button"
-                    className={`option-btn ${colorMode === 'bw' ? 'selected' : ''}`}
-                    onClick={() => setColorMode('bw')}
-                  >
-                    B&W (₹2/pg)
-                  </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${colorMode === 'color' ? 'selected' : ''}`}
-                    onClick={() => setColorMode('color')}
-                  >
-                    Color (₹8/pg)
-                  </button>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#4B5563', fontWeight: 600 }}>Print cost</span>
+                <span style={{ fontWeight: 900, fontFamily: 'var(--font-heading)' }}>₹{printCost}</span>
               </div>
 
-              {/* Sided */}
-              <div>
-                <label className="neo-label">Sides</label>
-                <div className="option-group">
-                  <button
-                    type="button"
-                    className={`option-btn ${sided === 'single' ? 'selected' : ''}`}
-                    onClick={() => setSided('single')}
-                  >
-                    Single-sided
-                  </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${sided === 'double' ? 'selected' : ''}`}
-                    onClick={() => setSided('double')}
-                  >
-                    Double-sided
-                  </button>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#4B5563', fontWeight: 600 }}>Binding</span>
+                <span style={{ fontWeight: 900, fontFamily: 'var(--font-heading)' }}>₹{bindingCost}</span>
               </div>
 
-              {/* Paper Size */}
-              <div>
-                <label className="neo-label">Paper Size</label>
-                <div className="option-group">
-                  <button
-                    type="button"
-                    className={`option-btn ${paperSize === 'A4' ? 'selected' : ''}`}
-                    onClick={() => setPaperSize('A4')}
-                  >
-                    A4 (Standard)
-                  </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${paperSize === 'A3' ? 'selected' : ''}`}
-                    onClick={() => setPaperSize('A3')}
-                  >
-                    A3 (Poster)
-                  </button>
-                </div>
-              </div>
+              <div style={{ borderTop: '2px dashed #000814', margin: '4px 0' }} />
 
-              {/* Binding */}
-              <div>
-                <label className="neo-label">Binding</label>
-                <div className="option-group">
-                  <button
-                    type="button"
-                    className={`option-btn ${binding === 'none' ? 'selected' : ''}`}
-                    onClick={() => setBinding('none')}
-                  >
-                    None (₹0)
-                  </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${binding === 'staple' ? 'selected' : ''}`}
-                    onClick={() => setBinding('staple')}
-                  >
-                    Stapled (₹5)
-                  </button>
-                  <button
-                    type="button"
-                    className={`option-btn ${binding === 'spiral' ? 'selected' : ''}`}
-                    onClick={() => setBinding('spiral')}
-                  >
-                    Spiral (₹30)
-                  </button>
-                </div>
-              </div>
-
-              {/* Special Instructions */}
-              <div>
-                <label className="neo-label">Special Instructions (Optional)</label>
-                <textarea
-                  className="neo-textarea"
-                  rows="2"
-                  placeholder="e.g. Please print page 1 in color, rest B&W"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.15rem' }}>
+                  Total
+                </span>
+                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.6rem', color: '#000814' }}>
+                  ₹{totalCost}
+                </span>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Right Column: Sticky Receipt Card */}
-        <div className="sticky-receipt">
-          <div className="receipt-header">
-            <span className="receipt-title">YOUR PRINT</span>
-          </div>
-
-          <div className="receipt-body">
-            <div className="receipt-row">
-              <span className="receipt-row-label">Pages</span>
-              <span className="receipt-row-val">
-                {file && pages > 0 ? `${pages} ${pages === 1 ? 'page' : 'pages'}` : '—'}
-              </span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Copies</span>
-              <span className="receipt-row-val">{copies}</span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Color</span>
-              <span className="receipt-row-val">
-                {colorMode === 'color' ? 'Color' : 'B&W'}
-              </span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Sides</span>
-              <span className="receipt-row-val">
-                {sided === 'double' ? 'Double' : 'Single'}
-              </span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Paper</span>
-              <span className="receipt-row-val">{paperSize}</span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">Binding</span>
-              <span className="receipt-row-val" style={{ textTransform: 'capitalize' }}>
-                {binding === 'none' ? 'None' : binding === 'staple' ? 'Stapled' : 'Spiral'}
-              </span>
-            </div>
-
-            <div className="receipt-divider" />
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">PRINT COST</span>
-              <span className="receipt-row-val">₹{printCost}</span>
-            </div>
-
-            <div className="receipt-row">
-              <span className="receipt-row-label">BINDING</span>
-              <span className="receipt-row-val">₹{bindingCost}</span>
-            </div>
-
-            <div className="receipt-total-bar">
-              <span className="receipt-total-label">TOTAL</span>
-              <span className="receipt-total-amt">₹{totalCost}</span>
-            </div>
-
+            {/* Full-width CTA button */}
             <button
-              type="button"
-              className="neo-btn primary full-width"
+              type="submit"
               disabled={submitting || !file || pages <= 0}
-              onClick={handleSubmit}
-              style={{ padding: '14px', fontSize: '1.05rem', marginTop: '6px' }}
+              style={{
+                width: '100%',
+                marginTop: '20px',
+                backgroundColor: '#FFC300',
+                color: '#000814',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '1.1rem',
+                textTransform: 'uppercase',
+                padding: '14px',
+                borderRadius: '12px',
+                border: '2px solid #000814',
+                boxShadow: '4px 4px 0px 0px #000814',
+                cursor: submitting || !file || pages <= 0 ? 'not-allowed' : 'pointer',
+                opacity: submitting || !file || pages <= 0 ? 0.6 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                transition: 'transform 0.08s ease, box-shadow 0.08s ease',
+              }}
             >
               <span>
                 {submitting
-                  ? 'PROCESSING…'
+                  ? 'PLACING ORDER…'
                   : !file
                   ? 'ATTACH PDF FIRST'
-                  : 'PLACE ORDER'}
+                  : 'PLACE ORDER ->'}
               </span>
-              <ArrowRight size={20} strokeWidth={2.5} />
+              <ArrowRight size={20} strokeWidth={3} />
             </button>
-          </div>
+          </NeoCard>
         </div>
-      </div>
+
+        {/* Right Column: PRINT SETTINGS */}
+        <NeoCard variant="default" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '22px' }}>
+          <div
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 900,
+              fontSize: '0.9rem',
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              borderBottom: '2px solid #000814',
+              paddingBottom: '12px',
+              color: '#000814',
+            }}
+          >
+            PRINT SETTINGS
+          </div>
+
+          {/* Copies Counter */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.85rem', textTransform: 'uppercase' }}>
+              Copies
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button
+                type="button"
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '8px',
+                  border: '2px solid #000814',
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  fontWeight: 900,
+                }}
+                onClick={() => setCopies((c) => Math.max(1, c - 1))}
+              >
+                <Minus size={16} strokeWidth={3} />
+              </button>
+              <span
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '1.2rem',
+                  minWidth: '24px',
+                  textAlign: 'center',
+                }}
+              >
+                {copies}
+              </span>
+              <button
+                type="button"
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '8px',
+                  border: '2px solid #000814',
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  fontWeight: 900,
+                }}
+                onClick={() => setCopies((c) => Math.min(50, c + 1))}
+              >
+                <Plus size={16} strokeWidth={3} />
+              </button>
+            </div>
+          </div>
+
+          {/* Color Mode */}
+          <div>
+            <span style={{ display: 'block', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '10px' }}>
+              Color
+            </span>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              {[
+                { id: 'bw', label: 'B&W' },
+                { id: 'color', label: 'Color' },
+              ].map((item) => {
+                const selected = colorMode === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setColorMode(item.id)}
+                    style={{
+                      padding: '12px',
+                      borderRadius: '12px',
+                      border: '2px solid #000814',
+                      backgroundColor: selected ? '#FFC300' : '#FFFFFF',
+                      boxShadow: selected ? '2px 2px 0px 0px #000814' : 'none',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 900,
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'all 0.1s ease',
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Sides */}
+          <div>
+            <span style={{ display: 'block', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '10px' }}>
+              Sides
+            </span>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              {[
+                { id: 'single', label: 'Single' },
+                { id: 'double', label: 'Double' },
+              ].map((item) => {
+                const selected = sided === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setSided(item.id)}
+                    style={{
+                      padding: '12px',
+                      borderRadius: '12px',
+                      border: '2px solid #000814',
+                      backgroundColor: selected ? '#FFC300' : '#FFFFFF',
+                      boxShadow: selected ? '2px 2px 0px 0px #000814' : 'none',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 900,
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'all 0.1s ease',
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Paper Size */}
+          <div>
+            <span style={{ display: 'block', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '10px' }}>
+              Paper Size
+            </span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+              {['A4', 'Letter', 'A3'].map((size) => {
+                const selected = paperSize === size;
+                return (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => setPaperSize(size)}
+                    style={{
+                      padding: '12px 6px',
+                      borderRadius: '12px',
+                      border: '2px solid #000814',
+                      backgroundColor: selected ? '#FFC300' : '#FFFFFF',
+                      boxShadow: selected ? '2px 2px 0px 0px #000814' : 'none',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 900,
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'all 0.1s ease',
+                    }}
+                  >
+                    {size}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Binding */}
+          <div>
+            <span style={{ display: 'block', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '10px' }}>
+              Binding
+            </span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+              {[
+                { id: 'none', label: 'None' },
+                { id: 'staple', label: 'Staple' },
+                { id: 'spiral', label: 'Spiral' },
+              ].map((item) => {
+                const selected = binding === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setBinding(item.id)}
+                    style={{
+                      padding: '12px 6px',
+                      borderRadius: '12px',
+                      border: '2px solid #000814',
+                      backgroundColor: selected ? '#FFC300' : '#FFFFFF',
+                      boxShadow: selected ? '2px 2px 0px 0px #000814' : 'none',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 900,
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'all 0.1s ease',
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Notes */}
+          <div>
+            <span style={{ display: 'block', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '8px' }}>
+              Notes (optional)
+            </span>
+            <textarea
+              rows={2}
+              placeholder="Any special instructions for the print shop?"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              style={{
+                width: '100%',
+                border: '2px solid #000814',
+                borderRadius: '12px',
+                padding: '10px 14px',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.88rem',
+                resize: 'none',
+                outline: 'none',
+                backgroundColor: '#FFFFFF',
+                boxShadow: '2px 2px 0px 0px #000814',
+              }}
+            />
+          </div>
+        </NeoCard>
+      </form>
     </div>
   );
 }
+
+export default NewOrder;

@@ -21,6 +21,8 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { PrinterDemo } from '../components/PrinterDemo.jsx';
+import { NeoCard, NeoButton, StatusBadge } from '../components/ui/index.js';
+import { PixelUploadDoc, PixelPrinterGraphic } from '../components/PixelArt.jsx';
 
 export function StaffDashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -109,6 +111,10 @@ export function StaffDashboard() {
 
   // Filter orders client-side
   const displayOrders = orders.filter((o) => {
+    if (activeTab === 'queue') {
+      // In queue tab, prioritize active orders unless specifically filtered
+      if (!statusFilter && ['completed', 'rejected', 'cancelled'].includes(o.status)) return false;
+    }
     if (statusFilter && o.status !== statusFilter) return false;
     if (paymentFilter && o.paymentStatus !== paymentFilter) return false;
     return true;
@@ -116,90 +122,123 @@ export function StaffDashboard() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+      {/* Top Header Title & Refresh */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '16px',
+        }}
+      >
         <div>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)',
+              fontSize: 'clamp(2rem, 3.8vw, 2.6rem)',
               fontWeight: 900,
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.03em',
+              margin: 0,
+              textTransform: 'uppercase',
+              color: '#000814',
             }}
           >
             {activeTab === 'stats' ? 'SHOP STATISTICS' : activeTab === 'orders' ? 'ALL ORDERS' : 'SHOP QUEUE'}
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+          <p style={{ color: '#4B5563', fontSize: '0.9rem', marginTop: '4px', fontWeight: 600 }}>
             {activeTab === 'stats'
               ? 'Real-time financial analytics, volume distribution & shop metrics'
               : activeTab === 'orders'
               ? 'Complete searchable transaction logs and historical orders'
-              : 'Live orders awaiting processing and dispatch'}
+              : 'Live print queue awaiting shop processing and hardware dispatch'}
           </p>
         </div>
 
-        <button
-          type="button"
-          className="neo-btn sm"
+        <NeoButton
+          variant="secondary"
+          size="sm"
           onClick={loadQueue}
           disabled={loading}
-          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          style={{ gap: '8px' }}
         >
           <RefreshCw size={15} className={loading ? 'spin' : ''} />
-          <span>Refresh</span>
-        </button>
+          <span>Refresh Queue</span>
+        </NeoButton>
       </div>
 
       {/* Navigation Sub-Tabs */}
-      <div style={{ display: 'flex', gap: '10px', borderBottom: '2px solid #000', paddingBottom: '12px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '10px', borderBottom: '2px solid #000814', paddingBottom: '12px', flexWrap: 'wrap' }}>
         <button
           type="button"
-          className="neo-btn sm"
           onClick={() => setSearchParams({ tab: 'queue' })}
           style={{
-            background: activeTab === 'queue' ? 'var(--yellow-primary)' : '#fff',
+            padding: '8px 16px',
+            borderRadius: '10px',
+            border: '2px solid #000814',
+            backgroundColor: activeTab === 'queue' ? '#FFC300' : '#FFFFFF',
+            boxShadow: activeTab === 'queue' ? '3px 3px 0px 0px #000814' : '2px 2px 0px 0px #000814',
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 900,
+            fontSize: '0.85rem',
+            cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
           }}
         >
           <Clock size={15} />
-          <span style={{ fontWeight: 800 }}>Shop Queue</span>
-          <span style={{ fontSize: '0.75rem', background: '#000', color: '#fff', padding: '1px 7px', borderRadius: '10px', fontWeight: 800 }}>
+          <span>Dispatch Queue</span>
+          <span style={{ fontSize: '0.72rem', backgroundColor: '#000814', color: '#FFFFFF', padding: '1px 7px', borderRadius: '9999px', fontWeight: 800 }}>
             {countPlaced + countAccepted + countProcessing + countReady}
           </span>
         </button>
 
         <button
           type="button"
-          className="neo-btn sm"
           onClick={() => setSearchParams({ tab: 'orders' })}
           style={{
-            background: activeTab === 'orders' ? 'var(--yellow-primary)' : '#fff',
+            padding: '8px 16px',
+            borderRadius: '10px',
+            border: '2px solid #000814',
+            backgroundColor: activeTab === 'orders' ? '#FFC300' : '#FFFFFF',
+            boxShadow: activeTab === 'orders' ? '3px 3px 0px 0px #000814' : '2px 2px 0px 0px #000814',
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 900,
+            fontSize: '0.85rem',
+            cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
           }}
         >
           <Layers size={15} />
-          <span style={{ fontWeight: 800 }}>All Orders</span>
-          <span style={{ fontSize: '0.75rem', background: '#000', color: '#fff', padding: '1px 7px', borderRadius: '10px', fontWeight: 800 }}>
+          <span>All Orders</span>
+          <span style={{ fontSize: '0.72rem', backgroundColor: '#000814', color: '#FFFFFF', padding: '1px 7px', borderRadius: '9999px', fontWeight: 800 }}>
             {orders.length}
           </span>
         </button>
 
         <button
           type="button"
-          className="neo-btn sm"
           onClick={() => setSearchParams({ tab: 'stats' })}
           style={{
-            background: activeTab === 'stats' ? 'var(--yellow-primary)' : '#fff',
+            padding: '8px 16px',
+            borderRadius: '10px',
+            border: '2px solid #000814',
+            backgroundColor: activeTab === 'stats' ? '#FFC300' : '#FFFFFF',
+            boxShadow: activeTab === 'stats' ? '3px 3px 0px 0px #000814' : '2px 2px 0px 0px #000814',
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 900,
+            fontSize: '0.85rem',
+            cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
           }}
         >
           <BarChart3 size={15} />
-          <span style={{ fontWeight: 800 }}>Statistics & Analytics</span>
+          <span>Statistics &amp; Analytics</span>
         </button>
       </div>
 
@@ -214,74 +253,76 @@ export function StaffDashboard() {
               gap: '16px',
             }}
           >
-            <div className="neo-card" style={{ background: '#FEF08A', padding: '20px' }}>
+            <NeoCard variant="yellow" style={{ padding: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>TOTAL REVENUE</span>
+                <span style={{ fontSize: '0.78rem', fontWeight: 900, fontFamily: 'var(--font-heading)', textTransform: 'uppercase' }}>TOTAL REVENUE</span>
                 <IndianRupee size={18} />
               </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px', lineHeight: 1 }}>
                 ₹{totalRevenue}
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#78350F', marginTop: '4px', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.78rem', color: '#78350F', marginTop: '6px', fontWeight: 800 }}>
                 Today: ₹{todayRevenue}
               </div>
-            </div>
+            </NeoCard>
 
-            <div className="neo-card" style={{ background: '#BFDBFE', padding: '20px' }}>
+            <NeoCard variant="sky" style={{ padding: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>TOTAL PAGES PRINTED</span>
+                <span style={{ fontSize: '0.78rem', fontWeight: 900, fontFamily: 'var(--font-heading)', textTransform: 'uppercase' }}>TOTAL PAGES PRINTED</span>
                 <Printer size={18} />
               </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px', lineHeight: 1 }}>
                 {totalPages}
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#1E3A8A', marginTop: '4px', fontWeight: 700 }}>
-                {bwPages} B&W · {colorPages} Color
+              <div style={{ fontSize: '0.78rem', color: '#1E3A8A', marginTop: '6px', fontWeight: 800 }}>
+                {bwPages} B&amp;W · {colorPages} Color
               </div>
-            </div>
+            </NeoCard>
 
-            <div className="neo-card" style={{ background: '#86EFAC', padding: '20px' }}>
+            <NeoCard variant="mint" style={{ padding: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>TOTAL ORDERS</span>
+                <span style={{ fontSize: '0.78rem', fontWeight: 900, fontFamily: 'var(--font-heading)', textTransform: 'uppercase' }}>TOTAL ORDERS</span>
                 <Layers size={18} />
               </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px', lineHeight: 1 }}>
                 {orders.length}
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#14532D', marginTop: '4px', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.78rem', color: '#14532D', marginTop: '6px', fontWeight: 800 }}>
                 {countReady + countCompleted} Completed / Ready
               </div>
-            </div>
+            </NeoCard>
 
-            <div className="neo-card" style={{ background: '#FBCFE8', padding: '20px' }}>
+            <NeoCard variant="lavender" style={{ padding: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>AVG. PAGES / ORDER</span>
+                <span style={{ fontSize: '0.78rem', fontWeight: 900, fontFamily: 'var(--font-heading)', textTransform: 'uppercase' }}>AVG. PAGES / ORDER</span>
                 <TrendingUp size={18} />
               </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.4rem', fontWeight: 900, marginTop: '8px', lineHeight: 1 }}>
                 {orders.length ? Math.round(totalPages / orders.length) : 0}
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#831843', marginTop: '4px', fontWeight: 700 }}>
+              <div style={{ fontSize: '0.78rem', color: '#4338CA', marginTop: '6px', fontWeight: 800 }}>
                 Avg cost: ₹{orders.length ? Math.round(totalRevenue / orders.length) : 0}
               </div>
-            </div>
+            </NeoCard>
           </div>
 
           {/* Distribution Sections */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
             {/* Status Distribution */}
-            <div className="neo-card" style={{ padding: '20px', background: '#fff' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+            <NeoCard variant="default" style={{ padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px' }}>
                 <PieChart size={18} />
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem' }}>Order Status Breakdown</h3>
+                <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.1rem', margin: 0 }}>
+                  Order Status Breakdown
+                </h3>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {[
                   { label: 'New / Placed', count: countPlaced, color: '#FEF08A' },
-                  { label: 'Accepted', count: countAccepted, color: '#BFDBFE' },
-                  { label: 'In Processing', count: countProcessing, color: '#93C5FD' },
-                  { label: 'Ready for Pickup', count: countReady, color: '#86EFAC' },
-                  { label: 'Completed', count: countCompleted, color: '#CBD5E1' },
+                  { label: 'Accepted', count: countAccepted, color: '#BAE6FD' },
+                  { label: 'In Processing', count: countProcessing, color: '#C7D2FE' },
+                  { label: 'Ready for Pickup', count: countReady, color: '#BBF7D0' },
+                  { label: 'Completed', count: countCompleted, color: '#E2E8F0' },
                   { label: 'Rejected', count: countRejected, color: '#FECACA' },
                 ].map((item) => {
                   const pct = orders.length ? Math.round((item.count / orders.length) * 100) : 0;
@@ -289,35 +330,37 @@ export function StaffDashboard() {
                     <div key={item.label}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 700, marginBottom: '4px' }}>
                         <span>{item.label}</span>
-                        <span>{item.count} ({pct}%)</span>
+                        <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800 }}>{item.count} ({pct}%)</span>
                       </div>
-                      <div style={{ width: '100%', height: '12px', background: '#F1F5F9', borderRadius: '4px', border: '1px solid #000', overflow: 'hidden' }}>
+                      <div style={{ width: '100%', height: '14px', background: '#F1F5F9', borderRadius: '6px', border: '1.5px solid #000814', overflow: 'hidden' }}>
                         <div style={{ width: `${pct}%`, height: '100%', background: item.color }} />
                       </div>
                     </div>
                   );
                 })}
               </div>
-            </div>
+            </NeoCard>
 
             {/* Print Preferences Breakdown */}
-            <div className="neo-card" style={{ padding: '20px', background: '#fff' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+            <NeoCard variant="default" style={{ padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px' }}>
                 <BarChart3 size={18} />
-                <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem' }}>Print Preferences</h3>
+                <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.1rem', margin: 0 }}>
+                  Print Preferences
+                </h3>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 700, marginBottom: '4px' }}>
                     <span>Color Mode</span>
-                    <span>{Math.round((bwPages / (totalPages || 1)) * 100)}% B&W</span>
+                    <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800 }}>{Math.round((bwPages / (totalPages || 1)) * 100)}% B&amp;W</span>
                   </div>
-                  <div style={{ display: 'flex', height: '12px', border: '1px solid #000', borderRadius: '4px', overflow: 'hidden' }}>
-                    <div style={{ width: `${Math.round((bwPages / (totalPages || 1)) * 100)}%`, background: '#334155' }} title="B&W" />
-                    <div style={{ flex: 1, background: '#F59E0B' }} title="Color" />
+                  <div style={{ display: 'flex', height: '14px', border: '1.5px solid #000814', borderRadius: '6px', overflow: 'hidden' }}>
+                    <div style={{ width: `${Math.round((bwPages / (totalPages || 1)) * 100)}%`, background: '#001D3D' }} title="B&W" />
+                    <div style={{ flex: 1, background: '#FFC300' }} title="Color" />
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                    <span>B&W: {bwPages} pages</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#6B7280', marginTop: '4px', fontWeight: 700 }}>
+                    <span>B&amp;W: {bwPages} pages</span>
                     <span>Color: {colorPages} pages</span>
                   </div>
                 </div>
@@ -325,590 +368,698 @@ export function StaffDashboard() {
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 700, marginBottom: '4px' }}>
                     <span>Payment Method</span>
-                    <span>
+                    <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
                       {Math.round((orders.filter((o) => o.paymentMethod === 'online').length / (orders.length || 1)) * 100)}% Online
                     </span>
                   </div>
-                  <div style={{ display: 'flex', height: '12px', border: '1px solid #000', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', height: '14px', border: '1.5px solid #000814', borderRadius: '6px', overflow: 'hidden' }}>
                     <div
                       style={{
                         width: `${Math.round((orders.filter((o) => o.paymentMethod === 'online').length / (orders.length || 1)) * 100)}%`,
                         background: '#10B981',
                       }}
                     />
-                    <div style={{ flex: 1, background: '#FBBF24' }} />
+                    <div style={{ flex: 1, background: '#F59E0B' }} />
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#6B7280', marginTop: '4px', fontWeight: 700 }}>
                     <span>Online UPI/Card: {orders.filter((o) => o.paymentMethod === 'online').length}</span>
                     <span>Counter Cash: {orders.filter((o) => o.paymentMethod !== 'online').length}</span>
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '8px' }}>Binding Distribution</div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, marginBottom: '8px', fontFamily: 'var(--font-heading)' }}>
+                    BINDING DISTRIBUTION
+                  </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
                     {['none', 'spiral', 'staple', 'hardcover'].map((b) => {
                       const bCount = orders.filter((o) => (o.options?.binding || 'none') === b).length;
                       return (
-                        <div key={b} style={{ border: '1px solid #000', padding: '6px 10px', borderRadius: '4px', background: '#F8FAFC' }}>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>{b}</div>
-                          <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1rem' }}>{bCount} orders</div>
+                        <div key={b} style={{ border: '1.5px solid #000814', padding: '8px 12px', borderRadius: '8px', background: '#F8FAFC', boxShadow: '2px 2px 0px 0px #000814' }}>
+                          <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', fontWeight: 800 }}>{b}</div>
+                          <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.05rem' }}>{bCount} orders</div>
                         </div>
                       );
                     })}
                   </div>
                 </div>
               </div>
-            </div>
+            </NeoCard>
           </div>
         </div>
       ) : (
-        /* Top 5 Metric Cards (Queue / Orders Tabs) */
+        /* Queue and Orders Tabs */
         <>
+          {/* Top 5 Metric Cards: NEW ORDERS, ACCEPTED, PROCESSING, READY, TODAY'S ORDERS */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-              gap: '14px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '16px',
             }}
           >
-            <div
-              className="neo-card"
+            {/* NEW ORDERS */}
+            <NeoCard
+              variant="yellow"
               style={{
-                background: '#FEF08A',
-                padding: '16px',
                 cursor: 'pointer',
-                border: statusFilter === 'placed' ? '3px solid #000' : '2px solid #000',
+                padding: '18px 20px',
+                border: statusFilter === 'placed' ? '3px solid #000814' : '2px solid #000814',
+                boxShadow: statusFilter === 'placed' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
               }}
               onClick={() => setStatusFilter(statusFilter === 'placed' ? '' : 'placed')}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                 NEW ORDERS
               </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '2.2rem', marginTop: '4px', lineHeight: 1 }}>
                 {countPlaced}
               </div>
-            </div>
+            </NeoCard>
 
-            <div
-              className="neo-card"
+            {/* ACCEPTED */}
+            <NeoCard
+              variant="sky"
               style={{
-                background: '#BFDBFE',
-                padding: '16px',
                 cursor: 'pointer',
-                border: statusFilter === 'accepted' ? '3px solid #000' : '2px solid #000',
+                padding: '18px 20px',
+                border: statusFilter === 'accepted' ? '3px solid #000814' : '2px solid #000814',
+                boxShadow: statusFilter === 'accepted' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
               }}
               onClick={() => setStatusFilter(statusFilter === 'accepted' ? '' : 'accepted')}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                 ACCEPTED
               </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '2.2rem', marginTop: '4px', lineHeight: 1 }}>
                 {countAccepted}
               </div>
-            </div>
+            </NeoCard>
 
-            <div
-              className="neo-card"
+            {/* PROCESSING */}
+            <NeoCard
+              variant="lavender"
               style={{
-                background: '#93C5FD',
-                padding: '16px',
                 cursor: 'pointer',
-                border: statusFilter === 'processing' ? '3px solid #000' : '2px solid #000',
+                padding: '18px 20px',
+                border: statusFilter === 'processing' ? '3px solid #000814' : '2px solid #000814',
+                boxShadow: statusFilter === 'processing' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
               }}
               onClick={() => setStatusFilter(statusFilter === 'processing' ? '' : 'processing')}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                 PROCESSING
               </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '2.2rem', marginTop: '4px', lineHeight: 1 }}>
                 {countProcessing}
               </div>
-            </div>
+            </NeoCard>
 
-            <div
-              className="neo-card"
+            {/* READY */}
+            <NeoCard
+              variant="mint"
               style={{
-                background: '#86EFAC',
-                padding: '16px',
                 cursor: 'pointer',
-                border: statusFilter === 'ready' ? '3px solid #000' : '2px solid #000',
+                padding: '18px 20px',
+                border: statusFilter === 'ready' ? '3px solid #000814' : '2px solid #000814',
+                boxShadow: statusFilter === 'ready' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
               }}
               onClick={() => setStatusFilter(statusFilter === 'ready' ? '' : 'ready')}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                 READY
               </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '2.2rem', marginTop: '4px', lineHeight: 1 }}>
                 {countReady}
               </div>
-            </div>
+            </NeoCard>
 
-            <div
-              className="neo-card"
+            {/* TODAY'S ORDERS */}
+            <NeoCard
+              variant="default"
               style={{
-                background: '#FFFDF9',
-                padding: '16px',
+                cursor: 'pointer',
+                padding: '18px 20px',
+                border: statusFilter === '' ? '3px solid #000814' : '2px solid #000814',
+                boxShadow: statusFilter === '' ? '5px 5px 0px 0px #000814' : '3px 3px 0px 0px #000814',
               }}
+              onClick={() => setStatusFilter('')}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text-muted)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.75rem', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#6B7280' }}>
                 TODAY'S ORDERS
               </div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '2.2rem', fontWeight: 900, marginTop: '4px' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '2.2rem', marginTop: '4px', lineHeight: 1 }}>
                 {countToday}
               </div>
+            </NeoCard>
+          </div>
+
+          {/* Search and Filter Toolbar */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '12px',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+            }}
+          >
+            <div style={{ position: 'relative', flex: '1 1 260px' }}>
+              <Search
+                size={18}
+                style={{
+                  position: 'absolute',
+                  left: '14px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: '#6B7280',
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Search token, student or file..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  backgroundColor: '#FFFFFF',
+                  border: '2px solid #000814',
+                  borderRadius: '12px',
+                  boxShadow: '3px 3px 0px 0px #000814',
+                  paddingLeft: '42px',
+                  paddingRight: '14px',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
+                  outline: 'none',
+                }}
+              />
+            </div>
+
+            <div style={{ width: '180px' }}>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  backgroundColor: '#FFFFFF',
+                  border: '2px solid #000814',
+                  borderRadius: '12px',
+                  boxShadow: '3px 3px 0px 0px #000814',
+                  padding: '0 12px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+              >
+                <option value="">All Statuses</option>
+                <option value="placed">Placed (New)</option>
+                <option value="accepted">Accepted</option>
+                <option value="processing">Processing</option>
+                <option value="ready">Ready</option>
+                <option value="completed">Completed</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+
+            <div style={{ width: '180px' }}>
+              <select
+                value={paymentFilter}
+                onChange={(e) => setPaymentFilter(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  backgroundColor: '#FFFFFF',
+                  border: '2px solid #000814',
+                  borderRadius: '12px',
+                  boxShadow: '3px 3px 0px 0px #000814',
+                  padding: '0 12px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+              >
+                <option value="">All Payments</option>
+                <option value="paid">Paid</option>
+                <option value="unpaid">Unpaid</option>
+              </select>
             </div>
           </div>
 
-      {/* Filter Bar */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '12px',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          background: '#fff',
-          border: '2px solid #000',
-          borderRadius: '8px',
-          padding: '12px 16px',
-          boxShadow: '2px 2px 0px #000',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: '220px' }}>
-          <Search size={18} color="var(--text-muted)" />
-          <input
-            type="text"
-            placeholder="Search token, student or file..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              border: 'none',
-              outline: 'none',
-              width: '100%',
-              fontSize: '0.9rem',
-              fontFamily: 'inherit',
-            }}
-          />
-        </div>
-
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="neo-select"
-            style={{ width: 'auto', padding: '6px 12px', fontSize: '0.85rem' }}
-          >
-            <option value="">All Statuses</option>
-            <option value="placed">Placed (New)</option>
-            <option value="accepted">Accepted</option>
-            <option value="processing">Processing</option>
-            <option value="ready">Ready</option>
-            <option value="completed">Completed</option>
-            <option value="rejected">Rejected</option>
-          </select>
-
-          <select
-            value={paymentFilter}
-            onChange={(e) => setPaymentFilter(e.target.value)}
-            className="neo-select"
-            style={{ width: 'auto', padding: '6px 12px', fontSize: '0.85rem' }}
-          >
-            <option value="">All Payments</option>
-            <option value="paid">Paid</option>
-            <option value="unpaid">Unpaid</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Main Queue Table */}
-      <div className="neo-table-wrapper">
-        <table className="neo-table">
-          <thead>
-            <tr>
-              <th>TOKEN</th>
-              <th>STUDENT</th>
-              <th>FILE</th>
-              <th>PAGES</th>
-              <th>REQ.</th>
-              <th>PAYMENT</th>
-              <th>STATUS</th>
-              <th>ETA</th>
-              <th>ACTION</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="9" style={{ textAlign: 'center', padding: '30px' }}>
-                  Loading queue…
-                </td>
-              </tr>
+          {/* Queue Table */}
+          <NeoCard variant="default" style={{ padding: 0, overflow: 'hidden' }}>
+            {loading && orders.length === 0 ? (
+              <div style={{ padding: '60px', textAlign: 'center', fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
+                Loading dispatch queue…
+              </div>
+            ) : error ? (
+              <div style={{ padding: '40px', textAlign: 'center', color: '#DC2626', fontWeight: 700 }}>
+                {error}
+              </div>
             ) : displayOrders.length === 0 ? (
-              <tr>
-                <td colSpan="9" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
-                  No orders match current criteria.
-                </td>
-              </tr>
+              <div style={{ padding: '60px 20px', textAlign: 'center', color: '#6B7280', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                <PixelPrinterGraphic size={72} />
+                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#000814', fontSize: '1.1rem' }}>
+                  All Clear! No Orders in Queue
+                </div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                  Incoming print jobs from students will appear here in real time.
+                </div>
+              </div>
             ) : (
-              displayOrders.map((order) => (
-                <tr key={order.orderId}>
-                  <td style={{ fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
-                    {order.orderId}
-                  </td>
-                  <td>
-                    <div style={{ fontWeight: 700 }}>{order.userName || order.userId}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{order.userId}</div>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <FileText size={15} color="#DC2626" />
-                      <span style={{ fontWeight: 600 }}>{order.fileName}</span>
-                    </div>
-                  </td>
-                  <td style={{ fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
-                    {order.pages}
-                  </td>
-                  <td style={{ fontSize: '0.82rem' }}>
-                    {order.options?.colorMode === 'color' ? 'Color' : 'B&W'} ·{' '}
-                    {order.options?.sided === 'double' ? 'Double' : 'Single'}
-                  </td>
-                  <td>
-                    <span className={`neo-badge ${order.paymentStatus === 'paid' ? 'paid' : 'unpaid'}`}>
-                      {order.paymentStatus}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`neo-badge ${order.status}`}>
-                      {order.status === 'processing' ? 'PROCESSING' : order.status}
-                    </span>
-                  </td>
-                  <td style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                    {order.status === 'ready'
-                      ? 'Ready'
-                      : order.status === 'processing'
-                      ? '~5 min'
-                      : order.status === 'accepted'
-                      ? '~15 min'
-                      : '—'}
-                  </td>
-                  <td>
-                    <button
-                      type="button"
-                      className="neo-btn sm primary"
-                      onClick={() => setSelectedOrder(order)}
-                    >
-                      <Eye size={13} />
-                      <span>Manage</span>
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    </>
-  )}
+              <div style={{ overflowX: 'auto' }}>
+                <table
+                  style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    textAlign: 'left',
+                  }}
+                >
+                  <thead>
+                    <tr style={{ backgroundColor: '#001D3D', borderBottom: '2px solid #000814' }}>
+                      {['TOKEN', 'STUDENT', 'FILE', 'PAGES', 'REQ', 'PAYMENT', 'STATUS', 'ETA', 'ACTION'].map((h, i) => (
+                        <th
+                          key={i}
+                          style={{
+                            padding: '12px 16px',
+                            fontFamily: 'var(--font-heading)',
+                            fontWeight: 900,
+                            fontSize: '0.78rem',
+                            letterSpacing: '0.06em',
+                            color: '#FFFFFF',
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {displayOrders.map((order, idx) => {
+                      const isPaid = order.paymentStatus === 'paid';
+                      const isSelected = selectedOrder?.orderId === order.orderId;
 
-      {/* Selected Order Manage Modal / Detail Panel (Matching Slide 7) */}
+                      return (
+                        <tr
+                          key={order.orderId}
+                          style={{
+                            borderBottom: idx !== displayOrders.length - 1 ? '1.5px solid #E2E8F0' : 'none',
+                            backgroundColor: isSelected ? '#FFFDEB' : idx % 2 === 0 ? '#FFFFFF' : '#FDFBF7',
+                          }}
+                        >
+                          <td style={{ padding: '12px 16px', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.9rem' }}>
+                            {order.orderId}
+                          </td>
+                          <td style={{ padding: '12px 16px', fontWeight: 700, fontSize: '0.85rem' }}>
+                            {order.userName || order.userId}
+                          </td>
+                          <td style={{ padding: '12px 16px' }}>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '0.85rem' }}>
+                              <FileText size={16} color="#DC2626" />
+                              <span>{order.fileName}</span>
+                            </span>
+                          </td>
+                          <td style={{ padding: '12px 16px', fontWeight: 800, fontSize: '0.85rem' }}>
+                            {order.pages}
+                          </td>
+                          <td style={{ padding: '12px 16px', fontSize: '0.8rem', color: '#4B5563', fontWeight: 600 }}>
+                            {order.options?.colorMode === 'color' ? 'Color' : 'B&W'} · {order.options?.sided || 'double'}
+                          </td>
+                          <td style={{ padding: '12px 16px' }}>
+                            <span
+                              style={{
+                                backgroundColor: isPaid ? '#BBF7D0' : '#FECACA',
+                                border: '1.5px solid #000814',
+                                borderRadius: '9999px',
+                                padding: '2px 10px',
+                                fontSize: '0.72rem',
+                                fontFamily: 'var(--font-heading)',
+                                fontWeight: 900,
+                                color: '#000814',
+                              }}
+                            >
+                              {isPaid ? 'PAID' : 'UNPAID'}
+                            </span>
+                          </td>
+                          <td style={{ padding: '12px 16px' }}>
+                            <StatusBadge status={order.status} />
+                          </td>
+                          <td style={{ padding: '12px 16px', fontSize: '0.8rem', color: '#4B5563', fontWeight: 700 }}>
+                            {order.status === 'ready'
+                              ? 'Ready'
+                              : order.status === 'processing'
+                              ? '~5 min'
+                              : order.status === 'accepted'
+                              ? '~10 min'
+                              : '—'}
+                          </td>
+                          <td style={{ padding: '12px 16px' }}>
+                            <NeoButton
+                              variant="primary"
+                              size="sm"
+                              onClick={() => setSelectedOrder(order)}
+                              style={{ padding: '4px 12px', fontSize: '0.75rem' }}
+                            >
+                              <span>Manage</span>
+                              <ArrowRight size={12} strokeWidth={2.5} />
+                            </NeoButton>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </NeoCard>
+        </>
+      )}
+
+      {/* Selected Order Drawer / Modal with 3D Simulation */}
       {selectedOrder && (
         <div
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0, 0, 0, 0.5)',
+            backgroundColor: 'rgba(0, 8, 20, 0.75)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px',
             zIndex: 1000,
+            padding: '20px',
           }}
           onClick={() => setSelectedOrder(null)}
         >
           <div
-            className="neo-card"
             style={{
-              maxWidth: '800px',
+              backgroundColor: '#FFFFFF',
+              border: '3px solid #000814',
+              borderRadius: '16px',
+              boxShadow: '8px 8px 0px 0px #000814',
+              maxWidth: '920px',
               width: '100%',
               maxHeight: '90vh',
               overflowY: 'auto',
-              background: 'var(--bg-cream)',
+              padding: '28px',
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '20px',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: '1.6rem',
-                    fontWeight: 900,
-                  }}
-                >
-                  ORDER {selectedOrder.orderId}
-                </span>
-                <span className={`neo-badge ${selectedOrder.status}`}>
-                  {selectedOrder.status}
-                </span>
+            {/* Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #000814', paddingBottom: '16px', marginBottom: '20px' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.5rem', margin: 0 }}>
+                    Manage Order {selectedOrder.orderId}
+                  </h2>
+                  <StatusBadge status={selectedOrder.status} />
+                </div>
+                <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#6B7280', fontWeight: 600 }}>
+                  Submitted by {selectedOrder.userName || selectedOrder.userId}
+                </p>
               </div>
 
               <button
                 type="button"
-                className="neo-btn sm"
                 onClick={() => setSelectedOrder(null)}
+                style={{
+                  background: '#FFFFFF',
+                  border: '2px solid #000814',
+                  borderRadius: '8px',
+                  padding: '6px',
+                  cursor: 'pointer',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                }}
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 
-            {/* 3 Panels Row matching Slide 7 */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                gap: '16px',
-                marginBottom: '20px',
-              }}
-            >
-              {/* Panel 1: Document File Preview */}
-              <div className="neo-card" style={{ background: '#fff', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '60px',
-                    height: '70px',
-                    background: '#FEE2E2',
-                    border: '2px solid #000',
-                    borderRadius: '6px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#DC2626',
-                  }}
-                >
-                  <FileText size={36} strokeWidth={2.2} />
+            {/* Modal Grid: Left Details & Right Actions */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+              {/* Order Meta Info */}
+              <NeoCard variant="default" style={{ padding: '18px' }}>
+                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.82rem', color: '#6B7280', textTransform: 'uppercase', marginBottom: '12px' }}>
+                  DOCUMENT DETAILS
                 </div>
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>
-                    {selectedOrder.fileName}
-                  </div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                    {selectedOrder.pages} pages
-                  </div>
-                </div>
-
-                <a
-                  href={api.staffFileUrl(selectedOrder.orderId)}
-                  target="_blank"
-                  rel="noreferrer"
-                  download={selectedOrder.fileName}
-                  className="neo-btn sm primary full-width"
-                >
-                  <Download size={14} />
-                  <span>DOWNLOAD FILE</span>
-                </a>
-              </div>
-
-              {/* Panel 2: Requirements */}
-              <div className="neo-card" style={{ background: '#fff' }}>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: '0.8rem',
-                    fontWeight: 800,
-                    textTransform: 'uppercase',
-                    color: 'var(--text-muted)',
-                    marginBottom: '10px',
-                  }}
-                >
-                  PRINT REQUIREMENTS
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.88rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Copies:</span>
-                    <span style={{ fontWeight: 700 }}>{selectedOrder.options?.copies || 1}</span>
+                    <span style={{ color: '#4B5563', fontWeight: 600 }}>File:</span>
+                    <span style={{ fontWeight: 800 }}>{selectedOrder.fileName}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Color:</span>
-                    <span style={{ fontWeight: 700 }}>{selectedOrder.options?.colorMode === 'color' ? 'Color' : 'B&W'}</span>
+                    <span style={{ color: '#4B5563', fontWeight: 600 }}>Pages:</span>
+                    <span style={{ fontWeight: 800 }}>{selectedOrder.pages}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Sides:</span>
-                    <span style={{ fontWeight: 700 }}>{selectedOrder.options?.sided || 'single'}</span>
+                    <span style={{ color: '#4B5563', fontWeight: 600 }}>Copies:</span>
+                    <span style={{ fontWeight: 800 }}>{selectedOrder.copies}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Paper:</span>
-                    <span style={{ fontWeight: 700 }}>{selectedOrder.options?.paperSize || 'A4'}</span>
+                    <span style={{ color: '#4B5563', fontWeight: 600 }}>Print Mode:</span>
+                    <span style={{ fontWeight: 800 }}>{selectedOrder.options?.colorMode === 'color' ? 'Full Color' : 'B&W'}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Binding:</span>
-                    <span style={{ fontWeight: 700, textTransform: 'capitalize' }}>{selectedOrder.options?.binding || 'none'}</span>
+                    <span style={{ color: '#4B5563', fontWeight: 600 }}>Sides:</span>
+                    <span style={{ fontWeight: 800 }}>{selectedOrder.options?.sided === 'double' ? 'Double Sided' : 'Single Sided'}</span>
                   </div>
-                  <div style={{ borderTop: '1px dashed #ccc', margin: '4px 0' }} />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Payment:</span>
-                    <span className={`neo-badge ${selectedOrder.paymentStatus === 'paid' ? 'paid' : 'unpaid'}`}>
-                      {selectedOrder.paymentStatus}
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#4B5563', fontWeight: 600 }}>Binding:</span>
+                    <span style={{ fontWeight: 800, textTransform: 'capitalize' }}>{selectedOrder.options?.binding || 'none'}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#4B5563', fontWeight: 600 }}>Total Price:</span>
+                    <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.1rem', color: '#000814' }}>
+                      ₹{selectedOrder.cost?.total || selectedOrder.cost || 0}
                     </span>
                   </div>
                 </div>
-              </div>
 
-              {/* Panel 3: Actions */}
-              <div className="neo-card" style={{ background: '#fff' }}>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: '0.8rem',
-                    fontWeight: 800,
-                    textTransform: 'uppercase',
-                    color: 'var(--text-muted)',
-                    marginBottom: '12px',
-                  }}
-                >
-                  ACTIONS
+                <div style={{ marginTop: '14px', display: 'flex', gap: '8px' }}>
+                  <a
+                    href={api.staffFileUrl(selectedOrder.orderId)}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      border: '2px solid #000814',
+                      backgroundColor: '#FFFFFF',
+                      boxShadow: '2px 2px 0px 0px #000814',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 800,
+                      fontSize: '0.8rem',
+                      color: '#000814',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Download size={14} />
+                    <span>Download PDF</span>
+                  </a>
+                </div>
+              </NeoCard>
+
+              {/* Status Control Actions */}
+              <NeoCard variant="default" style={{ padding: '18px' }}>
+                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.82rem', color: '#6B7280', textTransform: 'uppercase', marginBottom: '12px' }}>
+                  STATUS WORKFLOW TRANSITIONS
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {selectedOrder.status === 'placed' && (
                     <>
-                      <button
-                        type="button"
-                        className="neo-btn primary full-width sm"
+                      <NeoButton
+                        variant="primary"
+                        size="sm"
                         disabled={updating}
                         onClick={() => handleStatusChange(selectedOrder.orderId, 'accepted')}
+                        style={{ width: '100%' }}
                       >
                         <Check size={16} />
-                        <span>ACCEPT ORDER</span>
-                      </button>
-                      <button
-                        type="button"
-                        className="neo-btn danger full-width sm"
+                        <span>ACCEPT ORDER (START QUEUE)</span>
+                      </NeoButton>
+
+                      <NeoButton
+                        variant="danger"
+                        size="sm"
                         disabled={updating}
                         onClick={() => setRejectModalOpen(true)}
+                        style={{ width: '100%' }}
                       >
                         <X size={16} />
                         <span>REJECT ORDER</span>
-                      </button>
+                      </NeoButton>
                     </>
                   )}
 
                   {selectedOrder.status === 'accepted' && (
-                    <>
-                      <button
-                        type="button"
-                        className="neo-btn blue full-width sm"
-                        disabled={updating}
-                        onClick={() => handleStatusChange(selectedOrder.orderId, 'processing')}
-                      >
-                        <span>START PROCESSING</span>
-                      </button>
-                      <button
-                        type="button"
-                        className="neo-btn danger full-width sm"
-                        disabled={updating}
-                        onClick={() => setRejectModalOpen(true)}
-                      >
-                        <X size={16} />
-                        <span>REJECT ORDER</span>
-                      </button>
-                    </>
+                    <NeoButton
+                      variant="primary"
+                      size="sm"
+                      disabled={updating}
+                      onClick={() => handleStatusChange(selectedOrder.orderId, 'processing')}
+                      style={{ width: '100%' }}
+                    >
+                      <span>START PROCESSING</span>
+                    </NeoButton>
                   )}
 
                   {selectedOrder.status === 'processing' && (
-                    <button
-                      type="button"
-                      className="neo-btn success full-width sm"
+                    <NeoButton
+                      variant="mint"
+                      size="sm"
                       disabled={updating}
                       onClick={() => handleStatusChange(selectedOrder.orderId, 'ready')}
+                      style={{ width: '100%' }}
                     >
                       <Check size={16} />
                       <span>MARK READY FOR PICKUP</span>
-                    </button>
+                    </NeoButton>
                   )}
 
                   {selectedOrder.status === 'ready' && (
-                    <button
-                      type="button"
-                      className="neo-btn dark full-width sm"
+                    <NeoButton
+                      variant="dark"
+                      size="sm"
                       disabled={updating}
                       onClick={() => handleStatusChange(selectedOrder.orderId, 'completed')}
+                      style={{ width: '100%' }}
                     >
                       <Check size={16} />
                       <span>MARK COMPLETED</span>
-                    </button>
+                    </NeoButton>
                   )}
 
-                  {['completed', 'rejected', 'cancelled'].includes(selectedOrder.status) && (
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                      No further status transitions available.
-                    </p>
+                  {selectedOrder.status === 'completed' && (
+                    <div
+                      style={{
+                        backgroundColor: '#BBF7D0',
+                        border: '1.5px solid #000814',
+                        borderRadius: '10px',
+                        padding: '10px',
+                        textAlign: 'center',
+                        fontFamily: 'var(--font-heading)',
+                        fontWeight: 900,
+                        fontSize: '0.85rem',
+                      }}
+                    >
+                      ORDER FULFILLED
+                    </div>
                   )}
                 </div>
-              </div>
+              </NeoCard>
             </div>
 
-            {/* 3D Physical Hardware Simulator */}
-            <div style={{ marginBottom: '20px' }}>
+            {/* 3D Hardware Simulation Dispatch Station */}
+            <div style={{ marginBottom: '10px' }}>
               <PrinterDemo
                 pdfUrl={api.staffFileUrl(selectedOrder.orderId)}
                 order={selectedOrder}
-                autoPrint={selectedOrder.status === 'processing' || selectedOrder.status === 'ready' || selectedOrder.status === 'completed'}
+                orderStatus={selectedOrder.status}
                 height="340px"
                 title="3D Hardware Dispatch Station"
               />
             </div>
+          </div>
+        </div>
+      )}
 
-            {/* Rejection Prompt Section */}
-            {rejectModalOpen && (
-              <div
+      {/* Reject Modal */}
+      {rejectModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1100,
+            padding: '20px',
+          }}
+          onClick={() => setRejectModalOpen(false)}
+        >
+          <NeoCard
+            variant="default"
+            style={{ maxWidth: '440px', width: '100%', padding: '24px' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.2rem', marginBottom: '10px' }}>
+              Reject Order {selectedOrder?.orderId}
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: '#4B5563', marginBottom: '14px', fontWeight: 600 }}>
+              Specify the reason for rejection so the student is notified immediately.
+            </p>
+            <textarea
+              rows={3}
+              placeholder="e.g. Unreadable PDF formatting, paper size unavailable"
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              style={{
+                width: '100%',
+                border: '2px solid #000814',
+                borderRadius: '10px',
+                padding: '10px 12px',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.88rem',
+                resize: 'none',
+                outline: 'none',
+                backgroundColor: '#FFFFFF',
+                boxShadow: '2px 2px 0px 0px #000814',
+              }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '18px' }}>
+              <button
+                type="button"
+                onClick={() => setRejectModalOpen(false)}
                 style={{
-                  background: '#FEE2E2',
-                  border: '2px solid #EF4444',
-                  borderRadius: '8px',
-                  padding: '16px',
-                  marginTop: '16px',
+                  padding: '8px 14px',
+                  borderRadius: '10px',
+                  border: '2px solid #000814',
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
                 }}
               >
-                <div style={{ fontWeight: 800, color: '#991B1B', marginBottom: '8px' }}>
-                  State reason for rejection (required by backend):
-                </div>
-                <input
-                  type="text"
-                  className="neo-input"
-                  placeholder="e.g. Unreadable file format, corrupted PDF, etc."
-                  value={rejectReason}
-                  onChange={(e) => setRejectReason(e.target.value)}
-                  style={{ background: '#fff', marginBottom: '10px' }}
-                />
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button
-                    type="button"
-                    className="neo-btn danger sm"
-                    disabled={updating || !rejectReason.trim()}
-                    onClick={() => handleStatusChange(selectedOrder.orderId, 'rejected', rejectReason)}
-                  >
-                    Confirm Rejection
-                  </button>
-                  <button
-                    type="button"
-                    className="neo-btn sm"
-                    onClick={() => setRejectModalOpen(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={!rejectReason.trim()}
+                onClick={() => handleStatusChange(selectedOrder.orderId, 'rejected', rejectReason)}
+                style={{
+                  padding: '8px 14px',
+                  borderRadius: '10px',
+                  border: '2px solid #000814',
+                  backgroundColor: '#FECACA',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: '0.85rem',
+                  cursor: rejectReason.trim() ? 'pointer' : 'not-allowed',
+                }}
+              >
+                Confirm Reject
+              </button>
+            </div>
+          </NeoCard>
         </div>
       )}
     </div>
   );
 }
+
+export default StaffDashboard;
