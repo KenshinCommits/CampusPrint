@@ -139,8 +139,9 @@ export function NewOrder() {
             >
               <span
                 style={{
-                  background: '#000',
-                  color: '#fff',
+                  background: '#FFC300',
+                  color: '#000814',
+                  border: '1.5px solid #003566',
                   width: '26px',
                   height: '26px',
                   borderRadius: '50%',
@@ -154,8 +155,14 @@ export function NewOrder() {
               >
                 1
               </span>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 800 }}>
-                Upload Document
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '1.15rem',
+                  fontWeight: 800,
+                }}
+              >
+                UPLOAD DOCUMENT
               </h2>
             </div>
 
@@ -197,11 +204,11 @@ export function NewOrder() {
             ) : (
               <div
                 style={{
-                  border: '2px solid #000',
+                  border: '2px solid #003566',
                   borderRadius: '8px',
                   padding: '14px 18px',
-                  background: '#FFFDF9',
-                  boxShadow: '2px 2px 0px #000',
+                  background: 'var(--surface-white)',
+                  boxShadow: '2px 2px 0px #000814',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -211,11 +218,11 @@ export function NewOrder() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div
                     style={{
-                      background: '#FEE2E2',
-                      border: '1.5px solid #000',
+                      background: '#001428',
+                      border: '1.5px solid #003566',
                       borderRadius: '6px',
                       padding: '8px',
-                      color: '#DC2626',
+                      color: '#FFC300',
                     }}
                   >
                     <FileText size={24} strokeWidth={2.5} />
@@ -243,10 +250,12 @@ export function NewOrder() {
                     style={{
                       width: '60px',
                       padding: '4px 8px',
-                      border: '2px solid #000',
+                      border: '2px solid #003566',
                       borderRadius: '4px',
                       fontFamily: 'var(--font-heading)',
                       fontWeight: 700,
+                      background: '#000814',
+                      color: '#F8FAFC',
                     }}
                   />
                   <button
@@ -279,8 +288,9 @@ export function NewOrder() {
             >
               <span
                 style={{
-                  background: '#000',
-                  color: '#fff',
+                  background: '#FFC300',
+                  color: '#000814',
+                  border: '1.5px solid #003566',
                   width: '26px',
                   height: '26px',
                   borderRadius: '50%',

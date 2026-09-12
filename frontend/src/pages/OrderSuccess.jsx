@@ -56,20 +56,19 @@ export function OrderSuccess() {
           {/* Left Column: Big Celebratory Badge + Token */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '20px' }}>
             {/* Green Checkmark Circle */}
-            <div
-              style={{
+            <div              style={{
                 width: '74px',
                 height: '74px',
-                background: '#86EFAC',
-                border: '3px solid #000',
+                background: '#FFD60A',
+                border: '3px solid #003566',
                 borderRadius: '50%',
-                boxShadow: '3px 3px 0px #000',
+                boxShadow: '3px 3px 0px #000814',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <CheckCircle2 size={44} strokeWidth={2.5} color="#000" />
+              <CheckCircle2 size={44} strokeWidth={2.5} color="#000814" />
             </div>
 
             <div>
@@ -93,14 +92,15 @@ export function OrderSuccess() {
             {/* Neo-brutalist Yellow Ticket */}
             <div
               style={{
-                background: '#FFD028',
-                border: '3px solid #000',
+                background: '#FFC300',
+                border: '3px solid #000814',
                 borderRadius: '10px',
-                boxShadow: '4px 4px 0px #000',
+                boxShadow: '4px 4px 0px #000814',
                 padding: '18px 36px',
                 position: 'relative',
                 width: '100%',
                 maxWidth: '300px',
+                color: '#000814',
               }}
             >
               <div
@@ -109,6 +109,7 @@ export function OrderSuccess() {
                   fontSize: '2.4rem',
                   fontWeight: 900,
                   letterSpacing: '0.04em',
+                  color: '#000814',
                 }}
               >
                 {token}
@@ -121,6 +122,7 @@ export function OrderSuccess() {
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
                   marginTop: '2px',
+                  color: '#000814',
                 }}
               >
                 YOUR PRINT TOKEN
@@ -143,10 +145,10 @@ export function OrderSuccess() {
           {/* Right Column: Order Summary Receipt */}
           <div
             style={{
-              background: '#FFFDF9',
-              border: '2px solid #000',
+              background: 'var(--surface-white)',
+              border: '2px solid #003566',
               borderRadius: '8px',
-              boxShadow: '2px 2px 0px #000',
+              boxShadow: '2px 2px 0px #000814',
               padding: '24px',
               display: 'flex',
               flexDirection: 'column',
@@ -159,19 +161,23 @@ export function OrderSuccess() {
                 fontSize: '0.85rem',
                 fontWeight: 900,
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.04em',
                 color: 'var(--text-muted)',
               }}
             >
-              ORDER SUMMARY
+              Order Details
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Document</span>
+              <span style={{ fontWeight: 700 }}>{order?.fileName}</span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Print Specs</span>
               <span>
-                {order?.pages || 1} pages × {order?.options?.copies || 1} copies
-              </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
-                ₹{order?.cost?.printCost || 0}
+                {order?.pages} pgs · {order?.options?.copies || 1} copies ·{' '}
+                {order?.options?.colorMode === 'color' ? 'Color' : 'B&W'}
               </span>
             </div>
 
@@ -184,7 +190,7 @@ export function OrderSuccess() {
               </span>
             </div>
 
-            <div style={{ borderTop: '2px dashed #000', margin: '4px 0' }} />
+            <div style={{ borderTop: '2px dashed #003566', margin: '4px 0' }} />
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.1rem', fontWeight: 900 }}>

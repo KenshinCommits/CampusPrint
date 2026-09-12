@@ -100,21 +100,23 @@ export function StudentDashboard() {
         <div
           style={{
             background: 'var(--yellow-primary)',
-            border: '2.5px solid #000',
+            border: '2.5px solid #003566',
             borderRadius: '10px',
-            boxShadow: '3px 3px 0px #000',
+            boxShadow: '3px 3px 0px #000814',
             padding: '16px 20px',
             display: 'flex',
             alignItems: 'center',
             gap: '16px',
             transform: 'rotate(1deg)',
             maxWidth: '260px',
+            color: '#000814',
           }}
         >
           <div
             style={{
-              background: '#fff',
-              border: '2px solid #000',
+              background: '#000814',
+              color: '#FFC300',
+              border: '2px solid #003566',
               borderRadius: '6px',
               padding: '8px',
               display: 'flex',
@@ -124,7 +126,7 @@ export function StudentDashboard() {
           >
             <FileText size={28} strokeWidth={2.2} />
           </div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, lineHeight: 1.2 }}>
+          <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, lineHeight: 1.2, color: '#000814' }}>
             <div style={{ fontSize: '0.85rem' }}>FAST</div>
             <div style={{ fontSize: '0.85rem' }}>EASY</div>
             <div style={{ fontSize: '0.85rem' }}>CONVENIENT</div>
@@ -221,8 +223,8 @@ export function StudentDashboard() {
               style={{
                 width: '100%',
                 height: '12px',
-                background: '#F3EFE6',
-                border: '2px solid #000',
+                background: '#001428',
+                border: '2px solid #003566',
                 borderRadius: '6px',
                 overflow: 'hidden',
                 position: 'relative',
@@ -234,8 +236,8 @@ export function StudentDashboard() {
                   width: `${getProgressPercentage(currentOrder.status)}%`,
                   background:
                     currentOrder.status === 'ready'
-                      ? '#10B981'
-                      : 'linear-gradient(90deg, #3B82F6, #60A5FA)',
+                      ? '#FFD60A'
+                      : 'linear-gradient(90deg, #003566, #FFC300)',
                   transition: 'width 0.4s ease',
                 }}
               />
@@ -291,7 +293,7 @@ export function StudentDashboard() {
               fontFamily: 'var(--font-heading)',
               fontWeight: 700,
               fontSize: '0.85rem',
-              color: '#000',
+              color: '#FFC300',
               textDecoration: 'underline',
             }}
           >

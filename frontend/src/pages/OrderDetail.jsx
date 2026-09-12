@@ -205,9 +205,9 @@ export function OrderDetail() {
           style={{
             fontSize: '0.88rem',
             padding: '6px 14px',
-            background: '#FEF08A',
-            color: '#854D0E',
-            border: '2px solid #000',
+            background: '#002855',
+            color: '#60A5FA',
+            border: '2px solid #003566',
           }}
         >
           Printing in Progress
@@ -221,9 +221,9 @@ export function OrderDetail() {
           style={{
             fontSize: '0.88rem',
             padding: '6px 14px',
-            background: '#BFDBFE',
-            color: '#1E3A8A',
-            border: '2px solid #000',
+            background: '#003566',
+            color: '#FFD60A',
+            border: '2px solid #004B8D',
           }}
         >
           Accepted by Shop
@@ -237,9 +237,9 @@ export function OrderDetail() {
           style={{
             fontSize: '0.88rem',
             padding: '6px 14px',
-            background: '#86EFAC',
-            color: '#14532D',
-            border: '2px solid #000',
+            background: '#065F46',
+            color: '#6EE7B7',
+            border: '2px solid #047857',
           }}
         >
           Ready for Pickup
@@ -253,9 +253,9 @@ export function OrderDetail() {
           style={{
             fontSize: '0.88rem',
             padding: '6px 14px',
-            background: '#E5E7EB',
-            color: '#111',
-            border: '2px solid #000',
+            background: '#1E293B',
+            color: '#94A3B8',
+            border: '2px solid #334155',
           }}
         >
           Order Completed
@@ -269,8 +269,8 @@ export function OrderDetail() {
           fontSize: '0.88rem',
           padding: '6px 14px',
           background: 'var(--yellow-primary)',
-          color: '#000',
-          border: '2px solid #000',
+          color: '#000814',
+          border: '2px solid #003566',
         }}
       >
         Order Placed
@@ -328,9 +328,10 @@ export function OrderDetail() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                background: '#FFD028',
-                boxShadow: '2px 2px 0px #000',
-                border: '2px solid #000',
+                background: '#FFC300',
+                color: '#000814',
+                boxShadow: '2px 2px 0px #000814',
+                border: '2px solid #003566',
                 fontWeight: 800,
               }}
             >
@@ -519,7 +520,7 @@ export function OrderDetail() {
 
         {/* Right Column: Estimated Ready Time & Quick Actions */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div className="neo-card" style={{ background: '#FFFDF9' }}>
+          <div className="neo-card" style={{ background: 'var(--surface-white)' }}>
             <div
               style={{
                 fontFamily: 'var(--font-heading)',
@@ -539,8 +540,9 @@ export function OrderDetail() {
                 style={{
                   width: '42px',
                   height: '42px',
-                  background: currentStatus === 'ready' ? '#86EFAC' : 'var(--yellow-primary)',
-                  border: '2px solid #000',
+                  background: currentStatus === 'ready' ? '#FFD60A' : 'var(--yellow-primary)',
+                  color: '#000814',
+                  border: '2px solid #003566',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
@@ -555,7 +557,7 @@ export function OrderDetail() {
                   fontFamily: 'var(--font-heading)',
                   fontSize: '1.8rem',
                   fontWeight: 900,
-                  color: currentStatus === 'ready' ? '#166534' : '#000',
+                  color: currentStatus === 'ready' ? '#FFD60A' : '#FFC300',
                 }}
               >
                 {currentStatus === 'ready'
@@ -581,8 +583,9 @@ export function OrderDetail() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '6px',
-                  background: '#166534',
-                  color: '#FFFFFF',
+                  background: '#065F46',
+                  color: '#6EE7B7',
+                  border: '2px solid #047857',
                   marginBottom: '10px',
                 }}
               >
@@ -599,7 +602,9 @@ export function OrderDetail() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '6px',
-                  background: '#F1F5F9',
+                  background: '#002855',
+                  color: '#F8FAFC',
+                  border: '2px solid #003566',
                   marginBottom: '10px',
                 }}
               >

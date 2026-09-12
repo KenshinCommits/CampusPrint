@@ -79,11 +79,11 @@ export function Login() {
         <div
           style={{
             position: 'relative',
-            background: '#FCE77D',
-            border: '3px solid #000',
+            background: '#001D3D',
+            border: '3px solid #003566',
             borderRadius: '12px',
             padding: '28px',
-            boxShadow: '4px 4px 0px #000',
+            boxShadow: '4px 4px 0px #000814',
             maxWidth: '460px',
             margin: '10px 0',
             display: 'flex',
@@ -96,23 +96,23 @@ export function Login() {
               style={{
                 width: '64px',
                 height: '64px',
-                background: '#3B82F6',
-                border: '2.5px solid #000',
+                background: '#003566',
+                border: '2.5px solid #FFC300',
                 borderRadius: '8px',
-                boxShadow: '2px 2px 0px #000',
+                boxShadow: '2px 2px 0px #000814',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#fff',
+                color: '#FFC300',
               }}
             >
               <Printer size={36} strokeWidth={2.2} />
             </div>
             <div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem', color: '#F8FAFC' }}>
                 PRINT DISPATCH READY
               </div>
-              <div style={{ fontSize: '0.85rem', color: '#333' }}>
+              <div style={{ fontSize: '0.85rem', color: '#94A3B8' }}>
                 Tokens instantly synced to shop floor
               </div>
             </div>
@@ -121,14 +121,15 @@ export function Login() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <div
               style={{
-                background: '#fff',
-                border: '2px solid #000',
+                background: '#000814',
+                border: '2px solid #003566',
                 borderRadius: '4px',
                 padding: '3px 8px',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 800,
                 fontSize: '0.75rem',
-                boxShadow: '1.5px 1.5px 0px #000',
+                color: '#FFD60A',
+                boxShadow: '1.5px 1.5px 0px #000814',
                 transform: 'rotate(-3deg)',
               }}
             >
@@ -136,14 +137,15 @@ export function Login() {
             </div>
             <div
               style={{
-                background: '#86EFAC',
-                border: '2px solid #000',
+                background: '#FFC300',
+                border: '2px solid #000814',
                 borderRadius: '4px',
                 padding: '3px 8px',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 800,
                 fontSize: '0.75rem',
-                boxShadow: '1.5px 1.5px 0px #000',
+                color: '#000814',
+                boxShadow: '1.5px 1.5px 0px #000814',
                 transform: 'rotate(2deg)',
               }}
             >
@@ -155,7 +157,7 @@ export function Login() {
         {/* 3 Features Row */}
         <div className="hero-features">
           <div className="hero-feature-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#2563EB' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#FFC300' }}>
               <Upload size={18} strokeWidth={2.5} />
               <span className="hero-feature-title">QUICK UPLOAD</span>
             </div>
@@ -165,7 +167,7 @@ export function Login() {
           </div>
 
           <div className="hero-feature-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#059669' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#FFD60A' }}>
               <ShieldCheck size={18} strokeWidth={2.5} />
               <span className="hero-feature-title">SECURE PAYMENT</span>
             </div>
@@ -175,7 +177,7 @@ export function Login() {
           </div>
 
           <div className="hero-feature-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D97706' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#38BDF8' }}>
               <CheckCircle2 size={18} strokeWidth={2.5} />
               <span className="hero-feature-title">PICK UP & GO</span>
             </div>
@@ -218,12 +220,12 @@ export function Login() {
           {/* Quick Demo Accounts for Judges & Evaluators */}
           <div
             style={{
-              background: '#FEF9C3',
-              border: '2.5px solid #000',
+              background: '#001428',
+              border: '2.5px solid #003566',
               borderRadius: '8px',
               padding: '12px',
               marginBottom: '18px',
-              boxShadow: '3px 3px 0px #000',
+              boxShadow: '3px 3px 0px #000814',
             }}
           >
             <div
@@ -236,7 +238,7 @@ export function Login() {
                 gap: '6px',
                 marginBottom: '8px',
                 textTransform: 'uppercase',
-                color: '#854D0E',
+                color: '#FFC300',
               }}
             >
               <Sparkles size={16} />
@@ -250,7 +252,9 @@ export function Login() {
                 disabled={busy}
                 onClick={() => handleQuickLogin('student@campusprint.demo', 'student123', 'student')}
                 style={{
-                  background: '#DBEAFE',
+                  background: '#002855',
+                  color: '#F8FAFC',
+                  border: '2px solid #003566',
                   textAlign: 'left',
                   padding: '7px 8px',
                   display: 'flex',
@@ -259,7 +263,7 @@ export function Login() {
                 }}
               >
                 <div style={{ fontWeight: 800, fontSize: '0.78rem' }}>👨‍🎓 Demo Student</div>
-                <div style={{ fontSize: '0.68rem', color: '#475569' }}>order in progress</div>
+                <div style={{ fontSize: '0.68rem', color: '#94A3B8' }}>order in progress</div>
               </button>
 
               <button
@@ -268,7 +272,9 @@ export function Login() {
                 disabled={busy}
                 onClick={() => handleQuickLogin('staff@campusprint.demo', 'staff123', 'staff')}
                 style={{
-                  background: '#FDE047',
+                  background: '#FFC300',
+                  color: '#000814',
+                  border: '2px solid #FFD60A',
                   textAlign: 'left',
                   padding: '7px 8px',
                   display: 'flex',
@@ -277,7 +283,7 @@ export function Login() {
                 }}
               >
                 <div style={{ fontWeight: 800, fontSize: '0.78rem' }}>👩‍💼 Shop Staff</div>
-                <div style={{ fontSize: '0.68rem', color: '#475569' }}>queue & analytics</div>
+                <div style={{ fontSize: '0.68rem', color: '#452A00' }}>queue & analytics</div>
               </button>
 
               <button
@@ -286,7 +292,9 @@ export function Login() {
                 disabled={busy}
                 onClick={() => handleQuickLogin('ananya@campusprint.demo', 'demo123', 'student')}
                 style={{
-                  background: '#DCFCE7',
+                  background: '#003566',
+                  color: '#FFD60A',
+                  border: '2px solid #004B8D',
                   textAlign: 'left',
                   padding: '7px 8px',
                   display: 'flex',
@@ -295,7 +303,7 @@ export function Login() {
                 }}
               >
                 <div style={{ fontWeight: 800, fontSize: '0.78rem' }}>📄 Ananya Iyer</div>
-                <div style={{ fontSize: '0.68rem', color: '#475569' }}>ready order (resume)</div>
+                <div style={{ fontSize: '0.68rem', color: '#CBD5E1' }}>ready order (resume)</div>
               </button>
 
               <button
@@ -304,7 +312,9 @@ export function Login() {
                 disabled={busy}
                 onClick={() => handleQuickLogin('karthik@campusprint.demo', 'demo123', 'student')}
                 style={{
-                  background: '#F3E8FF',
+                  background: '#001D3D',
+                  color: '#F8FAFC',
+                  border: '2px solid #FFC300',
                   textAlign: 'left',
                   padding: '7px 8px',
                   display: 'flex',
@@ -313,11 +323,11 @@ export function Login() {
                 }}
               >
                 <div style={{ fontWeight: 800, fontSize: '0.78rem' }}>📘 Karthik Rao</div>
-                <div style={{ fontSize: '0.68rem', color: '#475569' }}>capstone project</div>
+                <div style={{ fontSize: '0.68rem', color: '#94A3B8' }}>capstone project</div>
               </button>
             </div>
 
-            <div style={{ marginTop: '7px', fontSize: '0.7rem', color: '#713F12', textAlign: 'center', fontWeight: 600 }}>
+            <div style={{ marginTop: '7px', fontSize: '0.7rem', color: '#FFD60A', textAlign: 'center', fontWeight: 600 }}>
               👆 Click any role to log in instantly
             </div>
           </div>
@@ -377,13 +387,13 @@ export function Login() {
             Don't have an account?{' '}
             <Link
               to="/signup"
-              style={{ color: '#000', fontWeight: 800, textDecoration: 'underline' }}
+              style={{ color: '#FFC300', fontWeight: 800, textDecoration: 'underline' }}
             >
               Sign Up
             </Link>
           </div>
 
-          <div style={{ marginTop: '24px', borderTop: '2px dashed #000', paddingTop: '16px' }}>
+          <div style={{ marginTop: '24px', borderTop: '2px dashed #003566', paddingTop: '16px' }}>
             <div
               style={{
                 fontFamily: 'var(--font-heading)',

@@ -854,9 +854,9 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
       style={{
         padding: '0',
         overflow: 'hidden',
-        background: '#FFFDF9',
-        border: '3px solid #000',
-        boxShadow: '4px 4px 0px #000',
+        background: 'var(--surface-white)',
+        border: '3px solid #003566',
+        boxShadow: '4px 4px 0px #000814',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
@@ -869,8 +869,9 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '12px 16px',
-          borderBottom: '2px solid #000',
-          background: '#FFD028',
+          borderBottom: '2px solid #003566',
+          background: '#FFC300',
+          color: '#000814',
           flexWrap: 'wrap',
           gap: '8px',
         }}
@@ -899,23 +900,29 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
               fontWeight: 800,
               padding: '4px 10px',
               borderRadius: '999px',
-              border: '2px solid #000',
+              border: '2px solid #003566',
               background: isPrintingNow
-                ? '#FEF08A'
+                ? '#002855'
                 : isReadyNow
-                ? '#86EFAC'
+                ? '#065F46'
                 : isAcceptedNow
-                ? '#BFDBFE'
-                : '#FFFFFF',
-              color: '#000',
+                ? '#003566'
+                : '#001D3D',
+              color: isPrintingNow
+                ? '#60A5FA'
+                : isReadyNow
+                ? '#6EE7B7'
+                : isAcceptedNow
+                ? '#FFD60A'
+                : '#F8FAFC',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              boxShadow: '1px 1px 0px #000',
+              boxShadow: '1px 1px 0px #000814',
             }}
           >
             {isPrintingNow && <Loader2 size={12} className="spin" />}
-            {isReadyNow && <CheckCircle size={12} color="#166534" />}
+            {isReadyNow && <CheckCircle size={12} color="#6EE7B7" />}
             {isPrintingNow
               ? 'PRINTING'
               : isReadyNow
@@ -931,8 +938,9 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
             onClick={resetCamera}
             title="Reset 3D View"
             style={{
-              background: '#FFFFFF',
-              border: '2px solid #000',
+              background: '#001D3D',
+              color: '#F8FAFC',
+              border: '2px solid #003566',
               borderRadius: '6px',
               padding: '4px 8px',
               cursor: 'pointer',
@@ -942,7 +950,7 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
               fontSize: '0.75rem',
               fontWeight: 700,
               fontFamily: 'var(--font-heading)',
-              boxShadow: '1px 1px 0px #000',
+              boxShadow: '1px 1px 0px #000814',
             }}
           >
             <RotateCcw size={13} />
@@ -958,7 +966,7 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
           width: '100%',
           height: height,
           position: 'relative',
-          background: 'radial-gradient(circle at center 40%, #FFFFFF 0%, #F5F1E6 100%)',
+          background: 'radial-gradient(circle at center 40%, #001D3D 0%, #000814 100%)',
           userSelect: 'none',
         }}
       >
@@ -1026,16 +1034,16 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
             position: 'absolute',
             bottom: '12px',
             left: '14px',
-            background: 'rgba(255, 255, 255, 0.88)',
-            border: '2px solid #000',
+            background: 'rgba(0, 13, 29, 0.88)',
+            border: '2px solid #003566',
             borderRadius: '6px',
             padding: '4px 10px',
             fontSize: '0.72rem',
             fontWeight: 700,
             fontFamily: 'var(--font-heading)',
-            color: '#333',
+            color: '#F8FAFC',
             pointerEvents: 'none',
-            boxShadow: '2px 2px 0px #000',
+            boxShadow: '2px 2px 0px #000814',
           }}
         >
           🖱️ Drag to rotate 360° · Scroll to zoom
@@ -1047,8 +1055,8 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
         <div
           style={{
             padding: '12px 16px',
-            background: '#FFFFFF',
-            borderTop: '2px solid #000',
+            background: 'var(--surface-white)',
+            borderTop: '2px solid #003566',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -1057,7 +1065,7 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <FileText size={16} color="#DC2626" />
+            <FileText size={16} color="#FFC300" />
             <div style={{ fontSize: '0.84rem' }}>
               <span style={{ fontWeight: 800 }}>{fileName}</span>
               <span style={{ color: 'var(--text-muted)', marginLeft: '6px' }}>
@@ -1120,7 +1128,7 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0, 0, 0, 0.72)',
+            background: 'rgba(0, 8, 20, 0.85)',
             backdropFilter: 'blur(5px)',
             display: 'flex',
             alignItems: 'center',
@@ -1137,9 +1145,9 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
               maxWidth: '850px',
               height: '90vh',
               maxHeight: '900px',
-              background: '#FFFDF9',
-              border: '3px solid #000',
-              boxShadow: '6px 6px 0px #000',
+              background: 'var(--surface-white)',
+              border: '3px solid #003566',
+              boxShadow: '6px 6px 0px #000814',
               padding: 0,
               display: 'flex',
               flexDirection: 'column',
@@ -1151,8 +1159,9 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
             <div
               style={{
                 padding: '14px 20px',
-                background: '#FFD028',
-                borderBottom: '3px solid #000',
+                background: '#FFC300',
+                color: '#000814',
+                borderBottom: '3px solid #003566',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -1161,7 +1170,7 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <FileText size={22} color="#000" />
+                <FileText size={22} color="#000814" />
                 <div>
                   <h3
                     style={{
@@ -1169,11 +1178,12 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
                       fontWeight: 900,
                       fontSize: '1.05rem',
                       margin: 0,
+                      color: '#000814',
                     }}
                   >
                     {fileName}
                   </h3>
-                  <div style={{ fontSize: '0.78rem', color: '#333', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.78rem', color: '#1E293B', fontWeight: 600 }}>
                     Order #{orderId} · {pages} {pages === 1 ? 'page' : 'pages'} · 2-Sided Output Tray Inspection
                   </div>
                 </div>
@@ -1185,7 +1195,8 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    background: '#000',
+                    background: '#000814',
+                    border: '1.5px solid #003566',
                     padding: '2px',
                     borderRadius: '6px',
                     gap: '2px',
@@ -1201,8 +1212,8 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
                       fontFamily: 'var(--font-heading)',
                       border: 'none',
                       borderRadius: '4px',
-                      background: modalTab === 'sheet' ? '#FFD028' : 'transparent',
-                      color: modalTab === 'sheet' ? '#000' : '#FFF',
+                      background: modalTab === 'sheet' ? '#FFC300' : 'transparent',
+                      color: modalTab === 'sheet' ? '#000814' : '#F8FAFC',
                       cursor: 'pointer',
                     }}
                   >
@@ -1218,8 +1229,8 @@ export const PrinterDemo = forwardRef(function PrinterDemo(
                       fontFamily: 'var(--font-heading)',
                       border: 'none',
                       borderRadius: '4px',
-                      background: modalTab === 'pdf' ? '#FFD028' : 'transparent',
-                      color: modalTab === 'pdf' ? '#000' : '#FFF',
+                      background: modalTab === 'pdf' ? '#FFC300' : 'transparent',
+                      color: modalTab === 'pdf' ? '#000814' : '#F8FAFC',
                       cursor: 'pointer',
                     }}
                   >
