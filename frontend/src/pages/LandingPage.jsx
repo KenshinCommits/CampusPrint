@@ -453,60 +453,289 @@ export const LandingPage = () => {
       </section>
 
       {/* ================================================================== */}
-      {/* 3. "HOW IT WORKS" 4-STEP BAR (Codédex / Pixel Parchment Style)       */}
+      {/* HOW IT WORKS — PIXEL FOUR STEPS                                    */}
       {/* ================================================================== */}
+
       <section
         id="how-it-works"
-        className="border-y-4 border-[#000814] bg-[#FBF8F1] rounded-none py-12 px-6 md:px-12"
+        className="border-y-4 border-[#000814] bg-[#FBF8F1] px-6 py-14 md:px-12"
       >
         <div className="mx-auto max-w-[1440px]">
           {/* Section Header */}
-          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b-4 border-[#000814] pb-6">
+          <div className="flex items-end justify-between">
             <div>
-              <div className="mb-2 font-['Silkscreen'] text-[10px] text-[#003566] tracking-wider">
+              <div className="font-['Silkscreen'] text-xs tracking-widest text-[#001D3D]/70">
                 // HOW IT WORKS
               </div>
-              <h2 className="font-['Press_Start_2P'] text-base sm:text-lg md:text-xl text-[#000814]">
+
+              <h2 className="mt-2 font-['Press_Start_2P'] text-2xl leading-relaxed text-[#000814] md:text-3xl">
                 FOUR STEPS. ZERO QUEUES.
               </h2>
             </div>
 
-            <div className="flex items-center gap-2">
+            {/* Pixel Window Accent */}
+            <div className="hidden items-center gap-1 pb-2 sm:flex">
               <span className="h-3 w-3 bg-[#FFC300]" />
               <span className="h-3 w-3 bg-[#38BDF8]" />
-              <span className="h-3 w-3 bg-[#86EFAC]" />
+              <span className="h-3 w-3 bg-[#22C55E]" />
             </div>
           </div>
 
-          {/* 4-Column Responsive Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-4 border-[#000814] bg-[#000814] gap-[4px] shadow-[4px_4px_0px_#000814]">
-            <StepCard
-              number="1"
-              icon={<UploadIcon />}
-              title="UPLOAD"
-              description="Upload your PDF from any device."
-            />
+          {/* Header Divider */}
+          <div className="mt-7 h-[3px] w-full bg-[#000814]" />
 
-            <StepCard
-              number="2"
-              icon={<PaymentIcon />}
-              title="PAY"
-              description="Secure and easy online payment."
-            />
+          {/* 4-Step Grid */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            {/* -------------------------------------------------------------- */}
+            {/* STEP 01 — UPLOAD                                                */}
+            {/* -------------------------------------------------------------- */}
+            <div className="relative border-[3px] border-[#000814] bg-white px-6 py-8 lg:border-r-0 lg:last:border-r-[3px]">
+              {/* Number */}
+              <div className="absolute right-4 top-4 font-['Silkscreen'] text-[10px] text-neutral-400">
+                01
+              </div>
 
-            <StepCard
-              number="3"
-              icon={<PrinterIcon />}
-              title="WE PRINT"
-              description="Your documents are printed on campus."
-            />
+              {/* Icon */}
+              <div className="flex h-24 items-center justify-center">
+                <svg
+                  viewBox="0 0 64 64"
+                  className="h-20 w-20"
+                  aria-hidden="true"
+                  shapeRendering="crispEdges"
+                >
+                  {/* Document */}
+                  <rect x="14" y="6" width="34" height="48" fill="#000814" />
+                  <rect x="19" y="11" width="24" height="38" fill="#FFFFFF" />
 
-            <StepCard
-              number="4"
-              icon={<ParcelIcon />}
-              title="PICK UP"
-              description="Collect your prints at the campus print shop."
-            />
+                  {/* Fold */}
+                  <rect x="37" y="11" width="11" height="11" fill="#38BDF8" />
+                  <rect x="37" y="17" width="6" height="5" fill="#FFFFFF" />
+
+                  {/* Document lines */}
+                  <rect x="24" y="27" width="14" height="4" fill="#003566" />
+                  <rect x="24" y="35" width="18" height="4" fill="#003566" />
+                  <rect x="24" y="43" width="11" height="3" fill="#38BDF8" />
+
+                  {/* Upload arrow */}
+                  <rect x="46" y="31" width="8" height="22" fill="#38BDF8" />
+                  <rect x="42" y="27" width="16" height="8" fill="#38BDF8" />
+                  <rect x="46" y="23" width="8" height="8" fill="#38BDF8" />
+
+                  {/* Arrow outline pixels */}
+                  <rect x="42" y="27" width="4" height="4" fill="#000814" />
+                  <rect x="54" y="27" width="4" height="4" fill="#000814" />
+                </svg>
+              </div>
+
+              {/* Text */}
+              <h3 className="mt-4 font-['Press_Start_2P'] text-sm uppercase text-[#000814]">
+                UPLOAD
+              </h3>
+
+              <p className="mt-2 font-mono text-xs leading-relaxed text-neutral-600">
+                Upload your PDF from any device.
+              </p>
+
+              {/* Bottom Accent */}
+              <div className="mt-7 flex h-1">
+                <span className="h-1 w-8 bg-[#FFC300]" />
+                <span className="h-1 w-2 bg-[#000814]" />
+              </div>
+            </div>
+
+            {/* -------------------------------------------------------------- */}
+            {/* STEP 02 — PAY                                                   */}
+            {/* -------------------------------------------------------------- */}
+            <div className="relative border-[3px] border-[#000814] bg-[#FFFDF9] px-6 py-8 sm:border-l-0 lg:border-r-0">
+              {/* Number */}
+              <div className="absolute right-4 top-4 font-['Silkscreen'] text-[10px] text-neutral-400">
+                02
+              </div>
+
+              {/* Icon */}
+              <div className="flex h-24 items-center justify-center">
+                <svg
+                  viewBox="0 0 64 64"
+                  className="h-20 w-20"
+                  aria-hidden="true"
+                  shapeRendering="crispEdges"
+                >
+                  {/* Card outline */}
+                  <rect x="8" y="16" width="48" height="34" fill="#000814" />
+
+                  {/* Card body */}
+                  <rect x="12" y="20" width="40" height="26" fill="#001D3D" />
+
+                  {/* Magnetic stripe */}
+                  <rect x="12" y="24" width="40" height="6" fill="#003566" />
+
+                  {/* Chip */}
+                  <rect x="18" y="34" width="12" height="9" fill="#FFC300" />
+                  <rect x="21" y="34" width="3" height="9" fill="#FFD60A" />
+                  <rect x="18" y="37" width="12" height="3" fill="#FFD60A" />
+
+                  {/* Card detail */}
+                  <rect x="36" y="36" width="10" height="3" fill="#FFFFFF" />
+                  <rect x="36" y="41" width="6" height="2" fill="#38BDF8" />
+
+                  {/* Pixel signal */}
+                  <rect x="48" y="11" width="4" height="4" fill="#86EFAC" />
+                  <rect x="53" y="7" width="4" height="4" fill="#FFC300" />
+                </svg>
+              </div>
+
+              {/* Text */}
+              <h3 className="mt-4 font-['Press_Start_2P'] text-sm uppercase text-[#000814]">
+                PAY
+              </h3>
+
+              <p className="mt-2 font-mono text-xs leading-relaxed text-neutral-600">
+                Secure and easy online payment.
+              </p>
+
+              {/* Bottom Accent */}
+              <div className="mt-7 flex h-1">
+                <span className="h-1 w-8 bg-[#FFC300]" />
+                <span className="h-1 w-2 bg-[#000814]" />
+              </div>
+            </div>
+
+            {/* -------------------------------------------------------------- */}
+            {/* STEP 03 — WE PRINT                                              */}
+            {/* -------------------------------------------------------------- */}
+            <div className="relative border-[3px] border-[#000814] bg-white px-6 py-8 sm:border-l-0 lg:border-r-0">
+              {/* Number */}
+              <div className="absolute right-4 top-4 font-['Silkscreen'] text-[10px] text-neutral-400">
+                03
+              </div>
+
+              {/* Icon */}
+              <div className="flex h-24 items-center justify-center">
+                <svg
+                  viewBox="0 0 64 64"
+                  className="h-20 w-20"
+                  aria-hidden="true"
+                  shapeRendering="crispEdges"
+                >
+                  {/* Printer body outline */}
+                  <rect x="10" y="25" width="44" height="28" fill="#000814" />
+
+                  {/* Printer body */}
+                  <rect x="14" y="29" width="36" height="20" fill="#001D3D" />
+
+                  {/* Top paper tray */}
+                  <rect x="18" y="12" width="28" height="19" fill="#000814" />
+                  <rect x="22" y="16" width="20" height="12" fill="#FFFFFF" />
+
+                  {/* Paper lines */}
+                  <rect x="25" y="19" width="14" height="3" fill="#003566" />
+                  <rect x="25" y="24" width="10" height="2" fill="#38BDF8" />
+
+                  {/* Output paper */}
+                  <rect x="19" y="42" width="26" height="17" fill="#000814" />
+                  <rect x="23" y="43" width="18" height="12" fill="#FFFFFF" />
+                  <rect x="26" y="46" width="12" height="2" fill="#003566" />
+                  <rect x="26" y="50" width="9" height="2" fill="#38BDF8" />
+
+                  {/* Printer controls */}
+                  <rect x="42" y="32" width="4" height="4" fill="#86EFAC" />
+                  <rect x="36" y="32" width="4" height="4" fill="#FFD60A" />
+
+                  {/* Side pixels */}
+                  <rect x="7" y="32" width="3" height="10" fill="#38BDF8" />
+                  <rect x="54" y="32" width="3" height="10" fill="#FFC300" />
+                </svg>
+              </div>
+
+              {/* Text */}
+              <h3 className="mt-4 font-['Press_Start_2P'] text-sm uppercase text-[#000814]">
+                WE PRINT
+              </h3>
+
+              <p className="mt-2 font-mono text-xs leading-relaxed text-neutral-600">
+                Your documents are printed on campus.
+              </p>
+
+              {/* Bottom Accent */}
+              <div className="mt-7 flex h-1">
+                <span className="h-1 w-8 bg-[#FFC300]" />
+                <span className="h-1 w-2 bg-[#000814]" />
+              </div>
+            </div>
+
+            {/* -------------------------------------------------------------- */}
+            {/* STEP 04 — PICK UP                                               */}
+            {/* -------------------------------------------------------------- */}
+            <div className="relative border-[3px] border-[#000814] bg-[#FFFDF9] px-6 py-8 sm:border-l-0">
+              {/* Number */}
+              <div className="absolute right-4 top-4 font-['Silkscreen'] text-[10px] text-neutral-400">
+                04
+              </div>
+
+              {/* Icon */}
+              <div className="flex h-24 items-center justify-center">
+                <svg
+                  viewBox="0 0 64 64"
+                  className="h-20 w-20"
+                  aria-hidden="true"
+                  shapeRendering="crispEdges"
+                >
+                  {/* Box outline */}
+                  <path
+                    d="M8 22L32 10L56 22V50L32 62L8 50V22Z"
+                    fill="#000814"
+                  />
+
+                  {/* Front face */}
+                  <path
+                    d="M11 25L32 35V58L11 48V25Z"
+                    fill="#FFC300"
+                  />
+
+                  {/* Right face */}
+                  <path
+                    d="M32 35L53 25V48L32 58V35Z"
+                    fill="#003566"
+                  />
+
+                  {/* Top face */}
+                  <path
+                    d="M11 22L32 12L53 22L32 33L11 22Z"
+                    fill="#FFD60A"
+                  />
+
+                  {/* Tape */}
+                  <path
+                    d="M28 14L36 18L36 37L32 39L28 37V14Z"
+                    fill="#FFC300"
+                  />
+
+                  {/* Tape outline pixels */}
+                  <rect x="28" y="14" width="8" height="4" fill="#000814" />
+                  <rect x="28" y="18" width="4" height="18" fill="#000814" />
+                  <rect x="32" y="18" width="4" height="18" fill="#FFC300" />
+
+                  {/* Box highlight */}
+                  <rect x="15" y="29" width="5" height="3" fill="#FFD60A" />
+                  <rect x="39" y="38" width="8" height="3" fill="#38BDF8" />
+                </svg>
+              </div>
+
+              {/* Text */}
+              <h3 className="mt-4 font-['Press_Start_2P'] text-sm uppercase text-[#000814]">
+                PICK UP
+              </h3>
+
+              <p className="mt-2 font-mono text-xs leading-relaxed text-neutral-600">
+                Collect your prints at the campus print shop.
+              </p>
+
+              {/* Bottom Accent */}
+              <div className="mt-7 flex h-1">
+                <span className="h-1 w-8 bg-[#FFC300]" />
+                <span className="h-1 w-2 bg-[#000814]" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
