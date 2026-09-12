@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 /* -------------------------------------------------------------------------- */
-/* Pixel Icons                                                                */
+/* Handcrafted Pixel Icons (Razor Sharp 16-Bit Crisp SVG)                    */
 /* -------------------------------------------------------------------------- */
 
 const PixelCapIcon = ({ className = "w-8 h-8", size = 32 }) => (
@@ -13,7 +13,7 @@ const PixelCapIcon = ({ className = "w-8 h-8", size = 32 }) => (
     className={className}
     aria-hidden="true"
     shapeRendering="crispEdges"
-    style={{ flexShrink: 0 }}
+    style={{ flexShrink: 0, imageRendering: 'pixelated' }}
   >
     <rect x="4" y="10" width="24" height="7" fill="#FFC300" />
     <rect x="8" y="7" width="16" height="3" fill="#FFD60A" />
@@ -33,7 +33,7 @@ const DocumentIcon = ({ className = "w-6 h-6", size = 24 }) => (
     className={className}
     aria-hidden="true"
     shapeRendering="crispEdges"
-    style={{ flexShrink: 0 }}
+    style={{ flexShrink: 0, imageRendering: 'pixelated' }}
   >
     <rect x="6" y="3" width="17" height="26" fill="#000814" />
     <rect x="9" y="6" width="11" height="20" fill="#FFFFFF" />
@@ -53,7 +53,7 @@ const UploadIcon = ({ className = "w-12 h-12", size = 48 }) => (
     className={className}
     aria-hidden="true"
     shapeRendering="crispEdges"
-    style={{ flexShrink: 0 }}
+    style={{ flexShrink: 0, imageRendering: 'pixelated' }}
   >
     <rect x="9" y="5" width="26" height="38" fill="#000814" />
     <rect x="13" y="9" width="18" height="30" fill="#FFFFFF" />
@@ -78,7 +78,7 @@ const PaymentIcon = ({ className = "w-12 h-12", size = 48 }) => (
     className={className}
     aria-hidden="true"
     shapeRendering="crispEdges"
-    style={{ flexShrink: 0 }}
+    style={{ flexShrink: 0, imageRendering: 'pixelated' }}
   >
     <rect x="5" y="10" width="38" height="28" fill="#000814" />
     <rect x="9" y="14" width="30" height="20" fill="#003566" />
@@ -101,7 +101,7 @@ const PrinterIcon = ({ className = "w-12 h-12", size = 48 }) => (
     className={className}
     aria-hidden="true"
     shapeRendering="crispEdges"
-    style={{ flexShrink: 0 }}
+    style={{ flexShrink: 0, imageRendering: 'pixelated' }}
   >
     <rect x="9" y="17" width="30" height="23" fill="#000814" />
     <rect x="5" y="20" width="38" height="16" fill="#003566" />
@@ -126,7 +126,7 @@ const ParcelIcon = ({ className = "w-12 h-12", size = 48 }) => (
     className={className}
     aria-hidden="true"
     shapeRendering="crispEdges"
-    style={{ flexShrink: 0 }}
+    style={{ flexShrink: 0, imageRendering: 'pixelated' }}
   >
     <rect x="7" y="15" width="34" height="26" fill="#000814" />
 
@@ -151,7 +151,7 @@ const HelpIcon = ({ className = "w-5 h-5", size = 20 }) => (
     className={className}
     aria-hidden="true"
     shapeRendering="crispEdges"
-    style={{ flexShrink: 0 }}
+    style={{ flexShrink: 0, imageRendering: 'pixelated' }}
   >
     <rect x="6" y="2" width="8" height="3" fill="currentColor" />
     <rect x="3" y="5" width="14" height="3" fill="currentColor" />
@@ -162,13 +162,13 @@ const HelpIcon = ({ className = "w-5 h-5", size = 20 }) => (
 );
 
 /* -------------------------------------------------------------------------- */
-/* Step Card                                                                  */
+/* Step Card Component                                                        */
 /* -------------------------------------------------------------------------- */
 
 const StepCard = ({ number, icon, title, description }) => (
-  <div className="group relative border-r-4 border-[#000814] px-6 py-8 last:border-r-0">
+  <div className="group relative border-r-4 border-[#000814] px-6 py-8 last:border-r-0 rounded-none bg-[#FBF8F1]">
     {/* Step number */}
-    <div className="absolute right-4 top-3 font-['Silkscreen'] text-[10px] text-[#003566]/50">
+    <div className="absolute right-4 top-3 font-['Silkscreen'] text-[10px] text-[#003566]/50 select-none">
       0{number}
     </div>
 
@@ -184,7 +184,7 @@ const StepCard = ({ number, icon, title, description }) => (
       {description}
     </p>
 
-    {/* Pixel accent */}
+    {/* Pixel accent indicator */}
     <div className="mt-5 flex gap-1">
       <span className="h-1 w-6 bg-[#FFC300]" />
       <span className="h-1 w-2 bg-[#000814]" />
@@ -193,18 +193,16 @@ const StepCard = ({ number, icon, title, description }) => (
 );
 
 /* -------------------------------------------------------------------------- */
-/* Metric Badge                                                               */
+/* Metric Counter Badge                                                       */
 /* -------------------------------------------------------------------------- */
 
 const MetricBadge = ({ symbol, value, label }) => (
   <div className="flex items-center gap-3 border-l-2 border-[#001D3D] pl-4">
     <span className="text-lg text-[#FFD60A]">{symbol}</span>
-
     <div>
-      <div className="font-['Press_Start_2P'] text-[9px] text-white md:text-[10px]">
+      <div className="font-['Press_Start_2P'] text-[9px] text-[#FFD60A] md:text-[10px]">
         {value}
       </div>
-
       <div className="mt-1 font-['Silkscreen'] text-[9px] text-white/60">
         {label}
       </div>
@@ -213,197 +211,236 @@ const MetricBadge = ({ symbol, value, label }) => (
 );
 
 /* -------------------------------------------------------------------------- */
-/* Landing Page                                                               */
+/* Dynamic 16-Bit Pixel Landing Page Component                               */
 /* -------------------------------------------------------------------------- */
 
 export const LandingPage = () => {
-  return (
-    <main className="min-h-screen bg-[#001D3D] text-white">
-      {/* ================================================================== */}
-      {/* NAVBAR (FLOATING PIXEL BAR)                                        */}
-      {/* ================================================================== */}
+  const [isNight, setIsNight] = useState(false);
 
-      <nav className="sticky top-3 z-50 mx-3 sm:mx-6 lg:mx-auto mt-3 max-w-[1440px] border-4 border-[#000814] bg-[#000814] shadow-[4px_4px_0px_#000814]">
-        <div className="flex h-[68px] items-center justify-between px-5 lg:px-10">
-          {/* Branding */}
+  return (
+    <main className="min-h-screen bg-[#001D3D] text-white selection:bg-[#FFD60A] selection:text-[#000814]">
+      {/* ================================================================== */}
+      {/* 1. RETRO PIXEL TOP NAVBAR                                          */}
+      {/* ================================================================== */}
+      <nav className="sticky top-0 z-50 h-16 w-full border-b-4 border-[#000814] bg-[#000814] px-6 md:px-12 flex items-center justify-between text-white rounded-none shadow-[0_4px_0_0_#000814]">
+        {/* Brand */}
+        <Link
+          to="/"
+          className="flex shrink-0 items-center gap-3"
+          aria-label="CampusPrint home"
+        >
+          <div className="flex h-10 w-10 items-center justify-center border-2 border-[#FFC300] bg-[#001D3D] rounded-none shadow-[2px_2px_0px_#000814]">
+            <PixelCapIcon className="h-7 w-7" size={28} />
+          </div>
+
+          <div>
+            <div className="font-['Press_Start_2P'] text-[12px] sm:text-[13px] tracking-tight text-white">
+              CAMPUS<span className="text-[#FFD60A]">PRINT</span>
+            </div>
+            <div className="mt-0.5 font-['Silkscreen'] text-[8px] tracking-wider text-[#FFD60A]">
+              PRINT. PAY. PICK UP.
+            </div>
+          </div>
+        </Link>
+
+        {/* Center navigation */}
+        <div className="hidden h-full items-center gap-7 lg:flex">
           <Link
             to="/"
-            className="flex shrink-0 items-center gap-3"
-            aria-label="CampusPrint home"
+            className="relative flex h-full items-center font-['Silkscreen'] text-xs text-[#FFD60A]"
           >
-            <div className="flex h-11 w-11 items-center justify-center border-2 border-[#FFC300] bg-[#001D3D]">
-              <PixelCapIcon className="h-8 w-8" />
-            </div>
-
-            <div className="hidden sm:block">
-              <div className="font-['Press_Start_2P'] text-[13px] tracking-tight text-white">
-                CAMPUSPRINT
-              </div>
-
-              <div className="mt-1 font-['Silkscreen'] text-[8px] tracking-wider text-[#FFD60A]">
-                PRINT. PAY. PICK UP.
-              </div>
-            </div>
+            Home
+            <span className="absolute bottom-0 left-0 h-[3px] w-full bg-[#FFD60A]" />
           </Link>
 
-          {/* Center navigation */}
-          <div className="hidden h-full items-center gap-6 lg:flex">
-            <Link
-              to="/"
-              className="relative flex h-full items-center font-['Silkscreen'] text-xs text-[#FFD60A]"
-            >
-              Home
-              <span className="absolute bottom-0 left-0 h-[3px] w-full bg-[#FFD60A]" />
-            </Link>
+          <a
+            href="#how-it-works"
+            className="font-['Silkscreen'] text-xs text-white/80 transition-colors hover:text-[#FFD60A]"
+          >
+            How It Works
+          </a>
 
-            <a
-              href="#how-it-works"
-              className="font-['Silkscreen'] text-xs text-white/80 transition-colors hover:text-[#FFD60A]"
-            >
-              How It Works
-            </a>
+          <a
+            href="#prices"
+            className="font-['Silkscreen'] text-xs text-white/80 transition-colors hover:text-[#FFD60A]"
+          >
+            Prices
+          </a>
 
-            <a
-              href="#prices"
-              className="font-['Silkscreen'] text-xs text-white/80 transition-colors hover:text-[#FFD60A]"
-            >
-              Prices
-            </a>
+          <a
+            href="#locations"
+            className="font-['Silkscreen'] text-xs text-white/80 transition-colors hover:text-[#FFD60A]"
+          >
+            Locations
+          </a>
 
-            <a
-              href="#locations"
-              className="font-['Silkscreen'] text-xs text-white/80 transition-colors hover:text-[#FFD60A]"
-            >
-              Locations
-            </a>
+          <a
+            href="#help"
+            className="font-['Silkscreen'] text-xs text-white/80 transition-colors hover:text-[#FFD60A]"
+          >
+            Help
+          </a>
+        </div>
 
-            <a
-              href="#help"
-              className="font-['Silkscreen'] text-xs text-white/80 transition-colors hover:text-[#FFD60A]"
-            >
-              Help
-            </a>
-          </div>
+        {/* Auth Buttons */}
+        <div className="flex items-center gap-3">
+          <Link
+            to="/login"
+            className="font-['Silkscreen'] text-xs text-white px-3 py-1.5 hover:text-[#FFD60A] transition-colors"
+          >
+            Login
+          </Link>
 
-          {/* Auth buttons */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              to="/login"
-              className="border-2 border-[#FFC300] px-3 py-2 font-['Silkscreen'] text-[9px] text-white transition-colors hover:bg-[#001D3D] hover:text-[#FFD60A] sm:px-4"
-            >
-              LOGIN
-            </Link>
-
-            <Link
-              to="/signup"
-              className="
-                border-2 border-[#000814]
-                bg-[#FFC300]
-                px-3 py-2
-                font-['Silkscreen'] text-[9px]
-                text-[#000814]
-                shadow-[2px_2px_0px_#FFD60A]
-                transition-transform
-                hover:bg-[#FFD60A]
-                active:translate-x-[2px]
-                active:translate-y-[2px]
-                active:shadow-none
-                sm:px-4
-              "
-            >
-              CREATE ACCOUNT
-            </Link>
-          </div>
+          <Link
+            to="/signup"
+            className="
+              border-2 border-[#000814]
+              bg-[#FFC300]
+              px-4 py-2
+              font-['Press_Start_2P'] text-[10px]
+              text-[#000814]
+              shadow-[2px_2px_0px_#000814]
+              transition-transform
+              hover:bg-[#FFD60A]
+              active:translate-x-0.5
+              active:translate-y-0.5
+              active:shadow-none
+              rounded-none
+            "
+          >
+            Create Account
+          </Link>
         </div>
       </nav>
 
       {/* ================================================================== */}
-      {/* HERO                                                               */}
+      {/* 2. DYNAMIC 16-BIT PIXEL HERO (TWILIGHT / NIGHT DUAL ENGINE)        */}
       {/* ================================================================== */}
-
-      <section className="relative min-h-[580px] overflow-hidden bg-[#001D3D]">
-        {/* Decorative pixel grid */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.08]"
-          style={{
-            backgroundImage:
-              "linear-gradient(#38BDF8 1px, transparent 1px), linear-gradient(90deg, #38BDF8 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-          }}
+      <section className="relative min-h-[620px] md:min-h-[700px] overflow-hidden bg-[#000814] rounded-none">
+        {/* Background Layer 1: Sunset / Golden Twilight */}
+        <img
+          src="/hero-twilight.jpg"
+          alt="CampusPrint Sunset Workstation"
+          className={`absolute inset-0 w-full h-full object-cover object-right md:object-center transition-opacity duration-700 select-none ${
+            isNight ? "opacity-0" : "opacity-100"
+          }`}
+          style={{ imageRendering: "pixelated" }}
         />
 
-        {/* Pixel corner decorations */}
-        <div className="absolute left-0 top-0 h-24 w-2 bg-[#FFC300]" />
-        <div className="absolute left-2 top-0 h-2 w-24 bg-[#FFC300]" />
+        {/* Background Layer 2: Deep Night Workstation */}
+        <img
+          src="/hero-night.jpg"
+          alt="CampusPrint Night Workstation"
+          className={`absolute inset-0 w-full h-full object-cover object-right md:object-center transition-opacity duration-700 select-none ${
+            isNight ? "opacity-100" : "opacity-0"
+          }`}
+          style={{ imageRendering: "pixelated" }}
+        />
 
-        <div className="absolute bottom-0 right-0 h-24 w-2 bg-[#FFD60A]" />
-        <div className="absolute bottom-0 right-0 h-2 w-24 bg-[#FFD60A]" />
+        {/* Subtle Navy Gradient Overlay (keeps left headlines 100% readable) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#000814]/95 via-[#000814]/70 to-transparent pointer-events-none" />
 
-        <div className="relative mx-auto grid min-h-[580px] max-w-[1440px] items-center gap-8 px-6 py-14 md:grid-cols-2 md:px-10 lg:px-16">
-          {/* Hero copy */}
-          <div className="z-10">
-            <div className="mb-6 inline-flex items-center gap-2 border-2 border-[#003566] bg-[#000814] px-3 py-2">
-              <span className="h-2 w-2 bg-[#86EFAC]" />
-              <span className="font-['Silkscreen'] text-[9px] text-white/80">
-                CAMPUS PRINT NETWORK // ONLINE
-              </span>
+        {/* Subtle Bottom Ground Shadow */}
+        <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-[#000814] to-transparent pointer-events-none" />
+
+        {/* Hero Content Overlay */}
+        <div className="relative mx-auto max-w-[1440px] px-6 py-12 md:px-12 lg:px-16 min-h-[620px] md:min-h-[700px] flex flex-col justify-center">
+          <div className="max-w-2xl z-10">
+            {/* Top Row: Campus Status Badge + Atmosphere Switcher Widget */}
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="inline-flex items-center gap-2 border-2 border-[#003566] bg-[#000814]/85 px-3 py-1.5 rounded-none shadow-[2px_2px_0px_#000814]">
+                <span className="h-2 w-2 bg-[#86EFAC]" />
+                <span className="font-['Silkscreen'] text-[9px] text-white/80 tracking-wider">
+                  CAMPUS PRINT NETWORK // ONLINE
+                </span>
+              </div>
+
+              {/* Atmosphere Switcher Widget */}
+              <button
+                type="button"
+                onClick={() => setIsNight((prev) => !prev)}
+                className="
+                  inline-flex items-center gap-1.5
+                  font-['Silkscreen'] text-[10px]
+                  bg-[#000814]/85 text-[#FFD60A]
+                  border-2 border-[#FFC300]
+                  px-3 py-1.5
+                  shadow-[2px_2px_0px_#000814]
+                  cursor-pointer
+                  hover:bg-[#001D3D]
+                  transition-all
+                  rounded-none
+                  active:translate-x-0.5
+                  active:translate-y-0.5
+                "
+                title="Toggle Daytime / Nighttime Workstation"
+              >
+                <span>{isNight ? "🌙 NIGHT" : "☀️ TWILIGHT"}</span>
+                <span className="text-[#FFC300] text-[9px]">[TOGGLE]</span>
+              </button>
             </div>
 
-            <h1 className="font-['Press_Start_2P'] text-3xl leading-[1.35] tracking-tight md:text-5xl">
-              <span className="block text-white">PRINT.</span>
-              <span className="block text-white">PAY.</span>
-              <span className="block text-[#FFD60A]">PICK UP.</span>
+            {/* 3-Line Pixel Headline */}
+            <h1 className="font-['Press_Start_2P'] text-3xl sm:text-5xl lg:text-6xl leading-[1.25] mt-6 tracking-tight">
+              <span className="block text-white drop-shadow-[3px_3px_0px_#000814]">
+                PRINT.
+              </span>
+              <span className="block text-white drop-shadow-[3px_3px_0px_#000814]">
+                PAY.
+              </span>
+              <span className="block text-[#FFD60A] drop-shadow-[3px_3px_0px_#000814]">
+                PICK UP.
+              </span>
             </h1>
 
-            <div className="mt-6 h-1 w-28 bg-[#FFC300]" />
+            {/* Golden Divider Accent */}
+            <div className="mt-5 h-1.5 w-28 bg-[#FFC300] shadow-[1px_1px_0px_#000814]" />
 
-            <p className="mt-5 max-w-lg font-mono text-sm leading-6 text-[#FBF8F1]">
+            {/* Subtext */}
+            <p className="font-mono text-white/90 text-sm md:text-base mt-5 max-w-lg bg-[#000814]/75 p-3.5 border-l-4 border-[#FFC300] shadow-[2px_2px_0px_#000814]">
               Skip the queue. Send your documents from anywhere on campus.
             </p>
 
-            {/* CTA buttons */}
-            <div className="mt-8 flex flex-wrap gap-4">
+            {/* Action Buttons */}
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 to="/signup"
                 className="
-                  inline-flex items-center gap-3
-                  border-4 border-[#000814]
-                  bg-[#FFC300]
-                  px-5 py-4
-                  font-['Press_Start_2P'] text-[10px]
+                  bg-[#FFC300] hover:bg-[#FFD60A]
                   text-[#000814]
+                  font-['Press_Start_2P'] text-xs
+                  px-6 py-4
+                  border-4 border-[#000814]
                   shadow-[4px_4px_0px_#000814]
-                  transition-all
-                  hover:bg-[#FFD60A]
-                  active:translate-x-1
-                  active:translate-y-1
-                  active:shadow-none
+                  active:translate-x-1 active:translate-y-1 active:shadow-none
+                  flex items-center gap-3
+                  rounded-none
+                  transition-transform
                 "
               >
-                <DocumentIcon className="h-5 w-5" />
-                GET STARTED &gt;
+                <DocumentIcon className="h-5 w-5" size={20} />
+                <span>Get Started &gt;</span>
               </Link>
 
               <a
                 href="#how-it-works"
                 className="
-                  inline-flex items-center gap-3
-                  border-2 border-[#003566]
-                  bg-[#000814]
+                  bg-[#000814]/85 text-white
+                  font-['Silkscreen'] text-xs
                   px-5 py-4
-                  font-['Press_Start_2P'] text-[10px]
-                  text-white
+                  border-2 border-[#003566] hover:border-[#FFD60A]
+                  flex items-center gap-2
+                  rounded-none
                   transition-colors
-                  hover:border-[#38BDF8]
-                  hover:text-[#38BDF8]
+                  shadow-[2px_2px_0px_#000814]
                 "
               >
-                ▶ HOW IT WORKS
+                <span>▶ How It Works</span>
               </a>
             </div>
 
-            {/* Mini trust line */}
-            <div className="mt-7 flex items-center gap-3 font-['Silkscreen'] text-[9px] text-white/50">
+            {/* Mini Trustline */}
+            <div className="mt-7 flex items-center gap-3 font-['Silkscreen'] text-[9px] text-white/60 select-none">
               <span className="h-2 w-2 bg-[#86EFAC]" />
               NO QUEUES
               <span className="text-[#003566]">/</span>
@@ -412,187 +449,125 @@ export const LandingPage = () => {
               CAMPUS READY
             </div>
           </div>
-
-          {/* Hero artwork */}
-          <div className="relative flex min-h-[340px] items-center justify-center md:min-h-[450px]">
-            {/* Artwork frame */}
-            <div className="absolute h-[75%] w-[75%] border-2 border-[#003566]" />
-
-            <div className="absolute right-[8%] top-[12%] h-3 w-3 bg-[#FFD60A]" />
-            <div className="absolute bottom-[15%] left-[8%] h-3 w-3 bg-[#38BDF8]" />
-            <div className="absolute right-[17%] bottom-[8%] h-2 w-8 bg-[#FFC300]" />
-
-            <img
-              src="/landing-hero.png"
-              alt="CampusPrint Workstation"
-              className="relative z-10 w-full max-w-2xl object-contain"
-              style={{
-                imageRendering: "pixelated",
-              }}
-            />
-          </div>
         </div>
       </section>
 
       {/* ================================================================== */}
-      {/* HOW IT WORKS                                                       */}
+      {/* 3. "HOW IT WORKS" 4-STEP BAR (Codédex / Pixel Parchment Style)       */}
       {/* ================================================================== */}
-
       <section
         id="how-it-works"
-        className="border-y-4 border-[#000814] bg-[#FBF8F1]"
+        className="border-y-4 border-[#000814] bg-[#FBF8F1] rounded-none py-12 px-6 md:px-12"
       >
-        {/* Section header */}
-        <div className="border-b-4 border-[#000814] px-6 py-6 md:px-10">
-          <div className="mx-auto flex max-w-[1440px] items-center justify-between">
+        <div className="mx-auto max-w-[1440px]">
+          {/* Section Header */}
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b-4 border-[#000814] pb-6">
             <div>
-              <div className="mb-2 font-['Silkscreen'] text-[10px] text-[#003566]">
+              <div className="mb-2 font-['Silkscreen'] text-[10px] text-[#003566] tracking-wider">
                 // HOW IT WORKS
               </div>
-
-              <h2 className="font-['Press_Start_2P'] text-lg text-[#000814] md:text-xl">
+              <h2 className="font-['Press_Start_2P'] text-base sm:text-lg md:text-xl text-[#000814]">
                 FOUR STEPS. ZERO QUEUES.
               </h2>
             </div>
 
-            <div className="hidden items-center gap-2 sm:flex">
+            <div className="flex items-center gap-2">
               <span className="h-3 w-3 bg-[#FFC300]" />
               <span className="h-3 w-3 bg-[#38BDF8]" />
               <span className="h-3 w-3 bg-[#86EFAC]" />
             </div>
           </div>
-        </div>
 
-        {/* Steps */}
-        <div className="mx-auto grid max-w-[1440px] grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-          <StepCard
-            number="1"
-            icon={<UploadIcon />}
-            title="UPLOAD"
-            description="Upload your PDF from any device."
-          />
+          {/* 4-Column Responsive Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-4 border-[#000814] bg-[#000814] gap-[4px] shadow-[4px_4px_0px_#000814]">
+            <StepCard
+              number="1"
+              icon={<UploadIcon />}
+              title="UPLOAD"
+              description="Upload your PDF from any device."
+            />
 
-          <StepCard
-            number="2"
-            icon={<PaymentIcon />}
-            title="PAY"
-            description="Secure and easy online payment."
-          />
+            <StepCard
+              number="2"
+              icon={<PaymentIcon />}
+              title="PAY"
+              description="Secure and easy online payment."
+            />
 
-          <StepCard
-            number="3"
-            icon={<PrinterIcon />}
-            title="WE PRINT"
-            description="Your documents are printed on campus."
-          />
+            <StepCard
+              number="3"
+              icon={<PrinterIcon />}
+              title="WE PRINT"
+              description="Your documents are printed on campus."
+            />
 
-          <StepCard
-            number="4"
-            icon={<ParcelIcon />}
-            title="PICK UP"
-            description="Collect your prints at the campus print shop."
-          />
+            <StepCard
+              number="4"
+              icon={<ParcelIcon />}
+              title="PICK UP"
+              description="Collect your prints at the campus print shop."
+            />
+          </div>
         </div>
       </section>
 
       {/* ================================================================== */}
-      {/* SOCIAL PROOF / METRICS                                             */}
+      {/* 4. BOTTOM METRICS & SKYLINE FOOTER                                 */}
       {/* ================================================================== */}
-
-      <section className="border-t-2 border-[#001D3D] bg-[#000814]">
-        <div className="mx-auto flex min-h-[80px] max-w-[1440px] flex-col items-center justify-between gap-6 px-6 py-5 md:flex-row md:px-10">
+      <section className="border-t-2 border-[#001D3D] bg-[#000814] py-6 px-6 md:px-12 rounded-none">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-6">
           {/* Statement */}
           <div className="flex items-center gap-3">
-            <span className="h-1 w-8 bg-[#FFD60A]" />
-
-            <p className="font-['Silkscreen'] text-[9px] leading-4 text-white/70 md:text-xs">
-              BUILT FOR STUDENTS.
-              <br className="md:hidden" /> POWERED BY CONVENIENCE.
+            <span className="h-1.5 w-8 bg-[#FFD60A]" />
+            <p className="font-['Silkscreen'] text-[9px] sm:text-xs leading-4 text-white/80">
+              BUILT FOR STUDENTS. POWERED BY CONVENIENCE.
             </p>
           </div>
 
-          {/* Metrics */}
-          <div className="flex flex-wrap items-center justify-center gap-5 md:gap-7">
-            <MetricBadge
-              symbol="👥"
-              value="10K+"
-              label="STUDENTS"
-            />
-
-            <MetricBadge
-              symbol="▣"
-              value="50K+"
-              label="PAGES PRINTED"
-            />
-
-            <MetricBadge
-              symbol="★"
-              value="4.8"
-              label="STUDENT RATING"
-            />
+          {/* 3 Live Counters */}
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
+            <MetricBadge symbol="👥" value="10K+" label="STUDENTS" />
+            <MetricBadge symbol="▣" value="50K+" label="PAGES PRINTED" />
+            <MetricBadge symbol="★" value="4.8" label="STUDENT RATING" />
           </div>
         </div>
       </section>
 
       {/* ================================================================== */}
-      {/* FOOTER                                                             */}
+      {/* 5. RETRO FOOTER                                                    */}
       {/* ================================================================== */}
-
-      <footer
-        id="help"
-        className="border-t-4 border-[#001D3D] bg-[#000814]"
-      >
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-6 py-8 md:flex-row md:items-center md:justify-between md:px-10">
+      <footer id="help" className="border-t-4 border-[#001D3D] bg-[#000814] py-8 px-6 md:px-12 rounded-none">
+        <div className="mx-auto flex max-w-[1440px] flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <div className="font-['Press_Start_2P'] text-[10px] text-white">
-              CAMPUSPRINT
+              CAMPUS<span className="text-[#FFD60A]">PRINT</span>
             </div>
-
             <p className="mt-2 font-['Silkscreen'] text-[8px] text-white/40">
-              PRINT. PAY. PICK UP.
+              DIGITAL XEROX &amp; STATIONERY ORDERING SYSTEM
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-5 font-['Silkscreen'] text-[9px] text-white/50">
-            <Link
-              to="/"
-              className="hover:text-[#FFD60A]"
-            >
+          <div className="flex flex-wrap items-center gap-6 font-['Silkscreen'] text-[9px] text-white/50">
+            <Link to="/" className="hover:text-[#FFD60A] transition-colors">
               HOME
             </Link>
-
-            <a
-              href="#how-it-works"
-              className="hover:text-[#FFD60A]"
-            >
+            <a href="#how-it-works" className="hover:text-[#FFD60A] transition-colors">
               HOW IT WORKS
             </a>
-
-            <a
-              href="#prices"
-              className="hover:text-[#FFD60A]"
-            >
+            <a href="#prices" className="hover:text-[#FFD60A] transition-colors">
               PRICES
             </a>
-
-            <a
-              href="#locations"
-              className="hover:text-[#FFD60A]"
-            >
+            <a href="#locations" className="hover:text-[#FFD60A] transition-colors">
               LOCATIONS
             </a>
-
-            <a
-              href="#help"
-              className="flex items-center gap-2 hover:text-[#FFD60A]"
-            >
+            <a href="#help" className="flex items-center gap-2 hover:text-[#FFD60A] transition-colors">
               <HelpIcon />
               HELP
             </a>
           </div>
 
           <div className="font-mono text-[10px] text-white/30">
-            © 2026 CAMPUSPRINT
+            &copy; 2026 CAMPUSPRINT // RETRO 16-BIT EDITION
           </div>
         </div>
       </footer>
