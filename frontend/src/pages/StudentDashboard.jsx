@@ -3,13 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../api/client.js';
 import { 
-  PixelHeroPrinterScene, 
-  PixelShopPrinterScene,
-  PixelDocumentIcon, 
-  PixelBoxIcon, 
-  PixelChartIcon, 
-  PixelShopIcon 
-} from '../components/PixelArt.jsx';
+  PixelHeroPrinter, 
+  PixelPrintShopStation, 
+  PixelDocIcon, 
+  PixelPackageIcon, 
+  PixelChartIcon 
+} from '../components/pixel/index.js';
+import { PixelShopIcon } from '../components/PixelArt.jsx';
 import { 
   Plus, 
   FileText, 
@@ -202,9 +202,9 @@ export function StudentDashboard() {
             </button>
           </div>
 
-          {/* Right: Handcrafted Pixel Hero Printer Scene */}
-          <div style={{ flexShrink: 0 }}>
-            <PixelHeroPrinterScene width={360} height={180} />
+          {/* Right: Handcrafted Pixel Hero Printer Workstation Scene */}
+          <div style={{ flexShrink: 0, width: '360px', height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <PixelHeroPrinter width={360} height={180} />
           </div>
         </div>
 
@@ -242,7 +242,7 @@ export function StudentDashboard() {
                 flexShrink: 0,
               }}
             >
-              <PixelDocumentIcon size={26} />
+              <PixelDocIcon size={32} />
             </div>
             <div>
               <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#475569', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
@@ -281,7 +281,7 @@ export function StudentDashboard() {
                 flexShrink: 0,
               }}
             >
-              <PixelBoxIcon size={26} />
+              <PixelPackageIcon size={32} />
             </div>
             <div>
               <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#475569', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
@@ -320,7 +320,7 @@ export function StudentDashboard() {
                 flexShrink: 0,
               }}
             >
-              <PixelChartIcon size={26} />
+              <PixelChartIcon size={32} />
             </div>
             <div>
               <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 800, color: '#475569', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
@@ -652,7 +652,7 @@ export function StudentDashboard() {
 
         {/* Pixel Art Printer with Paper Stacks Banner */}
         <div style={{ border: '1.5px solid #000814', borderRadius: '8px', overflow: 'hidden' }}>
-          <PixelShopPrinterScene width={300} height={110} />
+          <PixelPrintShopStation width="100%" height={110} />
         </div>
 
         {/* PRINT SETTINGS Section */}

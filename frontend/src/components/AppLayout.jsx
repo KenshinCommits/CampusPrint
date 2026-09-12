@@ -4,10 +4,10 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { useNotifications } from '../context/NotificationContext.jsx';
 import { 
   PixelGraduationCap, 
-  PixelCampusBuilding, 
   PixelStudentAvatar,
   PixelLogo 
 } from './PixelArt.jsx';
+import { PixelCampusBuilding } from './pixel/index.js';
 import { 
   LayoutDashboard, 
   PlusCircle, 
