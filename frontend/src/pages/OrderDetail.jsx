@@ -14,6 +14,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { PrinterDemo } from '../components/PrinterDemo.jsx';
+import { PixelSpeedWatch, PixelTicketGraphic } from '../components/PixelArt.jsx';
 
 const STATUS_STEPS = [
   { key: 'placed', label: 'ORDER PLACED' },
@@ -536,21 +537,9 @@ export function OrderDetail() {
               ESTIMATED READY TIME
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <div
-                style={{
-                  width: '42px',
-                  height: '42px',
-                  background: currentStatus === 'ready' ? '#86EFAC' : 'var(--yellow-primary)',
-                  border: '2px solid #000',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'background 0.3s ease',
-                }}
-              >
-                <Clock size={22} strokeWidth={2.5} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
+              <div style={{ filter: 'drop-shadow(2px 2px 0px #000000)' }}>
+                <PixelSpeedWatch size={48} />
               </div>
               <div
                 style={{

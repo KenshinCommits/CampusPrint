@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { PixelDoc, PixelSparkles } from '../components/PixelArt.jsx';
+import { PixelTicketGraphic, PixelSpeedWatch, PixelSparkles } from '../components/PixelArt.jsx';
 import { NeoCard, NeoButton } from '../components/ui/index.js';
 import { CheckCircle2, ArrowRight, FileText, Clock, CreditCard, Sparkles } from 'lucide-react';
 
@@ -99,49 +99,52 @@ export function OrderSuccess() {
           </h1>
         </div>
 
-        {/* Ticket Box: Yellow dashed-border container (border-2 border-dashed border-black bg-[#FEF08A] p-6 rounded-2xl text-center) */}
-        <div
-          style={{
-            width: '100%',
-            backgroundColor: '#FEF08A',
-            border: '2px dashed #000000',
-            borderRadius: '16px', // rounded-2xl
-            padding: '24px 20px',
-            textAlign: 'center',
-            boxShadow: '4px 4px 0px 0px #000000',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
-          {/* Token: Giant bold text "CP-1042" with subtitle "PRINT #42" */}
+        {/* Authentic Handcrafted Pixel Ticket Graphic with Token Banner */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%' }}>
+          <PixelTicketGraphic size={130} />
+
           <div
             style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2.6rem, 6vw, 3.6rem)',
-              fontWeight: 900,
-              letterSpacing: '-0.01em',
-              color: '#000000',
-              lineHeight: 1,
+              width: '100%',
+              backgroundColor: '#FEF08A',
+              border: '2px dashed #000000',
+              borderRadius: '16px',
+              padding: '16px 20px',
+              textAlign: 'center',
+              boxShadow: '4px 4px 0px 0px #000000',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '4px',
             }}
           >
-            {token}
-          </div>
-          <div
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 900,
-              fontSize: '0.9rem',
-              letterSpacing: '0.1em',
-              color: '#000000',
-              backgroundColor: '#FFC300',
-              border: '1.5px solid #000000',
-              borderRadius: '6px',
-              padding: '2px 10px',
-            }}
-          >
-            PRINT {tokenNum}
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(2.4rem, 5vw, 3.2rem)',
+                fontWeight: 900,
+                letterSpacing: '-0.01em',
+                color: '#000000',
+                lineHeight: 1,
+              }}
+            >
+              {token}
+            </div>
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.85rem',
+                letterSpacing: '0.1em',
+                color: '#000000',
+                backgroundColor: '#FFC300',
+                border: '1.5px solid #000000',
+                borderRadius: '6px',
+                padding: '2px 10px',
+              }}
+            >
+              PRINT {tokenNum}
+            </div>
           </div>
         </div>
 
@@ -205,8 +208,9 @@ export function OrderSuccess() {
               <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#6B7280', textTransform: 'uppercase' }}>
                 Estimated Ready Time
               </span>
-              <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#0D9488' }}>
-                ~10-15 minutes
+              <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#0D9488', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <PixelSpeedWatch size={20} />
+                <span>~10-15 minutes</span>
               </span>
             </div>
           </div>

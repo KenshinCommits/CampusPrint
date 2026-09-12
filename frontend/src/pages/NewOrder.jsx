@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { PixelDoc } from '../components/PixelArt.jsx';
+import { PixelUploadDoc } from '../components/PixelArt.jsx';
 import { NeoCard, NeoButton } from '../components/ui/index.js';
 import { ArrowLeft, Trash2, CheckCircle2, ArrowRight, Minus, Plus } from 'lucide-react';
 
@@ -186,8 +186,8 @@ export function NewOrder() {
                 onChange={(e) => handleFileSelect(e.target.files?.[0])}
               />
 
-              {/* Centered Document Icon with Blue Upload Arrow */}
-              <PixelDoc size={76} />
+              {/* Centered Handcrafted Dual Documents with Blue Upload Arrow & Sparkles */}
+              <PixelUploadDoc size={110} />
 
               <div>
                 <div

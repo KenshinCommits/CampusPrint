@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../api/client.js';
-import { PixelPrinter } from '../components/PixelArt.jsx';
+import { PixelPrinterGraphic, PixelTicketGraphic, PixelSpeedWatch } from '../components/PixelArt.jsx';
 import { NeoCard, NeoButton, StatusBadge } from '../components/ui/index.js';
 import { Plus, FileText, ArrowRight } from 'lucide-react';
 
@@ -61,7 +61,7 @@ export function StudentDashboard() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-      {/* 1. Hero Section: Left title & button, Right 2D/pixel printer illustration */}
+      {/* 1. Hero Section: Left title & button, Right 2D pixel printer illustration */}
       <div
         style={{
           display: 'flex',
@@ -101,9 +101,9 @@ export function StudentDashboard() {
           </div>
         </div>
 
-        {/* Right: Clean 2D/pixel printer illustration with yellow accent stars */}
+        {/* Right: Handcrafted Pixel Printer Graphic */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <PixelPrinter width={190} height={145} />
+          <PixelPrinterGraphic size={150} />
         </div>
       </div>
 
@@ -224,7 +224,7 @@ export function StudentDashboard() {
         </NeoCard>
       </div>
 
-      {/* 3. Current Active Order Card */}
+      {/* 3. Current Active Order Card with Pixel Ticket Graphic */}
       {currentOrder && (
         <NeoCard
           variant="default"
@@ -237,15 +237,24 @@ export function StudentDashboard() {
         >
           <div
             style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '0.8rem',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              color: '#6B7280',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
           >
-            CURRENT ORDER
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '0.8rem',
+                fontWeight: 900,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: '#6B7280',
+              }}
+            >
+              CURRENT ORDER
+            </div>
+            <PixelTicketGraphic size={36} />
           </div>
 
           <div
@@ -328,20 +337,26 @@ export function StudentDashboard() {
               <span>{getProgressPercentage(currentOrder.status)}% Completed</span>
               <span
                 style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
                   backgroundColor: '#FEF08A',
                   border: '1.5px solid #000000',
                   borderRadius: '9999px',
-                  padding: '2px 10px',
+                  padding: '3px 10px',
                   fontSize: '0.72rem',
                   fontWeight: 900,
                   color: '#000000',
                 }}
               >
-                {currentOrder.status === 'ready'
-                  ? 'READY NOW!'
-                  : currentOrder.status === 'completed'
-                  ? 'COLLECTED'
-                  : '~5-10 MIN'}
+                <PixelSpeedWatch size={18} />
+                <span>
+                  {currentOrder.status === 'ready'
+                    ? 'READY NOW!'
+                    : currentOrder.status === 'completed'
+                    ? 'COLLECTED'
+                    : '~5-10 MIN'}
+                </span>
               </span>
             </div>
           </div>

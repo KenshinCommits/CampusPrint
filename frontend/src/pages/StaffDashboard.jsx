@@ -3,6 +3,7 @@ import { api } from '../api/client.js';
 import { Search, Download, Check, X, RefreshCw, Clock, ArrowRight, Eye, FileText, AlertTriangle } from 'lucide-react';
 import { PrinterDemo } from '../components/PrinterDemo.jsx';
 import { NeoCard, NeoButton, StatusBadge } from '../components/ui/index.js';
+import { PixelUploadDoc, PixelPrinterGraphic } from '../components/PixelArt.jsx';
 
 export function StaffDashboard() {
   const [orders, setOrders] = useState([]);
@@ -316,8 +317,14 @@ export function StaffDashboard() {
             {error}
           </div>
         ) : displayOrders.length === 0 ? (
-          <div style={{ padding: '60px 20px', textAlign: 'center', color: '#6B7280', fontFamily: 'var(--font-heading)', fontWeight: 600 }}>
-            No orders found in queue.
+          <div style={{ padding: '60px 20px', textAlign: 'center', color: '#6B7280', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+            <PixelPrinterGraphic size={72} />
+            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, color: '#000000', fontSize: '1.1rem' }}>
+              All Clear! No Orders in Queue
+            </div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+              Incoming print jobs from students will appear here in real time.
+            </div>
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
@@ -512,21 +519,7 @@ export function StaffDashboard() {
             >
               {/* Panel 1: Document File Preview */}
               <NeoCard variant="default" style={{ padding: '20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '64px',
-                    height: '72px',
-                    backgroundColor: '#FEE2E2',
-                    border: '2px solid #000000',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#DC2626',
-                  }}
-                >
-                  <FileText size={38} strokeWidth={2.2} />
-                </div>
+                <PixelUploadDoc size={64} />
                 <div>
                   <div style={{ fontWeight: 900, fontSize: '0.95rem', fontFamily: 'var(--font-heading)' }}>
                     {selectedOrder.fileName}

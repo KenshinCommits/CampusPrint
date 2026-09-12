@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { NeoCard, NeoButton, StatusBadge } from '../components/ui/index.js';
+import { PixelTicketGraphic } from '../components/PixelArt.jsx';
 import { Search, Filter, FileText, ArrowRight, Plus } from 'lucide-react';
 
 export function MyOrders() {
@@ -145,9 +146,9 @@ export function MyOrders() {
             {error}
           </div>
         ) : filteredOrders.length === 0 ? (
-          <div style={{ padding: '60px 20px', textAlign: 'center', color: '#6B7280' }}>
-            <FileText size={48} style={{ margin: '0 auto 14px', opacity: 0.4 }} />
-            <h3 style={{ fontFamily: 'var(--font-heading)', color: '#000000', marginBottom: '6px', fontWeight: 900 }}>
+          <div style={{ padding: '60px 20px', textAlign: 'center', color: '#6B7280', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+            <PixelTicketGraphic size={72} />
+            <h3 style={{ fontFamily: 'var(--font-heading)', color: '#000000', margin: '8px 0 2px', fontWeight: 900, fontSize: '1.2rem' }}>
               No orders found
             </h3>
             <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>You don't have any matching print orders.</p>
