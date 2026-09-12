@@ -4,10 +4,11 @@
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "256",
   "memory": "512",
+  "executionRoleArn": "arn:aws:iam::666036096455:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
-      "name": "campusprint-frontend",
-      "image": "325355906800.dkr.ecr.ap-south-1.amazonaws.com/campusprint-frontend:latest",
+      "name": "frontend",
+      "image": "666036096455.dkr.ecr.ap-south-1.amazonaws.com/campusprint-frontend:latest",
       "essential": true,
       "portMappings": [
         {
@@ -16,13 +17,13 @@
           "protocol": "tcp"
         }
       ],
+      "environment": [],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "/ecs/campusprint-frontend",
           "awslogs-region": "ap-south-1",
-          "awslogs-stream-prefix": "ecs",
-          "awslogs-create-group": "true"
+          "awslogs-stream-prefix": "frontend"
         }
       }
     }

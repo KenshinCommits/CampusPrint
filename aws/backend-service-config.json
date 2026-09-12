@@ -1,0 +1,71 @@
+{
+  "cluster": "campusprint-cluster",
+  "serviceName": "campusprint-backend",
+  "taskDefinition": {
+    "family": "campusprint-backend",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::666036096455:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+      {
+        "name": "backend",
+        "image": "666036096455.dkr.ecr.ap-south-1.amazonaws.com/campusprint-backend:latest",
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 4000,
+            "hostPort": 4000,
+            "protocol": "tcp"
+          }
+        ],
+        "environment": [
+          {
+            "name": "DB_DRIVER",
+            "value": "local"
+          },
+          {
+            "name": "PORT",
+            "value": "4000"
+          },
+          {
+            "name": "JWT_SECRET",
+            "value": "campusprint-demo-secret-2026"
+          },
+          {
+            "name": "CORS_ORIGIN",
+            "value": "*"
+          },
+          {
+            "name": "NODE_ENV",
+            "value": "production"
+          }
+        ],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/campusprint-backend",
+            "awslogs-region": "ap-south-1",
+            "awslogs-stream-prefix": "backend-service"
+          }
+        }
+      }
+    ]
+  },
+  "serviceConfig": {
+    "desiredCount": 1,
+    "launchType": "FARGATE",
+    "deploymentConfiguration": {
+      "minimumHealthyPercent": 100,
+      "maximumPercent": 200
+    },
+    "networkConfiguration": {
+      "awsvpcConfiguration": {
+        "assignPublicIp": "ENABLED",
+        "subnets": [],
+        "securityGroups": []
+      }
+    }
+  }
+}

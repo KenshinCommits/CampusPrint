@@ -6,7 +6,7 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-change-me',
   corsOrigin: process.env.CORS_ORIGIN || '*',
 
-  awsRegion: process.env.AWS_REGION || 'us-east-1',
+  awsRegion: process.env.AWS_REGION || 'ap-south-1',
   usersTable: process.env.USERS_TABLE || 'campusprint-users',
   ordersTable: process.env.ORDERS_TABLE || 'campusprint-orders',
 

@@ -28,11 +28,27 @@ export function Login() {
   }
 
   async function onSubmit(e) {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setError('');
     setBusy(true);
     try {
       const user = await login(email, password);
+      navigate(user.role === 'staff' ? '/staff' : '/dashboard');
+    } catch (err) {
+      setError(err.message || 'Invalid email or password');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleQuickLogin(targetEmail, targetPassword, role) {
+    setEmail(targetEmail);
+    setPassword(targetPassword);
+    setRoleSelection(role);
+    setError('');
+    setBusy(true);
+    try {
+      const user = await login(targetEmail, targetPassword);
       navigate(user.role === 'staff' ? '/staff' : '/dashboard');
     } catch (err) {
       setError(err.message || 'Invalid email or password');
@@ -231,6 +247,129 @@ export function Login() {
               {error}
             </div>
           )}
+
+          {/* Quick Demo Accounts for Judges & Evaluators */}
+          <div
+            style={{
+              backgroundColor: '#FFFDEB',
+              border: '2px solid #000814',
+              borderRadius: '10px',
+              padding: '12px',
+              marginBottom: '18px',
+              boxShadow: '3px 3px 0px 0px #000814',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                fontSize: '0.8rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                marginBottom: '8px',
+                textTransform: 'uppercase',
+                color: '#000814',
+              }}
+            >
+              <Sparkles size={16} color="#FFC300" />
+              <span>⚡ Judges One-Click Demo Logins:</span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => handleQuickLogin('student@campusprint.demo', 'student123', 'student')}
+                style={{
+                  backgroundColor: '#BAE6FD',
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>👨‍🎓 Demo Student</div>
+                <div style={{ fontSize: '0.65rem', color: '#003566', fontWeight: 600 }}>order in progress</div>
+              </button>
+
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => handleQuickLogin('staff@campusprint.demo', 'staff123', 'staff')}
+                style={{
+                  backgroundColor: '#FFD60A',
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>👩‍💼 Shop Staff</div>
+                <div style={{ fontSize: '0.65rem', color: '#001D3D', fontWeight: 600 }}>queue & analytics</div>
+              </button>
+
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => handleQuickLogin('ananya@campusprint.demo', 'demo123', 'student')}
+                style={{
+                  backgroundColor: '#86EFAC',
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>📄 Ananya Iyer</div>
+                <div style={{ fontSize: '0.65rem', color: '#003566', fontWeight: 600 }}>ready order (resume)</div>
+              </button>
+
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => handleQuickLogin('karthik@campusprint.demo', 'demo123', 'student')}
+                style={{
+                  backgroundColor: '#C7D2FE',
+                  border: '1.5px solid #000814',
+                  borderRadius: '6px',
+                  boxShadow: '2px 2px 0px 0px #000814',
+                  textAlign: 'left',
+                  padding: '7px 8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-heading)',
+                }}
+              >
+                <div style={{ fontWeight: 800, fontSize: '0.75rem', color: '#000814' }}>📘 Karthik Rao</div>
+                <div style={{ fontSize: '0.65rem', color: '#001D3D', fontWeight: 600 }}>capstone project</div>
+              </button>
+            </div>
+
+            <div style={{ marginTop: '7px', fontSize: '0.68rem', color: '#6B7280', textAlign: 'center', fontWeight: 700 }}>
+              👆 Click any role to log in instantly
+            </div>
+          </div>
 
           {/* Form */}
           <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>

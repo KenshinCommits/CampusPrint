@@ -1,0 +1,50 @@
+{
+  "cluster": "campusprint-cluster",
+  "serviceName": "campusprint-frontend",
+  "taskDefinition": {
+    "family": "campusprint-frontend",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::666036096455:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+      {
+        "name": "frontend",
+        "image": "666036096455.dkr.ecr.ap-south-1.amazonaws.com/campusprint-frontend:latest",
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 80,
+            "hostPort": 80,
+            "protocol": "tcp"
+          }
+        ],
+        "environment": [],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/campusprint-frontend",
+            "awslogs-region": "ap-south-1",
+            "awslogs-stream-prefix": "frontend-service"
+          }
+        }
+      }
+    ]
+  },
+  "serviceConfig": {
+    "desiredCount": 1,
+    "launchType": "FARGATE",
+    "deploymentConfiguration": {
+      "minimumHealthyPercent": 100,
+      "maximumPercent": 200
+    },
+    "networkConfiguration": {
+      "awsvpcConfiguration": {
+        "assignPublicIp": "ENABLED",
+        "subnets": [],
+        "securityGroups": []
+      }
+    }
+  }
+}
