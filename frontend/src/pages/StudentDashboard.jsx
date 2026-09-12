@@ -4,13 +4,11 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../api/client.js';
 import { 
   PixelHeroPrinter, 
-  PixelPrintShopStation, 
   PixelDocIcon, 
   PixelPackageIcon, 
   PixelChartIcon,
   PixelArt
 } from '../components/pixel/index.js';
-import { PixelShopIcon } from '../components/PixelArt.jsx';
 import { 
   Plus, 
   FileText, 
@@ -19,7 +17,6 @@ import {
   Check, 
   X, 
   Cog, 
-  Minus,
   Eye
 } from 'lucide-react';
 
@@ -28,13 +25,6 @@ export function StudentDashboard() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Interactive Print Shop Widget State
-  const [copies, setCopies] = useState(2);
-  const [colorMode, setColorMode] = useState('bw'); // 'bw' | 'color'
-  const [sides, setSides] = useState('single'); // 'single' | 'double'
-  const [paperSize, setPaperSize] = useState('A4'); // 'A4' | 'A3'
-  const [binding, setBinding] = useState('staple'); // 'none' | 'staple' | 'spiral'
 
   useEffect(() => {
     api
@@ -102,30 +92,8 @@ export function StudentDashboard() {
   // Active current order (defaults to CP-1042 if none processing)
   const currentOrder = displayOrders.find((o) => ['processing', 'accepted', 'placed'].includes(o.status)) || sampleOrders[0];
 
-  // Calculate live pricing for Print Shop widget
-  const pageBaseRate = colorMode === 'color' ? 8 : 2;
-  const paperMultiplier = paperSize === 'A3' ? 2 : 1;
-  const sidesMultiplier = sides === 'double' ? 1.5 : 1;
-  const printCost = Math.round(copies * 4 * pageBaseRate * paperMultiplier * sidesMultiplier);
-  const bindingCost = binding === 'staple' ? 1 : binding === 'spiral' ? 15 : 0;
-  const totalCost = printCost + bindingCost;
-
-  function handlePlaceOrder() {
-    navigate('/new-order', {
-      state: {
-        presetCopies: copies,
-        presetColor: colorMode,
-        presetSides: sides,
-        presetPaper: paperSize,
-        presetBinding: binding,
-      }
-    });
-  }
-
   return (
-    <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start', maxWidth: '1440px', margin: '0 auto' }}>
-      {/* LEFT COLUMN: Main Dashboard Content (Hero, Stats, Current Order, Recent Orders) */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         
         {/* 1. HERO BANNER: HEY, STUDENT. READY TO PRINT? */}
         <div
@@ -624,329 +592,6 @@ export function StudentDashboard() {
               })}
             </tbody>
           </table>
-        </div>
-      </div>
-
-      {/* RIGHT COLUMN: Interactive "PRINT SHOP" Widget matching Reference Mockup */}
-      <div
-        style={{
-          width: '340px',
-          flexShrink: 0,
-          backgroundColor: '#FFFFFF',
-          border: '2px solid #000814',
-          borderRadius: '12px',
-          boxShadow: '3px 3px 0px #000814',
-          padding: '20px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '18px',
-        }}
-      >
-        {/* Header */}
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <PixelShopIcon size={24} />
-            <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1rem', color: '#000814', letterSpacing: '0.04em' }}>
-              PRINT SHOP
-            </span>
-          </div>
-          <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, marginTop: '2px' }}>
-            Quick. Easy. Reliable.
-          </div>
-        </div>
-
-        {/* Pixel Art Printer with Paper Stacks Banner */}
-        <div style={{ border: '1.5px solid #000814', borderRadius: '8px', overflow: 'hidden' }}>
-          <PixelPrintShopStation width="100%" height={110} />
-        </div>
-
-        {/* PRINT SETTINGS Section */}
-        <div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 900, color: '#000814', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '12px' }}>
-            PRINT SETTINGS
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {/* Copies */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Copies</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <button
-                  type="button"
-                  onClick={() => setCopies((prev) => Math.max(1, prev - 1))}
-                  style={{
-                    width: '26px',
-                    height: '26px',
-                    backgroundColor: '#FFC300',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 900,
-                  }}
-                >
-                  <Minus size={13} strokeWidth={3} />
-                </button>
-                <span style={{ minWidth: '24px', textAlign: 'center', fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.9rem', color: '#000814' }}>
-                  {copies}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setCopies((prev) => prev + 1)}
-                  style={{
-                    width: '26px',
-                    height: '26px',
-                    backgroundColor: '#FFC300',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 900,
-                  }}
-                >
-                  <Plus size={13} strokeWidth={3} />
-                </button>
-              </div>
-            </div>
-
-            {/* Color */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Color</span>
-              </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                <button
-                  type="button"
-                  onClick={() => setColorMode('bw')}
-                  style={{
-                    padding: '4px 12px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: colorMode === 'bw' ? '#001D3D' : '#FFFFFF',
-                    color: colorMode === 'bw' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  B&amp;W
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setColorMode('color')}
-                  style={{
-                    padding: '4px 12px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: colorMode === 'color' ? '#001D3D' : '#FFFFFF',
-                    color: colorMode === 'color' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  COLOR
-                </button>
-              </div>
-            </div>
-
-            {/* Sides */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Sides</span>
-              </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                <button
-                  type="button"
-                  onClick={() => setSides('single')}
-                  style={{
-                    padding: '4px 10px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: sides === 'single' ? '#001D3D' : '#FFFFFF',
-                    color: sides === 'single' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  SINGLE
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSides('double')}
-                  style={{
-                    padding: '4px 10px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: sides === 'double' ? '#001D3D' : '#FFFFFF',
-                    color: sides === 'double' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  DOUBLE
-                </button>
-              </div>
-            </div>
-
-            {/* Paper */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Paper</span>
-              </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                <button
-                  type="button"
-                  onClick={() => setPaperSize('A4')}
-                  style={{
-                    padding: '4px 14px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: paperSize === 'A4' ? '#001D3D' : '#FFFFFF',
-                    color: paperSize === 'A4' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  A4
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPaperSize('A3')}
-                  style={{
-                    padding: '4px 14px',
-                    border: '1.5px solid #000814',
-                    borderRadius: '4px',
-                    backgroundColor: paperSize === 'A3' ? '#001D3D' : '#FFFFFF',
-                    color: paperSize === 'A3' ? '#FFFFFF' : '#000814',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    fontSize: '0.72rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  A3
-                </button>
-              </div>
-            </div>
-
-            {/* Binding */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#000814' }}>
-                <FileText size={15} color="#003566" />
-                <span>Binding</span>
-              </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                {['none', 'staple', 'spiral'].map((b) => (
-                  <button
-                    key={b}
-                    type="button"
-                    onClick={() => setBinding(b)}
-                    style={{
-                      padding: '4px 8px',
-                      border: '1.5px solid #000814',
-                      borderRadius: '4px',
-                      backgroundColor: binding === b ? '#001D3D' : '#FFFFFF',
-                      color: binding === b ? '#FFFFFF' : '#000814',
-                      fontFamily: 'var(--font-heading)',
-                      fontWeight: 800,
-                      fontSize: '0.68rem',
-                      textTransform: 'uppercase',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {b}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* PRICE SUMMARY Section */}
-        <div style={{ borderTop: '1.5px solid #E2E8F0', paddingTop: '14px' }}>
-          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 900, color: '#000814', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '10px' }}>
-            PRICE SUMMARY
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.82rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: '#475569', fontWeight: 700 }}>
-              <span>PRINT COST</span>
-              <span style={{ color: '#000814', fontWeight: 800 }}>₹{printCost}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: '#475569', fontWeight: 700 }}>
-              <span>BINDING</span>
-              <span style={{ color: '#000814', fontWeight: 800 }}>₹{bindingCost}</span>
-            </div>
-
-            <div style={{ height: '1.5px', backgroundColor: '#000814', margin: '6px 0' }} />
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '0.95rem', color: '#000814' }}>
-                TOTAL
-              </span>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.6rem', color: '#000814' }}>
-                ₹{totalCost}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Action CTA Button: PLACE ORDER -> */}
-        <button
-          type="button"
-          onClick={handlePlaceOrder}
-          style={{
-            width: '100%',
-            backgroundColor: '#FFC300',
-            color: '#000814',
-            border: '3px solid #000814',
-            borderRadius: '8px',
-            padding: '14px',
-            fontFamily: 'var(--font-heading)',
-            fontWeight: 900,
-            fontSize: '0.88rem',
-            letterSpacing: '0.03em',
-            boxShadow: '3px 3px 0px #000814',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            transition: 'all 0.1s ease',
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FFD60A'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FFC300'; }}
-          onMouseDown={(e) => {
-            e.currentTarget.style.transform = 'translate(2px, 2px)';
-            e.currentTarget.style.boxShadow = '1px 1px 0px #000814';
-          }}
-          onMouseUp={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = '3px 3px 0px #000814';
-          }}
-        >
-          <span>PLACE ORDER</span>
-          <ArrowRight size={18} strokeWidth={3} />
-        </button>
       </div>
     </div>
   );

@@ -112,12 +112,18 @@ export function AppLayout({ children }) {
     }
   }
 
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
+  const isLandingPage = location.pathname === '/' || location.pathname === '/home';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/register';
   const isStaff = user?.role === 'staff';
 
   function handleLogout() {
     logout();
     navigate('/login');
+  }
+
+  // Standalone full-screen layout for landing page
+  if (isLandingPage) {
+    return <main style={{ minHeight: '100vh' }}>{children}</main>;
   }
 
   // If unauthenticated or on login/signup page, don't show full dashboard layout
@@ -146,18 +152,20 @@ export function AppLayout({ children }) {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#F4F6FA' }}>
-      {/* 1. FULL-WIDTH TOP HEADER BAR (Deep Navy #001D3D) matching Reference Mockup */}
+      {/* 1. FLOATING TOP NAVBAR (Deep Navy #001D3D) */}
       <header
         style={{
-          height: '68px',
+          height: '64px',
           backgroundColor: '#001D3D',
-          borderBottom: '2px solid #000814',
+          border: '3px solid #000814',
+          boxShadow: '4px 4px 0px #000814',
+          margin: '14px 24px 0 24px',
           padding: '0 24px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           position: 'sticky',
-          top: 0,
+          top: '14px',
           zIndex: 40,
         }}
       >
@@ -200,104 +208,8 @@ export function AppLayout({ children }) {
           </div>
         </Link>
 
-        {/* Center / Right: Nav Tabs, Notifications, and User Profile */}
+        {/* Right: Notifications, Quick Switch Role, and User Profile */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          {/* Top Nav Tabs */}
-          {!isStaff ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {/* Dashboard Tab */}
-              <Link
-                to="/dashboard"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 14px',
-                  borderRadius: '6px',
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  textDecoration: 'none',
-                  backgroundColor: isDashboardActive ? '#003566' : 'transparent',
-                  border: isDashboardActive ? '2px solid #FFD60A' : '2px solid transparent',
-                  color: isDashboardActive ? '#FFD60A' : '#E2E8F0',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <LayoutDashboard size={15} color={isDashboardActive ? '#FFD60A' : '#CBD5E1'} strokeWidth={2.5} />
-                <span>Dashboard</span>
-              </Link>
-
-              {/* New Order Tab */}
-              <Link
-                to="/new-order"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 14px',
-                  borderRadius: '6px',
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  textDecoration: 'none',
-                  backgroundColor: isNewOrderActive ? '#003566' : 'transparent',
-                  border: isNewOrderActive ? '2px solid #FFD60A' : '2px solid transparent',
-                  color: isNewOrderActive ? '#FFD60A' : '#E2E8F0',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <PlusCircle size={15} color={isNewOrderActive ? '#FFD60A' : '#CBD5E1'} strokeWidth={2.5} />
-                <span>New Order</span>
-              </Link>
-
-              {/* My Orders Tab */}
-              <Link
-                to="/orders"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 14px',
-                  borderRadius: '6px',
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  textDecoration: 'none',
-                  backgroundColor: isMyOrdersActive ? '#003566' : 'transparent',
-                  border: isMyOrdersActive ? '2px solid #FFD60A' : '2px solid transparent',
-                  color: isMyOrdersActive ? '#FFD60A' : '#E2E8F0',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <FileText size={15} color={isMyOrdersActive ? '#FFD60A' : '#CBD5E1'} strokeWidth={2.5} />
-                <span>My Orders</span>
-              </Link>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Link
-                to="/staff"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 14px',
-                  borderRadius: '6px',
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  textDecoration: 'none',
-                  backgroundColor: isStaffActive ? '#003566' : 'transparent',
-                  border: isStaffActive ? '2px solid #FFD60A' : '2px solid transparent',
-                  color: isStaffActive ? '#FFD60A' : '#E2E8F0',
-                }}
-              >
-                <Layers size={15} color={isStaffActive ? '#FFD60A' : '#CBD5E1'} strokeWidth={2.5} />
-                <span>Shop Queue</span>
-              </Link>
-            </div>
-          )}
 
           {/* Notifications Button with Red Badge */}
           <div ref={notifRef} style={{ position: 'relative' }}>

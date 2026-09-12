@@ -1,0 +1,61 @@
+/* ========================================================
+   GLOBAL 16-BIT RETRO PIXEL OVERRIDES (!important)
+   ======================================================== */
+
+/* 1. Eliminate every single rounded corner and curve */
+*, *::before, *::after,
+[class*="rounded-"], .rounded-full, .rounded-xl, .rounded-2xl {
+  border-radius: 0px !important;
+}
+
+/* 2. Global Pixel Font Enforcement */
+body, button, input, select, textarea {
+  font-family: 'Silkscreen', monospace !important;
+  background-color: #FBF8F1;
+  color: #000814;
+}
+
+/* Headers, Tokens, Big Badges */
+h1, h2, h3, h4,
+[class*="text-xl"], [class*="text-2xl"], [class*="text-3xl"], [class*="text-4xl"],
+.font-black {
+  font-family: 'Press Start 2P', monospace !important;
+  line-height: 1.6 !important;
+}
+
+/* 3. 3D Beveled Arcade Buttons */
+button[class*="bg-yellow"],
+button[class*="bg-[#FF"],
+[class*="bg-[#FFC300]"],
+[class*="bg-[#FFD60A]"],
+.nes-btn {
+  font-family: 'Press Start 2P', monospace !important;
+  border: 3px solid #000814 !important;
+  box-shadow:
+    inset 3px 3px 0px 0px #FFD60A,
+    inset -3px -3px 0px 0px #C79500,
+    3px 3px 0px 0px #000814 !important;
+  text-transform: uppercase !important;
+}
+
+button:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow:
+    inset 3px 3px 0px 0px #C79500,
+    1px 1px 0px 0px #000814 !important;
+}
+
+/* 4. Sharp Pixel Containers & Hard Shadows */
+[class*="border"] {
+  border-color: #000814 !important;
+}
+
+[class*="shadow"] {
+  box-shadow: 4px 4px 0px 0px #000814 !important;
+}
+
+/* 5. Force Pixel-Perfect Image Rendering */
+img, svg, canvas {
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+}
